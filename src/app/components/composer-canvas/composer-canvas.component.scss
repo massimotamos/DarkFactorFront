@@ -98,6 +98,14 @@
   text-transform: uppercase;
 }
 
+.canvas__connection-path--invalid {
+  stroke: rgba(248, 113, 113, 0.9);
+}
+
+.canvas__connection-label--invalid {
+  fill: #fda4af;
+}
+
 .canvas__guide {
   position: absolute;
   background: rgba(56, 189, 248, 0.16);

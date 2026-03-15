@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { FullStackApplicationAst, AstValidationIssue } from '../models/semantic-ast.models';
+import { SemanticLinkRulesService } from './semantic-link-rules.service';
 
 @Injectable({ providedIn: 'root' })
 export class SemanticValidatorService {
+  constructor(private readonly semanticLinkRulesService: SemanticLinkRulesService) {}
+
   validate(ast: FullStackApplicationAst): AstValidationIssue[] {
     const issues: AstValidationIssue[] = [];
 
@@ -55,6 +58,41 @@ export class SemanticValidatorService {
           code: 'SEMANTIC_CODE_MISSING',
           message: `${node.type} "${node.label}" has not been validated into semantic code yet.`,
           elementId: node.id
+        });
+      }
+    }
+
+    const nodesById = new Map(
+      [
+        ...ast.roles,
+        ...ast.entities,
+        ...ast.views,
+        ...ast.tasks,
+        ...ast.rules,
+        ...ast.integrations
+      ].map((node) => [node.id, node])
+    );
+
+    for (const link of ast.links) {
+      const source = nodesById.get(link.from);
+      const target = nodesById.get(link.to);
+
+      if (!source || !target) {
+        issues.push({
+          severity: 'error',
+          code: 'LINK_NODE_MISSING',
+          message: `Link "${link.id}" references a missing source or target node.`,
+          elementId: link.id
+        });
+        continue;
+      }
+
+      if (!this.semanticLinkRulesService.isAllowed(source.type, target.type)) {
+        issues.push({
+          severity: 'error',
+          code: 'LINK_TYPE_NOT_ALLOWED',
+          message: `Link "${source.label}" -> "${target.label}" is not allowed for ${source.type} -> ${target.type}.`,
+          elementId: link.id
         });
       }
     }

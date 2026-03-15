@@ -13,6 +13,7 @@ import { CanvasConnection, CanvasNode, PaletteItem } from '../../models/composer
 export class ComposerCanvasComponent {
   @Input({ required: true }) nodes: CanvasNode[] = [];
   @Input({ required: true }) connections: CanvasConnection[] = [];
+  @Input() invalidConnectionIds: string[] = [];
   @Input({ required: true }) selectedNodeId: string | null = null;
   @Output() nodeSelected = new EventEmitter<string>();
   @Output() nodeDropped = new EventEmitter<{ item: PaletteItem; position: { x: number; y: number } }>();
@@ -31,6 +32,10 @@ export class ComposerCanvasComponent {
 
   trackByConnectionId(_: number, connection: CanvasConnection): string {
     return connection.id;
+  }
+
+  isConnectionInvalid(connectionId: string): boolean {
+    return this.invalidConnectionIds.includes(connectionId);
   }
 
   getConnectionPath(connection: CanvasConnection): string {

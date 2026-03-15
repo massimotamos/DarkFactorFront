@@ -5,10 +5,11 @@ import { ComposerPaletteComponent } from './components/composer-palette/composer
 import { ComposerPropertiesComponent } from './components/composer-properties/composer-properties.component';
 import { ComposerToolbarComponent } from './components/composer-toolbar/composer-toolbar.component';
 import { COMPOSER_MOCK_MODEL } from './mock/composer.mock';
-import { CanvasNode, PaletteItem } from './models/composer.models';
+import { CanvasConnection, CanvasNode, PaletteItem } from './models/composer.models';
 import { SemanticProjectionResult } from './models/semantic-language.models';
 import { ComposerProjectFileService } from './services/composer-project-file.service';
 import { SemanticDslRendererService } from './services/semantic-dsl-renderer.service';
+import { SemanticLinkRulesService } from './services/semantic-link-rules.service';
 import { NodeValidationService } from './services/node-validation.service';
 import { SemanticProjectionService } from './services/semantic-projection.service';
 
@@ -55,6 +56,12 @@ export class AppComponent {
           .join('\n')
       : 'No semantic validation issues.'
   );
+  protected readonly invalidConnectionIds = computed(() =>
+    this.semanticProjection().validationIssues
+      .filter((issue) => issue.code === 'LINK_TYPE_NOT_ALLOWED' || issue.code === 'LINK_NODE_MISSING')
+      .map((issue) => issue.elementId)
+      .filter((elementId): elementId is string => !!elementId)
+  );
   protected readonly workspaceColumns = computed(
     () => `${this.paletteWidth()}px 10px minmax(0, 1fr) 10px ${this.propertiesWidth()}px`
   );
@@ -63,6 +70,7 @@ export class AppComponent {
 
   constructor(
     private readonly semanticDslRendererService: SemanticDslRendererService,
+    private readonly semanticLinkRulesService: SemanticLinkRulesService,
     private readonly nodeValidationService: NodeValidationService,
     private readonly composerProjectFileService: ComposerProjectFileService,
     private readonly semanticProjectionService: SemanticProjectionService
@@ -82,17 +90,7 @@ export class AppComponent {
       ...state,
       selectedNodeId: newNode.id,
       canvasNodes: [...state.canvasNodes, newNode],
-      connections: state.selectedNodeId
-        ? [
-            ...state.connections,
-            {
-              id: `conn-${state.selectedNodeId}-${newNode.id}`,
-              sourceNodeId: state.selectedNodeId,
-              targetNodeId: newNode.id,
-              label: 'next'
-            }
-          ]
-        : state.connections
+      connections: this.createAutoConnection(state.selectedNodeId, state.canvasNodes, newNode, state.connections)
     }));
   }
 
@@ -340,6 +338,36 @@ export class AppComponent {
     }
 
     return node.validationState === 'validated' ? 'configured' : 'draft';
+  }
+
+  private createAutoConnection(
+    selectedNodeId: string | null,
+    existingNodes: CanvasNode[],
+    newNode: CanvasNode,
+    existingConnections: CanvasConnection[]
+  ): CanvasConnection[] {
+    if (!selectedNodeId) {
+      return existingConnections;
+    }
+
+    const sourceNode = existingNodes.find((node) => node.id === selectedNodeId);
+    if (!sourceNode) {
+      return existingConnections;
+    }
+
+    if (!this.semanticLinkRulesService.isAllowed(sourceNode.type, newNode.type)) {
+      return existingConnections;
+    }
+
+    return [
+      ...existingConnections,
+      {
+        id: `conn-${selectedNodeId}-${newNode.id}`,
+        sourceNodeId: selectedNodeId,
+        targetNodeId: newNode.id,
+        label: this.semanticLinkRulesService.defaultRelation(sourceNode.type, newNode.type) ?? undefined
+      }
+    ];
   }
 
   private toFileSafeName(value: string): string {

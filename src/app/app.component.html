@@ -27,6 +27,7 @@
       class="workspace__canvas"
       [nodes]="composer().canvasNodes"
       [connections]="composer().connections"
+      [invalidConnectionIds]="invalidConnectionIds()"
       [selectedNodeId]="composer().selectedNodeId"
       (nodeSelected)="onNodeSelected($event)"
       (nodeDropped)="onNodeDropped($event)"

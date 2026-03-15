@@ -26,9 +26,13 @@
 
       <svg class="canvas__connections" aria-hidden="true">
         <g *ngFor="let connection of connections; trackBy: trackByConnectionId">
-          <path class="canvas__connection-path" [attr.d]="getConnectionPath(connection)"></path>
+          <path
+            class="canvas__connection-path"
+            [class.canvas__connection-path--invalid]="isConnectionInvalid(connection.id)"
+            [attr.d]="getConnectionPath(connection)"></path>
           <text
             class="canvas__connection-label"
+            [class.canvas__connection-label--invalid]="isConnectionInvalid(connection.id)"
             [attr.x]="getConnectionLabelPosition(connection).x"
             [attr.y]="getConnectionLabelPosition(connection).y">
             {{ connection.label }}
