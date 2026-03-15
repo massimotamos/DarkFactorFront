@@ -138,6 +138,11 @@ export class AppComponent {
   }
 
   protected onNodeDropped(event: { item: PaletteItem; position: { x: number; y: number } }): void {
+    if (event.item.type === 'applicationContext' && this.composer().canvasNodes.some((node) => node.type === 'applicationContext')) {
+      window.alert('Only one Application Context node is allowed per project.');
+      return;
+    }
+
     const newNode = this.createNodeFromPaletteItem(event.item, event.position);
 
     this.composer.update((state) => ({

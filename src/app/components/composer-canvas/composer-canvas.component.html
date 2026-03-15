@@ -53,8 +53,18 @@
         [style.minHeight.px]="node.size.height"
         (mousedown)="onNodePointerDown($event, node)">
         <div class="canvas-node__header">
-          <span class="canvas-node__type">{{ node.type }}</span>
-          <span class="canvas-node__status">{{ node.status }}</span>
+          <div class="canvas-node__meta">
+            <span class="canvas-node__type">{{ node.type }}</span>
+            <span class="canvas-node__status">{{ node.status }}</span>
+          </div>
+          <button
+            type="button"
+            class="canvas-node__connect"
+            [class.canvas-node__connect--active]="isConnectionSource(node.id)"
+            (mousedown)="$event.stopPropagation()"
+            (click)="onConnectionHandleClick($event, node.id)">
+            {{ isConnectionSource(node.id) ? 'Cancel' : 'Link' }}
+          </button>
         </div>
         <strong>{{ node.label }}</strong>
         <small class="canvas-node__name">{{ node.name }}</small>
@@ -63,14 +73,6 @@
           <span>Properties {{ node.properties.length }}</span>
           <span>{{ node.validationState }}</span>
         </footer>
-        <button
-          type="button"
-          class="canvas-node__connect"
-          [class.canvas-node__connect--active]="isConnectionSource(node.id)"
-          (mousedown)="$event.stopPropagation()"
-          (click)="onConnectionHandleClick($event, node.id)">
-          {{ isConnectionSource(node.id) ? 'Cancel' : 'Link' }}
-        </button>
       </article>
 
       <div class="canvas__hint">
