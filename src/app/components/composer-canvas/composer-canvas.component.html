@@ -44,6 +44,8 @@
         class="canvas-node"
         *ngFor="let node of nodes; trackBy: trackByNodeId"
         [class.canvas-node--selected]="node.id === selectedNodeId"
+        [class.canvas-node--connect-source]="isConnectionSource(node.id)"
+        [class.canvas-node--connect-target]="isConnectionTarget(node.id)"
         [class.canvas-node--warning]="node.status === 'warning'"
         [style.left.px]="node.position.x"
         [style.top.px]="node.position.y"
@@ -61,6 +63,14 @@
           <span>Properties {{ node.properties.length }}</span>
           <span>{{ node.validationState }}</span>
         </footer>
+        <button
+          type="button"
+          class="canvas-node__connect"
+          [class.canvas-node__connect--active]="isConnectionSource(node.id)"
+          (mousedown)="$event.stopPropagation()"
+          (click)="onConnectionHandleClick($event, node.id)">
+          {{ isConnectionSource(node.id) ? 'Cancel' : 'Link' }}
+        </button>
       </article>
 
       <div class="canvas__hint">

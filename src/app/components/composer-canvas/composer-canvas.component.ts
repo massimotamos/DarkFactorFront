@@ -15,9 +15,14 @@ export class ComposerCanvasComponent {
   @Input({ required: true }) connections: CanvasConnection[] = [];
   @Input() invalidConnectionIds: string[] = [];
   @Input({ required: true }) selectedNodeId: string | null = null;
+  @Input() pendingConnectionSourceId: string | null = null;
+  @Input() validConnectionTargetIds: string[] = [];
   @Output() nodeSelected = new EventEmitter<string>();
   @Output() nodeDropped = new EventEmitter<{ item: PaletteItem; position: { x: number; y: number } }>();
   @Output() nodeMoved = new EventEmitter<{ nodeId: string; position: { x: number; y: number } }>();
+  @Output() connectionStarted = new EventEmitter<string>();
+  @Output() connectionCompleted = new EventEmitter<string>();
+  @Output() connectionCanceled = new EventEmitter<void>();
 
   @ViewChild('surface', { static: true }) private surfaceRef!: ElementRef<HTMLDivElement>;
 
@@ -36,6 +41,14 @@ export class ComposerCanvasComponent {
 
   isConnectionInvalid(connectionId: string): boolean {
     return this.invalidConnectionIds.includes(connectionId);
+  }
+
+  isConnectionSource(nodeId: string): boolean {
+    return this.pendingConnectionSourceId === nodeId;
+  }
+
+  isConnectionTarget(nodeId: string): boolean {
+    return this.validConnectionTargetIds.includes(nodeId);
   }
 
   getConnectionPath(connection: CanvasConnection): string {
@@ -108,6 +121,14 @@ export class ComposerCanvasComponent {
 
   onNodePointerDown(event: MouseEvent, node: CanvasNode): void {
     event.stopPropagation();
+
+     if (this.pendingConnectionSourceId) {
+      if (node.id !== this.pendingConnectionSourceId && this.isConnectionTarget(node.id)) {
+        this.connectionCompleted.emit(node.id);
+      }
+      return;
+    }
+
     this.nodeSelected.emit(node.id);
     this.draggingNodeId = node.id;
     const surfaceRect = this.surfaceRef.nativeElement.getBoundingClientRect();
@@ -119,6 +140,20 @@ export class ComposerCanvasComponent {
 
   onCanvasBackgroundPointerDown(): void {
     this.draggingNodeId = null;
+    if (this.pendingConnectionSourceId) {
+      this.connectionCanceled.emit();
+    }
+  }
+
+  onConnectionHandleClick(event: MouseEvent, nodeId: string): void {
+    event.stopPropagation();
+    if (this.pendingConnectionSourceId === nodeId) {
+      this.connectionCanceled.emit();
+      return;
+    }
+
+    this.nodeSelected.emit(nodeId);
+    this.connectionStarted.emit(nodeId);
   }
 
   @HostListener('window:mousemove', ['$event'])

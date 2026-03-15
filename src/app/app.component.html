@@ -29,10 +29,15 @@
       [nodes]="composer().canvasNodes"
       [connections]="composer().connections"
       [invalidConnectionIds]="invalidConnectionIds()"
+      [pendingConnectionSourceId]="pendingConnectionSourceId()"
+      [validConnectionTargetIds]="validConnectionTargetIds()"
       [selectedNodeId]="composer().selectedNodeId"
       (nodeSelected)="onNodeSelected($event)"
       (nodeDropped)="onNodeDropped($event)"
-      (nodeMoved)="onNodeMoved($event)" />
+      (nodeMoved)="onNodeMoved($event)"
+      (connectionStarted)="onConnectionStarted($event)"
+      (connectionCompleted)="onConnectionCompleted($event)"
+      (connectionCanceled)="onConnectionCanceled()" />
 
     <div
       class="workspace__resizer"

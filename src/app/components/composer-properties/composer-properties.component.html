@@ -67,9 +67,9 @@
       </label>
 
       <label *ngIf="requiresKind(node)">
-        <span>Semantic Kind</span>
+        <span>Semantic Category</span>
         <select [value]="node.semanticKind || ''" (change)="onSemanticFieldInput('semanticKind', $event)">
-          <option value="" disabled>Select semantic kind</option>
+          <option value="" disabled>Select semantic category</option>
           <option *ngFor="let option of semanticKindOptions(node)" [value]="option">
             {{ option }}
           </option>

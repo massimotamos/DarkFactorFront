@@ -36,6 +36,7 @@ export class AppComponent {
   protected readonly composer = signal(COMPOSER_MOCK_MODEL);
   protected readonly isDslPreviewOpen = signal(false);
   protected readonly isProjectValidationOpen = signal(false);
+  protected readonly pendingConnectionSourceId = signal<string | null>(null);
   protected readonly paletteWidth = signal(272);
   protected readonly propertiesWidth = signal(288);
   protected readonly semanticProjection = computed<SemanticProjectionResult>(() =>
@@ -48,6 +49,26 @@ export class AppComponent {
   protected readonly selectedNode = computed(() => {
     const state = this.composer();
     return state.canvasNodes.find((node) => node.id === state.selectedNodeId) ?? null;
+  });
+  protected readonly validConnectionTargetIds = computed(() => {
+    const sourceId = this.pendingConnectionSourceId();
+    if (!sourceId) {
+      return [];
+    }
+
+    const state = this.composer();
+    const sourceNode = state.canvasNodes.find((node) => node.id === sourceId);
+    if (!sourceNode) {
+      return [];
+    }
+
+    return state.canvasNodes
+      .filter((node) =>
+        node.id !== sourceId &&
+        this.semanticLinkRulesService.isAllowed(sourceNode.type, node.type) &&
+        !state.connections.some((connection) => connection.sourceNodeId === sourceId && connection.targetNodeId === node.id)
+      )
+      .map((node) => node.id);
   });
   protected readonly semanticPreview = computed(() =>
     this.semanticDslRendererService.render(this.semanticProjection().ast)
@@ -139,6 +160,53 @@ export class AppComponent {
           : node
       )
     }));
+  }
+
+  protected onConnectionStarted(nodeId: string): void {
+    this.pendingConnectionSourceId.set(nodeId);
+  }
+
+  protected onConnectionCompleted(targetNodeId: string): void {
+    const sourceNodeId = this.pendingConnectionSourceId();
+    if (!sourceNodeId || sourceNodeId === targetNodeId) {
+      this.pendingConnectionSourceId.set(null);
+      return;
+    }
+
+    this.composer.update((state) => {
+      const sourceNode = state.canvasNodes.find((node) => node.id === sourceNodeId);
+      const targetNode = state.canvasNodes.find((node) => node.id === targetNodeId);
+      if (!sourceNode || !targetNode) {
+        return state;
+      }
+
+      if (!this.semanticLinkRulesService.isAllowed(sourceNode.type, targetNode.type)) {
+        return state;
+      }
+
+      if (state.connections.some((connection) => connection.sourceNodeId === sourceNodeId && connection.targetNodeId === targetNodeId)) {
+        return state;
+      }
+
+      return {
+        ...state,
+        connections: [
+          ...state.connections,
+          {
+            id: `conn-${sourceNodeId}-${targetNodeId}-${Date.now()}`,
+            sourceNodeId,
+            targetNodeId,
+            label: this.semanticLinkRulesService.defaultRelation(sourceNode.type, targetNode.type) ?? undefined
+          }
+        ]
+      };
+    });
+
+    this.pendingConnectionSourceId.set(null);
+  }
+
+  protected onConnectionCanceled(): void {
+    this.pendingConnectionSourceId.set(null);
   }
 
   protected onBasicPropertyChanged(event: {
@@ -402,6 +470,7 @@ export class AppComponent {
 
   @HostListener('window:keydown.escape')
   protected onEscapeKey(): void {
+    this.pendingConnectionSourceId.set(null);
     this.closeDslPreview();
     this.closeProjectValidation();
   }
