@@ -17,6 +17,11 @@ export class ComposerPropertiesComponent {
     field: 'name' | 'label' | 'description' | 'type';
     value: string;
   }>();
+  @Output() semanticFieldChanged = new EventEmitter<{
+    nodeId: string;
+    field: 'semanticKey' | 'semanticKind';
+    value: string;
+  }>();
   @Output() promptChanged = new EventEmitter<{
     nodeId: string;
     value: string;
@@ -56,5 +61,21 @@ export class ComposerPropertiesComponent {
     }
 
     this.validateRequested.emit(this.selectedNode.id);
+  }
+
+  onSemanticFieldInput(field: 'semanticKey' | 'semanticKind', event: Event): void {
+    if (!this.selectedNode) {
+      return;
+    }
+
+    this.semanticFieldChanged.emit({
+      nodeId: this.selectedNode.id,
+      field,
+      value: (event.target as HTMLInputElement).value
+    });
+  }
+
+  requiresKind(node: CanvasNode): boolean {
+    return node.type === 'task' || node.type === 'rule' || node.type === 'integration';
   }
 }

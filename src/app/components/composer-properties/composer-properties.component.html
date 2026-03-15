@@ -56,18 +56,20 @@
 
   <section class="properties__section">
     <header>
-      <h3>Semantic Configuration</h3>
-      <span>{{ node.properties.length }} fields</span>
+      <h3>Required Semantic Fields</h3>
+      <span>Deterministic core</span>
     </header>
 
-    <div class="properties__list">
-      <article *ngFor="let property of node.properties">
-        <div>
-          <span class="properties__property-group">{{ property.group }}</span>
-          <strong>{{ property.label }}</strong>
-        </div>
-        <input [value]="property.value" />
-      </article>
+    <div class="properties__grid">
+      <label>
+        <span>Semantic Key</span>
+        <input [value]="node.semanticKey" (input)="onSemanticFieldInput('semanticKey', $event)" />
+      </label>
+
+      <label *ngIf="requiresKind(node)">
+        <span>Semantic Kind</span>
+        <input [value]="node.semanticKind || ''" (input)="onSemanticFieldInput('semanticKind', $event)" />
+      </label>
     </div>
   </section>
 

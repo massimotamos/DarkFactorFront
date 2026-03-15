@@ -4,6 +4,8 @@ export interface SemanticNodeAst {
   id: string;
   type: ComposerNodeType;
   name: string;
+  key: string;
+  kind: string | null;
   label: string;
   description: string;
   prompt: string;
@@ -29,12 +31,12 @@ export interface FullStackApplicationAst {
     nodeCount: number;
     connectionCount: number;
   };
+  roles: SemanticNodeAst[];
   entities: SemanticNodeAst[];
-  pages: SemanticNodeAst[];
-  services: SemanticNodeAst[];
-  endpoints: SemanticNodeAst[];
-  actions: SemanticNodeAst[];
-  conditions: SemanticNodeAst[];
+  views: SemanticNodeAst[];
+  tasks: SemanticNodeAst[];
+  rules: SemanticNodeAst[];
+  integrations: SemanticNodeAst[];
   links: SemanticLinkAst[];
 }
 

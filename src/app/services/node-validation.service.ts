@@ -1,74 +1,116 @@
 import { Injectable } from '@angular/core';
-import { CanvasNode } from '../models/composer.models';
+import { CanvasNode, ComposerNodeType } from '../models/composer.models';
 
 @Injectable({ providedIn: 'root' })
 export class NodeValidationService {
   generateSemanticCode(node: CanvasNode): string {
-    const normalizedPrompt = node.prompt.trim() || 'No prompt provided';
-
     switch (node.type) {
+      case 'role':
+        return this.renderRole(node);
       case 'entity':
-        return [
-          `entity ${node.name} {`,
-          `  label: "${node.label}"`,
-          `  intent: "${normalizedPrompt}"`,
-          '}'
-        ].join('\n');
-      case 'page':
-        return [
-          `page ${node.name} {`,
-          `  route: "${this.extractPromptValue(node.prompt, '/'+node.name.toLowerCase())}"`,
-          `  label: "${node.label}"`,
-          `  purpose: "${normalizedPrompt}"`,
-          '}'
-        ].join('\n');
-      case 'service':
-        return [
-          `service ${node.name} {`,
-          `  layer: "spring-service"`,
-          `  responsibility: "${normalizedPrompt}"`,
-          '}'
-        ].join('\n');
-      case 'endpoint':
-        return [
-          `endpoint ${node.name} {`,
-          `  method: "${this.inferHttpMethod(node.prompt)}"`,
-          `  path: "${this.extractPromptValue(node.prompt, '/api/' + node.name.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase()).replace(/^-/, ''))}"`,
-          `  contract: "${normalizedPrompt}"`,
-          '}'
-        ].join('\n');
-      case 'condition':
-        return [
-          `condition ${node.name} {`,
-          `  expression: "${normalizedPrompt}"`,
-          '}'
-        ].join('\n');
+        return this.renderEntity(node);
+      case 'view':
+        return this.renderView(node);
+      case 'task':
+        return this.renderTask(node);
+      case 'rule':
+        return this.renderRule(node);
       default:
-        return [
-          `action ${node.name} {`,
-          `  label: "${node.label}"`,
-          `  intent: "${normalizedPrompt}"`,
-          '}'
-        ].join('\n');
+        return this.renderIntegration(node);
     }
   }
 
-  private inferHttpMethod(prompt: string): string {
-    const normalized = prompt.toLowerCase();
-    if (normalized.includes('create') || normalized.includes('add')) {
-      return 'POST';
+  defaultKind(type: ComposerNodeType): string | null {
+    switch (type) {
+      case 'task':
+        return 'business';
+      case 'rule':
+        return 'validation';
+      case 'integration':
+        return 'external-api';
+      default:
+        return null;
     }
-    if (normalized.includes('update') || normalized.includes('set')) {
-      return 'PUT';
-    }
-    if (normalized.includes('delete') || normalized.includes('remove')) {
-      return 'DELETE';
-    }
-    return 'GET';
   }
 
-  private extractPromptValue(prompt: string, fallback: string): string {
-    const trimmed = prompt.trim();
-    return trimmed.length > 0 ? trimmed : fallback;
+  defaultKey(type: ComposerNodeType, name: string): string {
+    return `${type}.${name}`;
+  }
+
+  private renderRole(node: CanvasNode): string {
+    return [
+      `role ${node.name} {`,
+      `  key "${node.semanticKey}"`,
+      `  label "${node.label}"`,
+      `  description "${this.escape(node.description)}"`,
+      `  prompt "${this.escape(this.normalizePrompt(node.prompt))}"`,
+      '}'
+    ].join('\n');
+  }
+
+  private renderEntity(node: CanvasNode): string {
+    return [
+      `entity ${node.name} {`,
+      `  key "${node.semanticKey}"`,
+      `  label "${node.label}"`,
+      `  description "${this.escape(node.description)}"`,
+      `  prompt "${this.escape(this.normalizePrompt(node.prompt))}"`,
+      '}'
+    ].join('\n');
+  }
+
+  private renderView(node: CanvasNode): string {
+    return [
+      `view ${node.name} {`,
+      `  key "${node.semanticKey}"`,
+      `  label "${node.label}"`,
+      `  description "${this.escape(node.description)}"`,
+      `  prompt "${this.escape(this.normalizePrompt(node.prompt))}"`,
+      '}'
+    ].join('\n');
+  }
+
+  private renderTask(node: CanvasNode): string {
+    return [
+      `task ${node.name} {`,
+      `  kind ${node.semanticKind ?? 'business'}`,
+      `  key "${node.semanticKey}"`,
+      `  label "${node.label}"`,
+      `  description "${this.escape(node.description)}"`,
+      `  prompt "${this.escape(this.normalizePrompt(node.prompt))}"`,
+      '}'
+    ].join('\n');
+  }
+
+  private renderRule(node: CanvasNode): string {
+    return [
+      `rule ${node.name} {`,
+      `  kind ${node.semanticKind ?? 'validation'}`,
+      `  key "${node.semanticKey}"`,
+      `  label "${node.label}"`,
+      `  description "${this.escape(node.description)}"`,
+      `  prompt "${this.escape(this.normalizePrompt(node.prompt))}"`,
+      '}'
+    ].join('\n');
+  }
+
+  private renderIntegration(node: CanvasNode): string {
+    return [
+      `integration ${node.name} {`,
+      `  kind ${node.semanticKind ?? 'external-api'}`,
+      `  key "${node.semanticKey}"`,
+      `  label "${node.label}"`,
+      `  description "${this.escape(node.description)}"`,
+      `  prompt "${this.escape(this.normalizePrompt(node.prompt))}"`,
+      '}'
+    ].join('\n');
+  }
+
+  private normalizePrompt(prompt: string): string {
+    return prompt.trim() || 'No prompt provided.';
+  }
+
+  private escape(value: string): string {
+    return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
   }
 }

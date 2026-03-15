@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, HostListener, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, ViewChild, computed, signal } from '@angular/core';
 import { ComposerCanvasComponent } from './components/composer-canvas/composer-canvas.component';
 import { ComposerPaletteComponent } from './components/composer-palette/composer-palette.component';
 import { ComposerPropertiesComponent } from './components/composer-properties/composer-properties.component';
@@ -7,6 +7,7 @@ import { ComposerToolbarComponent } from './components/composer-toolbar/composer
 import { COMPOSER_MOCK_MODEL } from './mock/composer.mock';
 import { CanvasNode, PaletteItem } from './models/composer.models';
 import { SemanticProjectionResult } from './models/semantic-language.models';
+import { ComposerProjectFileService } from './services/composer-project-file.service';
 import { SemanticDslRendererService } from './services/semantic-dsl-renderer.service';
 import { NodeValidationService } from './services/node-validation.service';
 import { SemanticProjectionService } from './services/semantic-projection.service';
@@ -26,14 +27,16 @@ import { SemanticProjectionService } from './services/semantic-projection.servic
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
-  protected readonly modelName = 'Commerce Demo Semantic Model';
+  @ViewChild('projectFileInput') private projectFileInput?: ElementRef<HTMLInputElement>;
+
+  protected readonly modelName = signal('Ecommerce Reference Semantic Model');
   protected readonly composer = signal(COMPOSER_MOCK_MODEL);
   protected readonly isDslPreviewOpen = signal(false);
   protected readonly paletteWidth = signal(272);
   protected readonly propertiesWidth = signal(288);
   protected readonly semanticProjection = computed<SemanticProjectionResult>(() =>
     this.semanticProjectionService.project(
-      this.modelName,
+      this.modelName(),
       this.composer().canvasNodes,
       this.composer().connections
     )
@@ -61,6 +64,7 @@ export class AppComponent {
   constructor(
     private readonly semanticDslRendererService: SemanticDslRendererService,
     private readonly nodeValidationService: NodeValidationService,
+    private readonly composerProjectFileService: ComposerProjectFileService,
     private readonly semanticProjectionService: SemanticProjectionService
   ) {}
 
@@ -128,6 +132,30 @@ export class AppComponent {
     }));
   }
 
+  protected onSemanticFieldChanged(event: {
+    nodeId: string;
+    field: 'semanticKey' | 'semanticKind';
+    value: string;
+  }): void {
+    this.composer.update((state) => ({
+      ...state,
+      canvasNodes: state.canvasNodes.map((node) =>
+        node.id === event.nodeId
+          ? {
+              ...node,
+              [event.field]: event.value || (event.field === 'semanticKind' ? null : ''),
+              validationState: 'unvalidated',
+              status: this.computeNodeStatus({
+                ...node,
+                [event.field]: event.value || (event.field === 'semanticKind' ? null : ''),
+                validationState: 'unvalidated'
+              })
+            }
+          : node
+      )
+    }));
+  }
+
   protected onPromptChanged(event: { nodeId: string; value: string }): void {
     this.composer.update((state) => ({
       ...state,
@@ -157,10 +185,15 @@ export class AppComponent {
         }
 
         const hasPrompt = node.prompt.trim().length > 0;
+        const hasKey = node.semanticKey.trim().length > 0;
+        const hasRequiredKind = node.type === 'task' || node.type === 'rule' || node.type === 'integration';
+        const hasKind = !hasRequiredKind || !!node.semanticKind?.trim();
         const validatedSemanticCode = hasPrompt
+          && hasKey
+          && hasKind
           ? this.nodeValidationService.generateSemanticCode(node)
           : '';
-        const validationState = hasPrompt ? 'validated' : 'invalid';
+        const validationState = hasPrompt && hasKey && hasKind ? 'validated' : 'invalid';
 
         return {
           ...node,
@@ -174,6 +207,52 @@ export class AppComponent {
 
   protected openDslPreview(): void {
     this.isDslPreviewOpen.set(true);
+  }
+
+  protected saveProject(): void {
+    const payload = this.composerProjectFileService.serialize({
+      version: 1,
+      modelName: this.modelName(),
+      selectedNodeId: this.composer().selectedNodeId,
+      canvasNodes: this.composer().canvasNodes,
+      connections: this.composer().connections
+    });
+    const blob = new Blob([payload], { type: 'application/json;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = `${this.toFileSafeName(this.modelName())}.darkfactor-project.json`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  }
+
+  protected requestProjectLoad(): void {
+    this.projectFileInput?.nativeElement.click();
+  }
+
+  protected async onProjectFileSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    try {
+      const raw = await file.text();
+      const project = this.composerProjectFileService.parse(raw);
+      this.modelName.set(project.modelName);
+      this.composer.update((state) => ({
+        ...state,
+        selectedNodeId: project.selectedNodeId,
+        canvasNodes: project.canvasNodes,
+        connections: project.connections
+      }));
+    } catch (error) {
+      console.error(error);
+      window.alert('The selected project file could not be loaded.');
+    } finally {
+      input.value = '';
+    }
   }
 
   protected closeDslPreview(): void {
@@ -228,6 +307,8 @@ export class AppComponent {
       name: normalizedName,
       label: item.label,
       description: item.description,
+      semanticKey: this.nodeValidationService.defaultKey(item.type, normalizedName),
+      semanticKind: this.nodeValidationService.defaultKind(item.type),
       prompt: '',
       validatedSemanticCode: '',
       validationState: 'unvalidated',
@@ -246,10 +327,25 @@ export class AppComponent {
       return 'draft';
     }
 
+    if (!node.semanticKey.trim()) {
+      return 'draft';
+    }
+
+    if ((node.type === 'task' || node.type === 'rule' || node.type === 'integration') && !node.semanticKind?.trim()) {
+      return 'draft';
+    }
+
     if (node.validationState === 'invalid') {
       return 'warning';
     }
 
     return node.validationState === 'validated' ? 'configured' : 'draft';
+  }
+
+  private toFileSafeName(value: string): string {
+    return value
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '') || 'semantic-project';
   }
 }

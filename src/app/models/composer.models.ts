@@ -1,16 +1,17 @@
 export type PaletteCategory =
-  | 'ui-elements'
-  | 'logic'
+  | 'security'
   | 'data'
-  | 'backend';
+  | 'experience'
+  | 'behavior'
+  | 'integration';
 
 export type ComposerNodeType =
+  | 'role'
   | 'entity'
-  | 'page'
-  | 'service'
-  | 'endpoint'
-  | 'action'
-  | 'condition';
+  | 'view'
+  | 'task'
+  | 'rule'
+  | 'integration';
 
 export interface PaletteItem {
   id: string;
@@ -36,6 +37,8 @@ export interface CanvasNode {
   name: string;
   label: string;
   description: string;
+  semanticKey: string;
+  semanticKind: string | null;
   prompt: string;
   validatedSemanticCode: string;
   validationState: 'unvalidated' | 'validated' | 'invalid';

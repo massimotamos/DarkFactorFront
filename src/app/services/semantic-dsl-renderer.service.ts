@@ -6,12 +6,12 @@ export class SemanticDslRendererService {
   render(ast: FullStackApplicationAst): string {
     const sections = [
       this.renderHeader(ast),
+      this.renderNodeBlock('roles', ast.roles),
       this.renderNodeBlock('entities', ast.entities),
-      this.renderNodeBlock('pages', ast.pages),
-      this.renderNodeBlock('services', ast.services),
-      this.renderNodeBlock('endpoints', ast.endpoints),
-      this.renderNodeBlock('actions', ast.actions),
-      this.renderNodeBlock('conditions', ast.conditions),
+      this.renderNodeBlock('views', ast.views),
+      this.renderNodeBlock('tasks', ast.tasks),
+      this.renderNodeBlock('rules', ast.rules),
+      this.renderNodeBlock('integrations', ast.integrations),
       this.renderLinks(ast.links)
     ].filter((section) => section.length > 0);
 
@@ -44,9 +44,14 @@ export class SemanticDslRendererService {
   private renderNode(node: SemanticNodeAst): string {
     const lines = [
       `${node.type} ${node.name} {`,
+      `  key "${this.escape(node.key)}"`,
       `  label "${this.escape(node.label)}"`,
       `  description "${this.escape(node.description)}"`
     ];
+
+    if (node.kind?.trim()) {
+      lines.push(`  kind ${node.kind}`);
+    }
 
     if (node.prompt.trim().length > 0) {
       lines.push(`  prompt "${this.escape(node.prompt)}"`);

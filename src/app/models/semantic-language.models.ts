@@ -11,24 +11,24 @@ export interface SemanticProjectionResult {
 }
 
 export function classifyNodeGroup(type: ComposerNodeType):
+  | 'roles'
   | 'entities'
-  | 'pages'
-  | 'services'
-  | 'endpoints'
-  | 'actions'
-  | 'conditions' {
+  | 'views'
+  | 'tasks'
+  | 'rules'
+  | 'integrations' {
   switch (type) {
+    case 'role':
+      return 'roles';
     case 'entity':
       return 'entities';
-    case 'page':
-      return 'pages';
-    case 'service':
-      return 'services';
-    case 'endpoint':
-      return 'endpoints';
-    case 'condition':
-      return 'conditions';
+    case 'view':
+      return 'views';
+    case 'task':
+      return 'tasks';
+    case 'rule':
+      return 'rules';
     default:
-      return 'actions';
+      return 'integrations';
   }
 }

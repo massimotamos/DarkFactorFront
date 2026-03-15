@@ -3,6 +3,21 @@ import { ComposerMockModel } from '../models/composer.models';
 export const COMPOSER_MOCK_MODEL: ComposerMockModel = {
   palette: [
     {
+      id: 'security',
+      label: 'Security',
+      items: [
+        {
+          id: 'role',
+          type: 'role',
+          category: 'security',
+          label: 'Role',
+          description: 'Application actor or access capability.',
+          icon: 'R',
+          accent: 'accent-logic'
+        }
+      ]
+    },
+    {
       id: 'data',
       label: 'Data',
       items: [
@@ -11,357 +26,377 @@ export const COMPOSER_MOCK_MODEL: ComposerMockModel = {
           type: 'entity',
           category: 'data',
           label: 'Entity',
-          description: 'Backend domain model persisted by Spring Boot.',
+          description: 'Domain object used across the application model.',
           icon: 'E',
           accent: 'accent-data'
         }
       ]
     },
     {
-      id: 'ui-elements',
-      label: 'Frontend',
+      id: 'experience',
+      label: 'Experience',
       items: [
         {
-          id: 'page',
-          type: 'page',
-          category: 'ui-elements',
-          label: 'Page',
-          description: 'Angular route or screen.',
-          icon: 'P',
-          accent: 'accent-ui'
-        },
-        {
-          id: 'action',
-          type: 'action',
-          category: 'ui-elements',
-          label: 'Action',
-          description: 'User interaction or page-level command.',
-          icon: 'A',
+          id: 'view',
+          type: 'view',
+          category: 'experience',
+          label: 'View',
+          description: 'User-facing screen or route.',
+          icon: 'V',
           accent: 'accent-ui'
         }
       ]
     },
     {
-      id: 'backend',
-      label: 'Backend',
+      id: 'behavior',
+      label: 'Behavior',
       items: [
         {
-          id: 'service',
-          type: 'service',
-          category: 'backend',
-          label: 'Service',
-          description: 'Spring Boot application service.',
-          icon: 'S',
+          id: 'task',
+          type: 'task',
+          category: 'behavior',
+          label: 'Task',
+          description: 'Business or interaction capability in the application.',
+          icon: 'T',
           accent: 'accent-backend'
         },
         {
-          id: 'endpoint',
-          type: 'endpoint',
-          category: 'backend',
-          label: 'Endpoint',
-          description: 'REST endpoint exposed by Spring Boot.',
-          icon: 'EP',
+          id: 'rule',
+          type: 'rule',
+          category: 'behavior',
+          label: 'Rule',
+          description: 'Validation, authorization, or decision constraint.',
+          icon: 'Ru',
           accent: 'accent-backend'
         }
       ]
     },
     {
-      id: 'logic',
-      label: 'Logic',
+      id: 'integration',
+      label: 'Integration',
       items: [
         {
-          id: 'condition',
-          type: 'condition',
-          category: 'logic',
-          label: 'Condition',
-          description: 'Guard or conditional branch in the application flow.',
-          icon: 'C',
-          accent: 'accent-logic'
+          id: 'integration',
+          type: 'integration',
+          category: 'integration',
+          label: 'Integration',
+          description: 'External system dependency or channel.',
+          icon: 'I',
+          accent: 'accent-backend'
         }
       ]
     }
   ],
-  selectedNodeId: 'node-page-catalog',
+  selectedNodeId: 'node-task-process-payment',
   canvasNodes: [
+    {
+      id: 'node-role-customer',
+      type: 'role',
+      category: 'security',
+      name: 'customer',
+      label: 'Customer',
+      description: 'Buyer using the ecommerce storefront.',
+      semanticKey: 'role.customer',
+      semanticKind: null,
+      prompt: 'Define the customer role that can browse products, manage the cart and complete checkout.',
+      validatedSemanticCode: `role customer {
+  key "role.customer"
+  label "Customer"
+  description "Buyer using the ecommerce storefront."
+  prompt "Define the customer role that can browse products, manage the cart and complete checkout."
+}`,
+      validationState: 'validated',
+      position: { x: 72, y: 96 },
+      size: { width: 186, height: 104 },
+      status: 'configured',
+      properties: [{ key: 'scope', label: 'Scope', value: 'storefront', group: 'security' }]
+    },
+    {
+      id: 'node-role-sales-manager',
+      type: 'role',
+      category: 'security',
+      name: 'salesManager',
+      label: 'Sales Manager',
+      description: 'Commercial role responsible for pricing and catalog changes.',
+      semanticKey: 'role.sales-manager',
+      semanticKind: null,
+      prompt: 'Define the sales manager role that can manage products, set prices and apply discounts.',
+      validatedSemanticCode: `role salesManager {
+  key "role.sales-manager"
+  label "Sales Manager"
+  description "Commercial role responsible for pricing and catalog changes."
+  prompt "Define the sales manager role that can manage products, set prices and apply discounts."
+}`,
+      validationState: 'validated',
+      position: { x: 72, y: 324 },
+      size: { width: 198, height: 104 },
+      status: 'configured',
+      properties: [{ key: 'scope', label: 'Scope', value: 'catalog-admin', group: 'security' }]
+    },
     {
       id: 'node-entity-product',
       type: 'entity',
       category: 'data',
       name: 'product',
       label: 'Product',
-      description: 'Represents items displayed in the storefront and managed by sales.',
-      prompt: 'Create a backend entity Product with fields id, sku, name, price and discount.',
+      description: 'Sellable catalog item with price and discount semantics.',
+      semanticKey: 'entity.product',
+      semanticKind: null,
+      prompt: 'Define the product entity with sku, name, base price, discount and availability.',
       validatedSemanticCode: `entity product {
-  label: "Product"
-  intent: "Create a backend entity Product with fields id, sku, name, price and discount."
+  key "entity.product"
+  label "Product"
+  description "Sellable catalog item with price and discount semantics."
+  prompt "Define the product entity with sku, name, base price, discount and availability."
 }`,
       validationState: 'validated',
-      position: { x: 72, y: 72 },
-      size: { width: 186, height: 98 },
+      position: { x: 360, y: 88 },
+      size: { width: 204, height: 104 },
       status: 'configured',
-      properties: [
-        { key: 'fields', label: 'Fields', value: 'id,sku,name,price,discount', group: 'general' }
-      ]
+      properties: [{ key: 'fields', label: 'Fields', value: 'sku,name,price,discount,availability', group: 'general' }]
     },
     {
-      id: 'node-entity-cart',
+      id: 'node-entity-order',
       type: 'entity',
       category: 'data',
-      name: 'cart',
-      label: 'Cart',
-      description: 'Holds the customer cart aggregate before checkout.',
-      prompt: 'Create a backend entity Cart with fields id, userId, items and totalAmount.',
-      validatedSemanticCode: `entity cart {
-  label: "Cart"
-  intent: "Create a backend entity Cart with fields id, userId, items and totalAmount."
+      name: 'order',
+      label: 'Order',
+      description: 'Confirmed customer purchase after successful checkout.',
+      semanticKey: 'entity.order',
+      semanticKind: null,
+      prompt: 'Define the order entity with customer reference, order items, payment status and fulfillment status.',
+      validatedSemanticCode: `entity order {
+  key "entity.order"
+  label "Order"
+  description "Confirmed customer purchase after successful checkout."
+  prompt "Define the order entity with customer reference, order items, payment status and fulfillment status."
 }`,
       validationState: 'validated',
-      position: { x: 324, y: 72 },
-      size: { width: 176, height: 98 },
+      position: { x: 360, y: 324 },
+      size: { width: 198, height: 104 },
       status: 'configured',
-      properties: [
-        { key: 'fields', label: 'Fields', value: 'id,userId,items,totalAmount', group: 'general' }
-      ]
+      properties: [{ key: 'fields', label: 'Fields', value: 'customer,items,paymentStatus,fulfillmentStatus', group: 'general' }]
     },
     {
-      id: 'node-page-login',
-      type: 'page',
-      category: 'ui-elements',
-      name: 'loginPage',
-      label: 'Login Page',
-      description: 'Angular login page for customers and sales managers.',
-      prompt: 'Create an Angular login page at route /login with email and password fields.',
-      validatedSemanticCode: `page loginPage {
-  route: "Create an Angular login page at route /login with email and password fields."
-  label: "Login Page"
-  purpose: "Create an Angular login page at route /login with email and password fields."
+      id: 'node-view-catalog',
+      type: 'view',
+      category: 'experience',
+      name: 'catalogView',
+      label: 'Catalog View',
+      description: 'Main storefront screen showing available products and add to cart actions.',
+      semanticKey: 'view.catalog',
+      semanticKind: null,
+      prompt: 'Define the catalog view where customers browse products and trigger add to cart.',
+      validatedSemanticCode: `view catalogView {
+  key "view.catalog"
+  label "Catalog View"
+  description "Main storefront screen showing available products and add to cart actions."
+  prompt "Define the catalog view where customers browse products and trigger add to cart."
 }`,
       validationState: 'validated',
-      position: { x: 604, y: 72 },
-      size: { width: 190, height: 98 },
+      position: { x: 664, y: 88 },
+      size: { width: 212, height: 104 },
       status: 'configured',
-      properties: [
-        { key: 'route', label: 'Route', value: '/login', group: 'general' }
-      ]
+      properties: [{ key: 'route', label: 'Route', value: '/catalog', group: 'general' }]
     },
     {
-      id: 'node-page-catalog',
-      type: 'page',
-      category: 'ui-elements',
-      name: 'catalogPage',
-      label: 'Catalog Page',
-      description: 'Angular product catalog page for storefront customers.',
-      prompt: 'Create an Angular catalog page at route /catalog showing product cards and add to cart buttons.',
-      validatedSemanticCode: `page catalogPage {
-  route: "Create an Angular catalog page at route /catalog showing product cards and add to cart buttons."
-  label: "Catalog Page"
-  purpose: "Create an Angular catalog page at route /catalog showing product cards and add to cart buttons."
+      id: 'node-view-admin-products',
+      type: 'view',
+      category: 'experience',
+      name: 'adminProductsView',
+      label: 'Admin Products View',
+      description: 'Administration screen for product creation, pricing and discount control.',
+      semanticKey: 'view.admin-products',
+      semanticKind: null,
+      prompt: 'Define the admin products view where sales managers maintain product prices and discounts.',
+      validatedSemanticCode: `view adminProductsView {
+  key "view.admin-products"
+  label "Admin Products View"
+  description "Administration screen for product creation, pricing and discount control."
+  prompt "Define the admin products view where sales managers maintain product prices and discounts."
 }`,
       validationState: 'validated',
-      position: { x: 876, y: 72 },
-      size: { width: 196, height: 98 },
+      position: { x: 664, y: 324 },
+      size: { width: 222, height: 104 },
       status: 'configured',
-      properties: [
-        { key: 'route', label: 'Route', value: '/catalog', group: 'general' }
-      ]
+      properties: [{ key: 'route', label: 'Route', value: '/admin/products', group: 'general' }]
     },
     {
-      id: 'node-action-add-to-cart',
-      type: 'action',
-      category: 'ui-elements',
-      name: 'addToCart',
-      label: 'Add To Cart',
-      description: 'Frontend action for adding the selected product to the cart.',
-      prompt: 'When the user clicks add to cart, call the backend endpoint to append the product to the active cart and refresh cart state.',
-      validatedSemanticCode: `action addToCart {
-  label: "Add To Cart"
-  intent: "When the user clicks add to cart, call the backend endpoint to append the product to the active cart and refresh cart state."
+      id: 'node-task-add-to-cart',
+      type: 'task',
+      category: 'behavior',
+      name: 'addProductToCart',
+      label: 'Add Product To Cart',
+      description: 'Interaction task that adds the selected product to the active cart.',
+      semanticKey: 'task.add-product-to-cart',
+      semanticKind: 'interaction',
+      prompt: 'When the customer clicks add to cart, append the selected product to the active cart and refresh the cart summary.',
+      validatedSemanticCode: `task addProductToCart {
+  kind interaction
+  key "task.add-product-to-cart"
+  label "Add Product To Cart"
+  description "Interaction task that adds the selected product to the active cart."
+  prompt "When the customer clicks add to cart, append the selected product to the active cart and refresh the cart summary."
 }`,
       validationState: 'validated',
-      position: { x: 1160, y: 72 },
-      size: { width: 196, height: 98 },
+      position: { x: 980, y: 88 },
+      size: { width: 224, height: 108 },
       status: 'configured',
-      properties: [
-        { key: 'trigger', label: 'Trigger', value: 'Button click', group: 'behavior' }
-      ]
+      properties: [{ key: 'mode', label: 'Mode', value: 'interaction', group: 'behavior' }]
     },
     {
-      id: 'node-endpoint-cart',
-      type: 'endpoint',
-      category: 'backend',
-      name: 'cartItemsEndpoint',
-      label: 'Cart Items Endpoint',
-      description: 'REST endpoint for adding a product to the cart.',
-      prompt: 'Expose a Spring Boot POST endpoint /api/cart/items that receives productId and quantity and returns the updated cart.',
-      validatedSemanticCode: `endpoint cartItemsEndpoint {
-  method: "POST"
-  path: "Expose a Spring Boot POST endpoint /api/cart/items that receives productId and quantity and returns the updated cart."
-  contract: "Expose a Spring Boot POST endpoint /api/cart/items that receives productId and quantity and returns the updated cart."
+      id: 'node-task-process-payment',
+      type: 'task',
+      category: 'behavior',
+      name: 'processPayment',
+      label: 'Process Payment',
+      description: 'Business task responsible for charging the customer during checkout.',
+      semanticKey: 'task.process-payment',
+      semanticKind: 'business',
+      prompt: 'Charge the customer through the payment provider, confirm success and allow order creation only after successful payment.',
+      validatedSemanticCode: `task processPayment {
+  kind business
+  key "task.process-payment"
+  label "Process Payment"
+  description "Business task responsible for charging the customer during checkout."
+  prompt "Charge the customer through the payment provider, confirm success and allow order creation only after successful payment."
 }`,
       validationState: 'validated',
-      position: { x: 1448, y: 72 },
-      size: { width: 212, height: 98 },
+      position: { x: 1244, y: 88 },
+      size: { width: 214, height: 108 },
       status: 'configured',
-      properties: [
-        { key: 'path', label: 'Path', value: '/api/cart/items', group: 'integration' }
-      ]
+      properties: [{ key: 'mode', label: 'Mode', value: 'business', group: 'behavior' }]
     },
     {
-      id: 'node-service-cart',
-      type: 'service',
-      category: 'backend',
-      name: 'cartService',
-      label: 'Cart Service',
-      description: 'Spring Boot service handling cart operations.',
-      prompt: 'Implement a Spring Boot service that loads the active cart, adds a product item, recalculates totals and persists the cart.',
-      validatedSemanticCode: `service cartService {
-  layer: "spring-service"
-  responsibility: "Implement a Spring Boot service that loads the active cart, adds a product item, recalculates totals and persists the cart."
+      id: 'node-task-set-discount',
+      type: 'task',
+      category: 'behavior',
+      name: 'setProductDiscount',
+      label: 'Set Product Discount',
+      description: 'Business task used by catalog administration to update discount policies.',
+      semanticKey: 'task.set-product-discount',
+      semanticKind: 'business',
+      prompt: 'Allow a sales manager to update the product discount policy and persist the new discount value.',
+      validatedSemanticCode: `task setProductDiscount {
+  kind business
+  key "task.set-product-discount"
+  label "Set Product Discount"
+  description "Business task used by catalog administration to update discount policies."
+  prompt "Allow a sales manager to update the product discount policy and persist the new discount value."
 }`,
       validationState: 'validated',
-      position: { x: 1764, y: 72 },
-      size: { width: 204, height: 98 },
+      position: { x: 980, y: 324 },
+      size: { width: 224, height: 108 },
       status: 'configured',
-      properties: [
-        { key: 'layer', label: 'Layer', value: 'application', group: 'behavior' }
-      ]
+      properties: [{ key: 'mode', label: 'Mode', value: 'business', group: 'behavior' }]
     },
     {
-      id: 'node-condition-cart-not-empty',
-      type: 'condition',
-      category: 'logic',
-      name: 'cartNotEmpty',
-      label: 'Cart Not Empty',
-      description: 'Guard ensuring checkout is only available when items are present.',
-      prompt: 'Allow checkout only when the current cart contains at least one item.',
-      validatedSemanticCode: `condition cartNotEmpty {
-  expression: "Allow checkout only when the current cart contains at least one item."
+      id: 'node-rule-cart-not-empty',
+      type: 'rule',
+      category: 'behavior',
+      name: 'cartMustNotBeEmpty',
+      label: 'Cart Must Not Be Empty',
+      description: 'Validation rule ensuring checkout only continues when the cart has items.',
+      semanticKey: 'rule.cart-not-empty',
+      semanticKind: 'validation',
+      prompt: 'Permit checkout only if the active cart contains at least one product.',
+      validatedSemanticCode: `rule cartMustNotBeEmpty {
+  kind validation
+  key "rule.cart-not-empty"
+  label "Cart Must Not Be Empty"
+  description "Validation rule ensuring checkout only continues when the cart has items."
+  prompt "Permit checkout only if the active cart contains at least one product."
 }`,
       validationState: 'validated',
-      position: { x: 2068, y: 72 },
-      size: { width: 206, height: 98 },
+      position: { x: 1520, y: 88 },
+      size: { width: 228, height: 108 },
       status: 'configured',
-      properties: [
-        { key: 'expression', label: 'Expression', value: 'cart.items.size > 0', group: 'behavior' }
-      ]
-    },
-
-    {
-      id: 'node-page-admin',
-      type: 'page',
-      category: 'ui-elements',
-      name: 'adminProductsPage',
-      label: 'Admin Products Page',
-      description: 'Angular administration page for maintaining products.',
-      prompt: 'Create an Angular admin products page at route /admin/products with product list, create form and price update actions.',
-      validatedSemanticCode: `page adminProductsPage {
-  route: "Create an Angular admin products page at route /admin/products with product list, create form and price update actions."
-  label: "Admin Products Page"
-  purpose: "Create an Angular admin products page at route /admin/products with product list, create form and price update actions."
-}`,
-      validationState: 'validated',
-      position: { x: 604, y: 292 },
-      size: { width: 208, height: 98 },
-      status: 'configured',
-      properties: [
-        { key: 'route', label: 'Route', value: '/admin/products', group: 'general' }
-      ]
+      properties: [{ key: 'kind', label: 'Kind', value: 'validation', group: 'behavior' }]
     },
     {
-      id: 'node-action-update-pricing',
-      type: 'action',
-      category: 'ui-elements',
-      name: 'updatePricing',
-      label: 'Update Pricing',
-      description: 'Frontend action for changing product price and discount.',
-      prompt: 'When the sales manager edits a product, submit the new price and discount values to the backend and refresh the product table.',
-      validatedSemanticCode: `action updatePricing {
-  label: "Update Pricing"
-  intent: "When the sales manager edits a product, submit the new price and discount values to the backend and refresh the product table."
+      id: 'node-rule-sales-manager-discount',
+      type: 'rule',
+      category: 'behavior',
+      name: 'onlySalesManagerCanSetDiscount',
+      label: 'Only Sales Manager Can Set Discount',
+      description: 'Authorization rule protecting discount maintenance actions.',
+      semanticKey: 'rule.sales-manager-discount',
+      semanticKind: 'authorization',
+      prompt: 'Allow the discount update task only when the authenticated user has the Sales Manager role.',
+      validatedSemanticCode: `rule onlySalesManagerCanSetDiscount {
+  kind authorization
+  key "rule.sales-manager-discount"
+  label "Only Sales Manager Can Set Discount"
+  description "Authorization rule protecting discount maintenance actions."
+  prompt "Allow the discount update task only when the authenticated user has the Sales Manager role."
 }`,
       validationState: 'validated',
-      position: { x: 924, y: 292 },
-      size: { width: 204, height: 98 },
+      position: { x: 1520, y: 324 },
+      size: { width: 238, height: 108 },
       status: 'configured',
-      properties: [
-        { key: 'trigger', label: 'Trigger', value: 'Form submit', group: 'behavior' }
-      ]
+      properties: [{ key: 'kind', label: 'Kind', value: 'authorization', group: 'behavior' }]
     },
     {
-      id: 'node-endpoint-admin-products',
-      type: 'endpoint',
-      category: 'backend',
-      name: 'adminProductsEndpoint',
-      label: 'Admin Products Endpoint',
-      description: 'REST endpoint for product maintenance actions.',
-      prompt: 'Expose a Spring Boot PUT endpoint /api/admin/products/{id} for updating product price and discount.',
-      validatedSemanticCode: `endpoint adminProductsEndpoint {
-  method: "PUT"
-  path: "Expose a Spring Boot PUT endpoint /api/admin/products/{id} for updating product price and discount."
-  contract: "Expose a Spring Boot PUT endpoint /api/admin/products/{id} for updating product price and discount."
+      id: 'node-integration-payment-gateway',
+      type: 'integration',
+      category: 'integration',
+      name: 'paymentGateway',
+      label: 'Payment Gateway',
+      description: 'External payment provider used during checkout.',
+      semanticKey: 'integration.payment-gateway',
+      semanticKind: 'payment',
+      prompt: 'Use an external payment gateway to authorize and capture the checkout payment.',
+      validatedSemanticCode: `integration paymentGateway {
+  kind payment
+  key "integration.payment-gateway"
+  label "Payment Gateway"
+  description "External payment provider used during checkout."
+  prompt "Use an external payment gateway to authorize and capture the checkout payment."
 }`,
       validationState: 'validated',
-      position: { x: 1248, y: 292 },
-      size: { width: 212, height: 98 },
+      position: { x: 1812, y: 88 },
+      size: { width: 212, height: 108 },
       status: 'configured',
-      properties: [
-        { key: 'path', label: 'Path', value: '/api/admin/products/{id}', group: 'integration' }
-      ]
+      properties: [{ key: 'provider', label: 'Provider', value: 'payment', group: 'integration' }]
     },
     {
-      id: 'node-service-product-admin',
-      type: 'service',
-      category: 'backend',
-      name: 'productAdminService',
-      label: 'Product Admin Service',
-      description: 'Spring Boot service for product creation, deletion, pricing and discounts.',
-      prompt: 'Implement a Spring Boot service that creates, removes and updates products including price and discount changes.',
-      validatedSemanticCode: `service productAdminService {
-  layer: "spring-service"
-  responsibility: "Implement a Spring Boot service that creates, removes and updates products including price and discount changes."
+      id: 'node-integration-email-service',
+      type: 'integration',
+      category: 'integration',
+      name: 'emailService',
+      label: 'Email Service',
+      description: 'Notification integration for confirmations and status updates.',
+      semanticKey: 'integration.email-service',
+      semanticKind: 'notification',
+      prompt: 'Send order confirmation and status notification emails to the customer.',
+      validatedSemanticCode: `integration emailService {
+  kind notification
+  key "integration.email-service"
+  label "Email Service"
+  description "Notification integration for confirmations and status updates."
+  prompt "Send order confirmation and status notification emails to the customer."
 }`,
       validationState: 'validated',
-      position: { x: 1568, y: 292 },
-      size: { width: 214, height: 98 },
+      position: { x: 1812, y: 324 },
+      size: { width: 212, height: 108 },
       status: 'configured',
-      properties: [
-        { key: 'layer', label: 'Layer', value: 'application', group: 'behavior' }
-      ]
-    },
-    {
-      id: 'node-condition-manager-role',
-      type: 'condition',
-      category: 'logic',
-      name: 'userIsSalesManager',
-      label: 'User Is Sales Manager',
-      description: 'Guard ensuring product maintenance actions require the sales manager role.',
-      prompt: 'Allow product administration actions only if the authenticated user has the Sales Manager role.',
-      validatedSemanticCode: `condition userIsSalesManager {
-  expression: "Allow product administration actions only if the authenticated user has the Sales Manager role."
-}`,
-      validationState: 'validated',
-      position: { x: 1898, y: 292 },
-      size: { width: 212, height: 98 },
-      status: 'configured',
-      properties: [
-        { key: 'expression', label: 'Expression', value: 'user.roles contains SALES_MANAGER', group: 'behavior' }
-      ]
+      properties: [{ key: 'provider', label: 'Provider', value: 'notification', group: 'integration' }]
     }
   ],
   connections: [
-    { id: 'conn-catalog-product', sourceNodeId: 'node-page-catalog', targetNodeId: 'node-entity-product', label: 'binds' },
-    { id: 'conn-login-catalog', sourceNodeId: 'node-page-login', targetNodeId: 'node-page-catalog', label: 'navigates' },
-    { id: 'conn-catalog-add', sourceNodeId: 'node-page-catalog', targetNodeId: 'node-action-add-to-cart', label: 'triggers' },
-    { id: 'conn-add-endpoint', sourceNodeId: 'node-action-add-to-cart', targetNodeId: 'node-endpoint-cart', label: 'calls' },
-    { id: 'conn-endpoint-service', sourceNodeId: 'node-endpoint-cart', targetNodeId: 'node-service-cart', label: 'delegates' },
-    { id: 'conn-service-cart', sourceNodeId: 'node-service-cart', targetNodeId: 'node-entity-cart', label: 'persists' },
-    { id: 'conn-cart-checkout', sourceNodeId: 'node-entity-cart', targetNodeId: 'node-condition-cart-not-empty', label: 'guards' },
-
-    { id: 'conn-admin-page-product', sourceNodeId: 'node-page-admin', targetNodeId: 'node-entity-product', label: 'manages' },
-    { id: 'conn-admin-action', sourceNodeId: 'node-page-admin', targetNodeId: 'node-action-update-pricing', label: 'triggers' },
-    { id: 'conn-action-endpoint-admin', sourceNodeId: 'node-action-update-pricing', targetNodeId: 'node-endpoint-admin-products', label: 'calls' },
-    { id: 'conn-endpoint-service-admin', sourceNodeId: 'node-endpoint-admin-products', targetNodeId: 'node-service-product-admin', label: 'delegates' },
-    { id: 'conn-service-product', sourceNodeId: 'node-service-product-admin', targetNodeId: 'node-entity-product', label: 'updates' },
-    { id: 'conn-condition-admin', sourceNodeId: 'node-condition-manager-role', targetNodeId: 'node-action-update-pricing', label: 'authorizes' }
+    { id: 'link-customer-catalog', sourceNodeId: 'node-role-customer', targetNodeId: 'node-view-catalog', label: 'accesses' },
+    { id: 'link-sales-admin', sourceNodeId: 'node-role-sales-manager', targetNodeId: 'node-view-admin-products', label: 'accesses' },
+    { id: 'link-catalog-product', sourceNodeId: 'node-view-catalog', targetNodeId: 'node-entity-product', label: 'displays' },
+    { id: 'link-admin-product', sourceNodeId: 'node-view-admin-products', targetNodeId: 'node-entity-product', label: 'manages' },
+    { id: 'link-catalog-add-task', sourceNodeId: 'node-view-catalog', targetNodeId: 'node-task-add-to-cart', label: 'triggers' },
+    { id: 'link-add-product', sourceNodeId: 'node-task-add-to-cart', targetNodeId: 'node-entity-product', label: 'reads' },
+    { id: 'link-payment-order', sourceNodeId: 'node-task-process-payment', targetNodeId: 'node-entity-order', label: 'creates' },
+    { id: 'link-payment-rule', sourceNodeId: 'node-task-process-payment', targetNodeId: 'node-rule-cart-not-empty', label: 'guards' },
+    { id: 'link-payment-integration', sourceNodeId: 'node-task-process-payment', targetNodeId: 'node-integration-payment-gateway', label: 'calls' },
+    { id: 'link-discount-product', sourceNodeId: 'node-task-set-discount', targetNodeId: 'node-entity-product', label: 'updates' },
+    { id: 'link-sales-task', sourceNodeId: 'node-role-sales-manager', targetNodeId: 'node-task-set-discount', label: 'executes' },
+    { id: 'link-discount-rule-task', sourceNodeId: 'node-rule-sales-manager-discount', targetNodeId: 'node-task-set-discount', label: 'guards' },
+    { id: 'link-role-rule', sourceNodeId: 'node-role-sales-manager', targetNodeId: 'node-rule-sales-manager-discount', label: 'constrains' },
+    { id: 'link-payment-email', sourceNodeId: 'node-task-process-payment', targetNodeId: 'node-integration-email-service', label: 'notifies' }
   ]
 };

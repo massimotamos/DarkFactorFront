@@ -10,7 +10,7 @@
   <div class="toolbar__status">
     <div class="toolbar__badge">
       <span class="toolbar__badge-label">Prototype Phase</span>
-      <strong>Layout Foundation</strong>
+      <strong>Reference Modeling</strong>
     </div>
     <div class="toolbar__badge">
       <span class="toolbar__badge-label">Canvas Nodes</span>
@@ -19,7 +19,8 @@
   </div>
 
   <div class="toolbar__actions">
-    <button type="button">Validate</button>
+    <button type="button" (click)="onSaveProjectClick()">Save Project</button>
+    <button type="button" (click)="onLoadProjectClick()">Load Project</button>
     <button type="button" (click)="onPreviewDslClick()">Preview DSL</button>
     <button type="button" class="toolbar__primary">Publish Structure</button>
   </div>
