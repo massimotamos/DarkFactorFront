@@ -73,7 +73,7 @@ export const COMPOSER_MOCK_MODEL: ComposerMockModel = {
           label: 'Task',
           description: 'Business or interaction capability in the application.',
           icon: 'T',
-          accent: 'accent-backend'
+          accent: 'accent-task'
         },
         {
           id: 'rule',
@@ -82,7 +82,7 @@ export const COMPOSER_MOCK_MODEL: ComposerMockModel = {
           label: 'Rule',
           description: 'Validation, authorization, or decision constraint.',
           icon: 'Ru',
-          accent: 'accent-backend'
+          accent: 'accent-rule'
         }
       ]
     },
@@ -97,7 +97,7 @@ export const COMPOSER_MOCK_MODEL: ComposerMockModel = {
           label: 'Integration',
           description: 'External system dependency or channel.',
           icon: 'I',
-          accent: 'accent-backend'
+          accent: 'accent-integration'
         }
       ]
     }
