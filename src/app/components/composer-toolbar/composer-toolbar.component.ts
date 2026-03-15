@@ -11,6 +11,7 @@ export class ComposerToolbarComponent {
   @Input({ required: true }) modelName = '';
   @Input({ required: true }) nodeCount = 0;
   @Output() validateProjectRequested = new EventEmitter<void>();
+  @Output() generateCodeRequested = new EventEmitter<void>();
   @Output() closeProjectRequested = new EventEmitter<void>();
   @Output() saveProjectRequested = new EventEmitter<void>();
   @Output() loadProjectRequested = new EventEmitter<void>();
@@ -34,5 +35,9 @@ export class ComposerToolbarComponent {
 
   onPreviewDslClick(): void {
     this.previewDslRequested.emit();
+  }
+
+  onGenerateCodeClick(): void {
+    this.generateCodeRequested.emit();
   }
 }

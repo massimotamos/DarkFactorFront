@@ -3,6 +3,7 @@
     [modelName]="modelName()"
     [nodeCount]="composer().canvasNodes.length"
     (validateProjectRequested)="openProjectValidation()"
+    (generateCodeRequested)="openGenerateCode()"
     (saveProjectRequested)="saveProject()"
     (loadProjectRequested)="requestProjectLoad()"
     (closeProjectRequested)="closeProject()"
@@ -89,6 +90,57 @@
         </header>
         <pre>{{ validationPreview() }}</pre>
       </section>
+    </section>
+  </div>
+
+  <div
+    *ngIf="isGenerateCodeOpen()"
+    class="dsl-modal-backdrop"
+    (click)="closeGenerateCode()">
+    <section
+      class="dsl-modal dsl-modal--wide"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Generated code preview"
+      (click)="$event.stopPropagation()">
+      <header class="dsl-modal__header">
+        <div>
+          <p class="dsl-modal__eyebrow">Generate Code</p>
+          <h2>Angular + Spring Boot + Maven Structure</h2>
+        </div>
+        <button type="button" class="dsl-modal__close" (click)="closeGenerateCode()">Close</button>
+      </header>
+
+      <div class="dsl-modal__workspace">
+        <aside class="dsl-modal__file-list">
+          <button
+            type="button"
+            *ngFor="let file of generatedFiles()"
+            class="dsl-modal__file-item"
+            [class.dsl-modal__file-item--active]="selectedGeneratedFilePath() === file.path"
+            (click)="selectGeneratedFile(file.path)">
+            <span>{{ file.category }}</span>
+            <strong>{{ file.path }}</strong>
+          </button>
+        </aside>
+
+        <section class="dsl-modal__section dsl-modal__section--full">
+          <ng-container *ngIf="selectedGeneratedFile() as selectedFile; else noGeneratedFile">
+            <header>
+              <h3>{{ selectedFile.path }}</h3>
+              <span>Preview only</span>
+            </header>
+            <pre>{{ selectedFile.content }}</pre>
+          </ng-container>
+          <ng-template #noGeneratedFile>
+            <header>
+              <h3>No generated files</h3>
+              <span>Preview only</span>
+            </header>
+            <pre>No generated output.</pre>
+          </ng-template>
+        </section>
+      </div>
     </section>
   </div>
 

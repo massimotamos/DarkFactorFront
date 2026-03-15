@@ -8,6 +8,7 @@ import { COMPOSER_MOCK_MODEL } from './mock/composer.mock';
 import { CanvasConnection, CanvasNode, PaletteItem } from './models/composer.models';
 import { SemanticProjectionResult } from './models/semantic-language.models';
 import { ApplicationContextDraftService } from './services/application-context-draft.service';
+import { CodeGenerationService } from './services/code-generation.service';
 import { SemanticDslRendererService } from './services/semantic-dsl-renderer.service';
 import { DslParseIssue, SemanticDslProjectService } from './services/semantic-dsl-project.service';
 import { SemanticLinkRulesService } from './services/semantic-link-rules.service';
@@ -39,8 +40,10 @@ export class AppComponent {
   );
   protected readonly isDslPreviewOpen = signal(false);
   protected readonly isProjectValidationOpen = signal(false);
+  protected readonly isGenerateCodeOpen = signal(false);
   protected readonly isImportDiagnosticsOpen = signal(false);
   protected readonly importDiagnostics = signal<DslParseIssue[]>([]);
+  protected readonly selectedGeneratedFilePath = signal<string | null>(null);
   protected readonly pendingConnectionSourceId = signal<string | null>(null);
   protected readonly paletteWidth = signal(272);
   protected readonly propertiesWidth = signal(288);
@@ -126,6 +129,15 @@ export class AppComponent {
           .join('\n')
       : 'No import diagnostics.'
   );
+  protected readonly generatedCodeBundle = computed(() =>
+    this.codeGenerationService.generate(this.semanticProjection().ast)
+  );
+  protected readonly generatedFiles = computed(() => this.generatedCodeBundle().files);
+  protected readonly selectedGeneratedFile = computed(() => {
+    const selectedPath = this.selectedGeneratedFilePath();
+    const files = this.generatedFiles();
+    return files.find((file) => file.path === selectedPath) ?? files[0] ?? null;
+  });
   protected readonly isProjectDirty = computed(
     () => this.buildProjectSignature(this.modelName(), this.composer()) !== this.lastSavedSignature()
   );
@@ -136,6 +148,7 @@ export class AppComponent {
   private resizingPane: 'palette' | 'properties' | null = null;
 
   constructor(
+    private readonly codeGenerationService: CodeGenerationService,
     private readonly semanticDslRendererService: SemanticDslRendererService,
     private readonly semanticDslProjectService: SemanticDslProjectService,
     private readonly semanticLinkRulesService: SemanticLinkRulesService,
@@ -404,6 +417,12 @@ export class AppComponent {
     this.isProjectValidationOpen.set(true);
   }
 
+  protected openGenerateCode(): void {
+    const firstFile = this.generatedFiles()[0];
+    this.selectedGeneratedFilePath.set(firstFile?.path ?? null);
+    this.isGenerateCodeOpen.set(true);
+  }
+
   protected saveProject(): void {
     const payload = this.semanticDslProjectService.serialize(this.modelName(), this.semanticProjection());
     const blob = new Blob([payload], { type: 'text/plain;charset=utf-8' });
@@ -438,6 +457,7 @@ export class AppComponent {
     this.composer.set(emptyProject);
     this.pendingConnectionSourceId.set(null);
     this.closeDslPreview();
+    this.closeGenerateCode();
     this.closeProjectValidation();
     this.lastSavedSignature.set(this.buildProjectSignature('Untitled Project', emptyProject));
   }
@@ -495,8 +515,16 @@ export class AppComponent {
     this.isProjectValidationOpen.set(false);
   }
 
+  protected closeGenerateCode(): void {
+    this.isGenerateCodeOpen.set(false);
+  }
+
   protected closeImportDiagnostics(): void {
     this.isImportDiagnosticsOpen.set(false);
+  }
+
+  protected selectGeneratedFile(path: string): void {
+    this.selectedGeneratedFilePath.set(path);
   }
 
   protected startResize(pane: 'palette' | 'properties', event: MouseEvent): void {
@@ -533,6 +561,7 @@ export class AppComponent {
   protected onEscapeKey(): void {
     this.pendingConnectionSourceId.set(null);
     this.closeDslPreview();
+    this.closeGenerateCode();
     this.closeProjectValidation();
     this.closeImportDiagnostics();
   }
