@@ -4,6 +4,17 @@ import { FullStackApplicationAst, SemanticLinkAst, SemanticNodeAst } from '../mo
 @Injectable({ providedIn: 'root' })
 export class SemanticDslRendererService {
   render(ast: FullStackApplicationAst): string {
+    const nodesById = new Map(
+      [
+        ...ast.applicationContexts,
+        ...ast.roles,
+        ...ast.entities,
+        ...ast.views,
+        ...ast.tasks,
+        ...ast.rules,
+        ...ast.integrations
+      ].map((node) => [node.id, node])
+    );
     const sections = [
       this.renderHeader(ast),
       this.renderNodeBlock('applicationContexts', ast.applicationContexts),
@@ -13,7 +24,7 @@ export class SemanticDslRendererService {
       this.renderNodeBlock('tasks', ast.tasks),
       this.renderNodeBlock('rules', ast.rules),
       this.renderNodeBlock('integrations', ast.integrations),
-      this.renderLinks(ast.links)
+      this.renderLinks(ast.links, nodesById)
     ].filter((section) => section.length > 0);
 
     return sections.join('\n\n');
@@ -47,7 +58,8 @@ export class SemanticDslRendererService {
       `${node.type} ${node.name} {`,
       `  key "${this.escape(node.key)}"`,
       `  label "${this.escape(node.label)}"`,
-      `  description "${this.escape(node.description)}"`
+      `  description "${this.escape(node.description)}"`,
+      `  layout ${node.layout.x} ${node.layout.y} ${node.layout.width} ${node.layout.height}`
     ];
 
     if (node.kind?.trim()) {
@@ -75,14 +87,22 @@ export class SemanticDslRendererService {
     return lines.join('\n');
   }
 
-  private renderLinks(links: SemanticLinkAst[]): string {
+  private renderLinks(links: SemanticLinkAst[], nodesById: Map<string, SemanticNodeAst>): string {
     if (links.length === 0) {
       return '';
     }
 
-    const lines = links.map((link) =>
-      `  link ${link.from} -> ${link.to}${link.label ? ` as "${this.escape(link.label)}"` : ''}`
-    );
+    const lines = links
+      .map((link) => {
+        const source = nodesById.get(link.from);
+        const target = nodesById.get(link.to);
+        if (!source || !target) {
+          return null;
+        }
+
+        return `  link ${source.key} -> ${target.key}${link.label ? ` as "${this.escape(link.label)}"` : ''}`;
+      })
+      .filter((line): line is string => !!line);
 
     return ['links {', ...lines, '}'].join('\n');
   }

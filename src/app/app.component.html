@@ -5,12 +5,13 @@
     (validateProjectRequested)="openProjectValidation()"
     (saveProjectRequested)="saveProject()"
     (loadProjectRequested)="requestProjectLoad()"
+    (closeProjectRequested)="closeProject()"
     (previewDslRequested)="openDslPreview()" />
 
   <input
     #projectFileInput
     type="file"
-    accept=".json,.darkfactor-project.json"
+    accept=".dsl,.txt,.json,.darkfactor-project.json,.darkfactor.dsl"
     hidden
     (change)="onProjectFileSelected($event)" />
 

@@ -8,6 +8,12 @@ export interface SemanticNodeAst {
   kind: string | null;
   label: string;
   description: string;
+  layout: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
   contextBrief?: {
     context: string;
     objective: string;

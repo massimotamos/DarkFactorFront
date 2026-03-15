@@ -7,9 +7,9 @@ import { ComposerToolbarComponent } from './components/composer-toolbar/composer
 import { COMPOSER_MOCK_MODEL } from './mock/composer.mock';
 import { CanvasConnection, CanvasNode, PaletteItem } from './models/composer.models';
 import { SemanticProjectionResult } from './models/semantic-language.models';
-import { ComposerProjectFileService } from './services/composer-project-file.service';
 import { ApplicationContextDraftService } from './services/application-context-draft.service';
 import { SemanticDslRendererService } from './services/semantic-dsl-renderer.service';
+import { SemanticDslProjectService } from './services/semantic-dsl-project.service';
 import { SemanticLinkRulesService } from './services/semantic-link-rules.service';
 import { NodeValidationService } from './services/node-validation.service';
 import { ProjectValidationService } from './services/project-validation.service';
@@ -34,6 +34,9 @@ export class AppComponent {
 
   protected readonly modelName = signal('Ecommerce Reference Semantic Model');
   protected readonly composer = signal(COMPOSER_MOCK_MODEL);
+  protected readonly lastSavedSignature = signal(
+    this.buildProjectSignature('Ecommerce Reference Semantic Model', COMPOSER_MOCK_MODEL)
+  );
   protected readonly isDslPreviewOpen = signal(false);
   protected readonly isProjectValidationOpen = signal(false);
   protected readonly pendingConnectionSourceId = signal<string | null>(null);
@@ -114,6 +117,9 @@ export class AppComponent {
       result.generationIssues.length > 0 ? this.formatIssues(result.generationIssues) : 'No generation issues.'
     ].join('\n');
   });
+  protected readonly isProjectDirty = computed(
+    () => this.buildProjectSignature(this.modelName(), this.composer()) !== this.lastSavedSignature()
+  );
   protected readonly workspaceColumns = computed(
     () => `${this.paletteWidth()}px 10px minmax(0, 1fr) 10px ${this.propertiesWidth()}px`
   );
@@ -122,9 +128,9 @@ export class AppComponent {
 
   constructor(
     private readonly semanticDslRendererService: SemanticDslRendererService,
+    private readonly semanticDslProjectService: SemanticDslProjectService,
     private readonly semanticLinkRulesService: SemanticLinkRulesService,
     private readonly nodeValidationService: NodeValidationService,
-    private readonly composerProjectFileService: ComposerProjectFileService,
     private readonly applicationContextDraftService: ApplicationContextDraftService,
     private readonly projectValidationService: ProjectValidationService,
     private readonly semanticProjectionService: SemanticProjectionService
@@ -390,20 +396,41 @@ export class AppComponent {
   }
 
   protected saveProject(): void {
-    const payload = this.composerProjectFileService.serialize({
-      version: 1,
-      modelName: this.modelName(),
-      selectedNodeId: this.composer().selectedNodeId,
-      canvasNodes: this.composer().canvasNodes,
-      connections: this.composer().connections
-    });
-    const blob = new Blob([payload], { type: 'application/json;charset=utf-8' });
+    const payload = this.semanticDslProjectService.serialize(this.modelName(), this.semanticProjection());
+    const blob = new Blob([payload], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href = url;
-    anchor.download = `${this.toFileSafeName(this.modelName())}.darkfactor-project.json`;
+    anchor.download = `${this.toFileSafeName(this.modelName())}.darkfactor.dsl`;
     anchor.click();
     URL.revokeObjectURL(url);
+    this.lastSavedSignature.set(this.buildProjectSignature(this.modelName(), this.composer()));
+  }
+
+  protected closeProject(): void {
+    if (this.isProjectDirty()) {
+      const shouldSave = window.confirm('This project has unsaved changes. Press OK to save it before closing.');
+      if (!shouldSave) {
+        return;
+      }
+
+      this.saveProject();
+    }
+
+    const palette = this.composer().palette;
+    const emptyProject = {
+      palette,
+      selectedNodeId: null,
+      canvasNodes: [],
+      connections: []
+    };
+
+    this.modelName.set('Untitled Project');
+    this.composer.set(emptyProject);
+    this.pendingConnectionSourceId.set(null);
+    this.closeDslPreview();
+    this.closeProjectValidation();
+    this.lastSavedSignature.set(this.buildProjectSignature('Untitled Project', emptyProject));
   }
 
   protected requestProjectLoad(): void {
@@ -419,14 +446,16 @@ export class AppComponent {
 
     try {
       const raw = await file.text();
-      const project = this.composerProjectFileService.parse(raw);
+      const project = this.semanticDslProjectService.parse(raw);
       this.modelName.set(project.modelName);
-      this.composer.update((state) => ({
-        ...state,
+      const nextProject = {
+        ...this.composer(),
         selectedNodeId: project.selectedNodeId,
         canvasNodes: project.canvasNodes,
         connections: project.connections
-      }));
+      };
+      this.composer.set(nextProject);
+      this.lastSavedSignature.set(this.buildProjectSignature(project.modelName, nextProject));
     } catch (error) {
       console.error(error);
       window.alert('The selected project file could not be loaded.');
@@ -575,6 +604,18 @@ export class AppComponent {
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '') || 'semantic-project';
+  }
+
+  private buildProjectSignature(
+    modelName: string,
+    project: Pick<typeof COMPOSER_MOCK_MODEL, 'selectedNodeId' | 'canvasNodes' | 'connections'>
+  ): string {
+    return JSON.stringify({
+      modelName,
+      selectedNodeId: project.selectedNodeId,
+      canvasNodes: project.canvasNodes,
+      connections: project.connections
+    });
   }
 
   private formatIssues(issues: SemanticProjectionResult['validationIssues']): string {

@@ -54,6 +54,12 @@ export class SemanticProjectionService {
         kind: node.semanticKind,
         label: node.label,
         description: node.description,
+        layout: {
+          x: node.position.x,
+          y: node.position.y,
+          width: node.size.width,
+          height: node.size.height
+        },
         contextBrief: node.contextBrief,
         prompt: node.prompt,
         semanticCode: node.validatedSemanticCode
