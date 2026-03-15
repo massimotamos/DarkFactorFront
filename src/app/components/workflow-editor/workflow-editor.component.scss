@@ -1,0 +1,58 @@
+.workflow-editor {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.workflow-editor__header,
+.workflow-editor__actions,
+.workflow-editor__edit {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.workflow-editor__form {
+  display: grid;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.workflow-editor__form label {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.workflow-editor__form input,
+.workflow-editor__form textarea {
+  padding: 0.75rem;
+  border: 1px solid #cbd2d9;
+  border-radius: 0.5rem;
+}
+
+.workflow-editor__steps {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.workflow-editor__steps li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #0f172a;
+  color: #fff;
+}
