@@ -20,7 +20,8 @@
     <app-composer-properties
       class="workspace__properties"
       [selectedNode]="selectedNode()"
-      [dslPreview]="dslPreview()"
+      [dslPreview]="semanticPreview()"
+      [validationPreview]="validationPreview()"
       (basicPropertyChanged)="onBasicPropertyChanged($event)" />
   </main>
 </div>

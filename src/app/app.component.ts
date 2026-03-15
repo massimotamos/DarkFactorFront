@@ -4,7 +4,9 @@ import { ComposerPaletteComponent } from './components/composer-palette/composer
 import { ComposerPropertiesComponent } from './components/composer-properties/composer-properties.component';
 import { ComposerToolbarComponent } from './components/composer-toolbar/composer-toolbar.component';
 import { COMPOSER_MOCK_MODEL } from './mock/composer.mock';
-import { CanvasNode, DslExportModel, PaletteItem } from './models/composer.models';
+import { CanvasNode, PaletteItem } from './models/composer.models';
+import { SemanticProjectionResult } from './models/semantic-language.models';
+import { SemanticProjectionService } from './services/semantic-projection.service';
 
 @Component({
   selector: 'app-root',
@@ -20,13 +22,31 @@ import { CanvasNode, DslExportModel, PaletteItem } from './models/composer.model
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
-  protected readonly modelName = 'Customer Operations Semantic Model';
+  protected readonly modelName = 'Commerce Demo Semantic Model';
   protected readonly composer = signal(COMPOSER_MOCK_MODEL);
+  protected readonly semanticProjection = computed<SemanticProjectionResult>(() =>
+    this.semanticProjectionService.project(
+      this.modelName,
+      this.composer().canvasNodes,
+      this.composer().connections
+    )
+  );
   protected readonly selectedNode = computed(() => {
     const state = this.composer();
     return state.canvasNodes.find((node) => node.id === state.selectedNodeId) ?? null;
   });
-  protected readonly dslPreview = computed(() => JSON.stringify(this.exportDsl(), null, 2));
+  protected readonly semanticPreview = computed(() =>
+    JSON.stringify(this.semanticProjection().ast, null, 2)
+  );
+  protected readonly validationPreview = computed(() =>
+    this.semanticProjection().validationIssues.length > 0
+      ? this.semanticProjection().validationIssues
+          .map((issue) => `[${issue.severity.toUpperCase()}] ${issue.code}: ${issue.message}`)
+          .join('\n')
+      : 'No semantic validation issues.'
+  );
+
+  constructor(private readonly semanticProjectionService: SemanticProjectionService) {}
 
   protected onNodeSelected(nodeId: string): void {
     this.composer.update((state) => ({
@@ -112,39 +132,6 @@ export class AppComponent {
         { key: 'name', label: 'Name', value: normalizedName, group: 'general' },
         { key: 'description', label: 'Description', value: item.description, group: 'general' }
       ]
-    };
-  }
-
-  private exportDsl(): DslExportModel {
-    const state = this.composer();
-
-    return {
-      application: {
-        name: this.modelName,
-        nodeCount: state.canvasNodes.length,
-        connectionCount: state.connections.length
-      },
-      nodes: state.canvasNodes.map((node) => ({
-        id: node.id,
-        name: node.name,
-        label: node.label,
-        type: node.type,
-        category: node.category,
-        description: node.description,
-        layout: {
-          x: node.position.x,
-          y: node.position.y,
-          width: node.size.width,
-          height: node.size.height
-        },
-        properties: Object.fromEntries(node.properties.map((property) => [property.key, property.value]))
-      })),
-      connections: state.connections.map((connection) => ({
-        id: connection.id,
-        from: connection.sourceNodeId,
-        to: connection.targetNodeId,
-        label: connection.label
-      }))
     };
   }
 

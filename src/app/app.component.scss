@@ -13,7 +13,7 @@
 
 .workspace {
   display: grid;
-  grid-template-columns: 20rem minmax(0, 1fr) 22rem;
+  grid-template-columns: 17rem minmax(0, 1fr) 18rem;
   min-height: calc(100vh - 5.55rem);
 }
 
@@ -25,7 +25,7 @@
 
 @media (max-width: 1440px) {
   .workspace {
-    grid-template-columns: 18rem minmax(0, 1fr) 20rem;
+    grid-template-columns: 15.5rem minmax(0, 1fr) 16.5rem;
   }
 }
 

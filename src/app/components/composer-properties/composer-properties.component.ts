@@ -13,6 +13,7 @@ import { CanvasNode } from '../../models/composer.models';
 export class ComposerPropertiesComponent {
   @Input() selectedNode: CanvasNode | null = null;
   @Input({ required: true }) dslPreview = '';
+  @Input({ required: true }) validationPreview = '';
   @Output() basicPropertyChanged = new EventEmitter<{
     nodeId: string;
     field: 'name' | 'label' | 'description' | 'type';
