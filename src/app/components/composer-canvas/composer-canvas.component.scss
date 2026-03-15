@@ -92,18 +92,9 @@
 }
 
 .canvas__connection-label {
-  fill: #bae6fd;
   font-size: 11px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-}
-
-.canvas__connection-path--invalid {
-  stroke: rgba(248, 113, 113, 0.9);
-}
-
-.canvas__connection-label--invalid {
-  fill: #fda4af;
 }
 
 .canvas__guide {
@@ -131,6 +122,8 @@
   padding: 1rem;
   border: 1px solid rgba(71, 85, 105, 0.86);
   border-radius: 1rem;
+  overflow: hidden;
+  --node-accent: #38bdf8;
   background:
     linear-gradient(180deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.98));
   box-shadow: 0 18px 34px rgba(2, 6, 23, 0.34);
@@ -180,6 +173,14 @@
   margin-bottom: 0.75rem;
 }
 
+.canvas-node__accent {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0.32rem;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--node-accent) 100%, white 10%), color-mix(in srgb, var(--node-accent) 70%, black 30%));
+  box-shadow: 0 0 18px color-mix(in srgb, var(--node-accent) 28%, transparent);
+}
+
 .canvas-node__meta {
   display: flex;
   flex-wrap: wrap;
@@ -212,7 +213,7 @@
 
 .canvas-node p {
   margin: 0 0 1rem;
-  color: #7dd3fc;
+  color: color-mix(in srgb, var(--node-accent) 72%, white 28%);
   text-transform: capitalize;
 }
 
@@ -232,6 +233,64 @@
   border-color: rgba(34, 197, 94, 0.32);
   background: rgba(20, 83, 45, 0.5);
   color: #dcfce7;
+}
+
+.canvas-node--applicationContext {
+  --node-accent: #f59e0b;
+  border-radius: 1.2rem;
+  border-width: 2px;
+  background:
+    linear-gradient(180deg, rgba(71, 45, 8, 0.28), rgba(15, 23, 42, 0.98)),
+    linear-gradient(180deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.98));
+}
+
+.canvas-node--role {
+  --node-accent: #e879f9;
+  border-radius: 1.6rem;
+  background:
+    linear-gradient(180deg, rgba(88, 28, 135, 0.16), rgba(15, 23, 42, 0.98)),
+    linear-gradient(180deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.98));
+}
+
+.canvas-node--entity {
+  --node-accent: #14b8a6;
+  border-radius: 0.8rem;
+  background:
+    linear-gradient(180deg, rgba(15, 118, 110, 0.18), rgba(15, 23, 42, 0.98)),
+    linear-gradient(180deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.98));
+}
+
+.canvas-node--view {
+  --node-accent: #38bdf8;
+  border-radius: 1rem 1rem 1.35rem 1rem;
+  background:
+    linear-gradient(180deg, rgba(3, 105, 161, 0.16), rgba(15, 23, 42, 0.98)),
+    linear-gradient(180deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.98));
+}
+
+.canvas-node--task {
+  --node-accent: #22c55e;
+  border-radius: 0.95rem;
+  background:
+    linear-gradient(180deg, rgba(21, 128, 61, 0.16), rgba(15, 23, 42, 0.98)),
+    linear-gradient(180deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.98));
+}
+
+.canvas-node--rule {
+  --node-accent: #f97316;
+  border-radius: 0.45rem 1rem 0.45rem 1rem;
+  background:
+    linear-gradient(180deg, rgba(154, 52, 18, 0.18), rgba(15, 23, 42, 0.98)),
+    linear-gradient(180deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.98));
+}
+
+.canvas-node--integration {
+  --node-accent: #a78bfa;
+  border-style: dashed;
+  border-radius: 1rem;
+  background:
+    linear-gradient(180deg, rgba(109, 40, 217, 0.15), rgba(15, 23, 42, 0.98)),
+    linear-gradient(180deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.98));
 }
 
 .canvas__hint {

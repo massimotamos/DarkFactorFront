@@ -51,6 +51,74 @@ export class ComposerCanvasComponent {
     return this.validConnectionTargetIds.includes(nodeId);
   }
 
+  nodeTypeClass(node: CanvasNode): string {
+    return `canvas-node--${node.type}`;
+  }
+
+  connectionGradientId(connection: CanvasConnection): string {
+    return `connection-gradient-${connection.id.replace(/[^a-zA-Z0-9_-]/g, '-')}`;
+  }
+
+  connectionGradientVector(connection: CanvasConnection): { x1: number; y1: number; x2: number; y2: number } {
+    const sourceNode = this.nodes.find((node) => node.id === connection.sourceNodeId);
+    const targetNode = this.nodes.find((node) => node.id === connection.targetNodeId);
+
+    if (!sourceNode || !targetNode) {
+      return { x1: 0, y1: 0, x2: 1, y2: 0 };
+    }
+
+    return {
+      x1: sourceNode.position.x + sourceNode.size.width,
+      y1: sourceNode.position.y + sourceNode.size.height / 2,
+      x2: targetNode.position.x,
+      y2: targetNode.position.y + targetNode.size.height / 2
+    };
+  }
+
+  connectionStroke(connection: CanvasConnection): string {
+    return this.isConnectionInvalid(connection.id)
+      ? 'rgba(248, 113, 113, 0.9)'
+      : `url(#${this.connectionGradientId(connection)})`;
+  }
+
+  connectionLabelColor(connection: CanvasConnection): string {
+    if (this.isConnectionInvalid(connection.id)) {
+      return '#fda4af';
+    }
+
+    const sourceNode = this.nodes.find((node) => node.id === connection.sourceNodeId);
+    return sourceNode ? this.nodeAccent(sourceNode) : '#bae6fd';
+  }
+
+  nodeAccent(node: CanvasNode): string {
+    switch (node.type) {
+      case 'applicationContext':
+        return '#f59e0b';
+      case 'role':
+        return '#e879f9';
+      case 'entity':
+        return '#14b8a6';
+      case 'view':
+        return '#38bdf8';
+      case 'task':
+        return '#22c55e';
+      case 'rule':
+        return '#f97316';
+      default:
+        return '#a78bfa';
+    }
+  }
+
+  connectionGradientStops(connection: CanvasConnection): { start: string; end: string } {
+    const sourceNode = this.nodes.find((node) => node.id === connection.sourceNodeId);
+    const targetNode = this.nodes.find((node) => node.id === connection.targetNodeId);
+
+    return {
+      start: sourceNode ? this.nodeAccent(sourceNode) : '#7dd3fc',
+      end: targetNode ? this.nodeAccent(targetNode) : '#c4b5fd'
+    };
+  }
+
   getConnectionPath(connection: CanvasConnection): string {
     const sourceNode = this.nodes.find((node) => node.id === connection.sourceNodeId);
     const targetNode = this.nodes.find((node) => node.id === connection.targetNodeId);

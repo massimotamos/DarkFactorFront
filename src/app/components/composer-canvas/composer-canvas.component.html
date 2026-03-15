@@ -25,14 +25,27 @@
       <div class="canvas__guide canvas__guide--vertical"></div>
 
       <svg class="canvas__connections" aria-hidden="true">
+        <defs>
+          <linearGradient
+            *ngFor="let connection of connections; trackBy: trackByConnectionId"
+            [attr.id]="connectionGradientId(connection)"
+            gradientUnits="userSpaceOnUse"
+            [attr.x1]="connectionGradientVector(connection).x1"
+            [attr.y1]="connectionGradientVector(connection).y1"
+            [attr.x2]="connectionGradientVector(connection).x2"
+            [attr.y2]="connectionGradientVector(connection).y2">
+            <stop offset="0%" [attr.stop-color]="connectionGradientStops(connection).start"></stop>
+            <stop offset="100%" [attr.stop-color]="connectionGradientStops(connection).end"></stop>
+          </linearGradient>
+        </defs>
         <g *ngFor="let connection of connections; trackBy: trackByConnectionId">
           <path
             class="canvas__connection-path"
-            [class.canvas__connection-path--invalid]="isConnectionInvalid(connection.id)"
+            [style.stroke]="connectionStroke(connection)"
             [attr.d]="getConnectionPath(connection)"></path>
           <text
             class="canvas__connection-label"
-            [class.canvas__connection-label--invalid]="isConnectionInvalid(connection.id)"
+            [style.fill]="connectionLabelColor(connection)"
             [attr.x]="getConnectionLabelPosition(connection).x"
             [attr.y]="getConnectionLabelPosition(connection).y">
             {{ connection.label }}
@@ -43,6 +56,7 @@
       <article
         class="canvas-node"
         *ngFor="let node of nodes; trackBy: trackByNodeId"
+        [class]="nodeTypeClass(node)"
         [class.canvas-node--selected]="node.id === selectedNodeId"
         [class.canvas-node--connect-source]="isConnectionSource(node.id)"
         [class.canvas-node--connect-target]="isConnectionTarget(node.id)"
@@ -52,6 +66,7 @@
         [style.width.px]="node.size.width"
         [style.minHeight.px]="node.size.height"
         (mousedown)="onNodePointerDown($event, node)">
+        <span class="canvas-node__accent" aria-hidden="true"></span>
         <div class="canvas-node__header">
           <div class="canvas-node__meta">
             <span class="canvas-node__type">{{ node.type }}</span>
