@@ -1,12 +1,18 @@
 <div class="app-shell">
   <app-composer-toolbar
     [modelName]="modelName"
-    [nodeCount]="composer().canvasNodes.length" />
+    [nodeCount]="composer().canvasNodes.length"
+    (previewDslRequested)="openDslPreview()" />
 
-  <main class="workspace">
+  <main class="workspace" [style.grid-template-columns]="workspaceColumns()">
     <app-composer-palette
       class="workspace__palette"
       [palette]="composer().palette" />
+
+    <div
+      class="workspace__resizer"
+      aria-hidden="true"
+      (mousedown)="startResize('palette', $event)"></div>
 
     <app-composer-canvas
       class="workspace__canvas"
@@ -17,11 +23,52 @@
       (nodeDropped)="onNodeDropped($event)"
       (nodeMoved)="onNodeMoved($event)" />
 
+    <div
+      class="workspace__resizer"
+      aria-hidden="true"
+      (mousedown)="startResize('properties', $event)"></div>
+
     <app-composer-properties
       class="workspace__properties"
       [selectedNode]="selectedNode()"
-      [dslPreview]="semanticPreview()"
-      [validationPreview]="validationPreview()"
-      (basicPropertyChanged)="onBasicPropertyChanged($event)" />
+      (basicPropertyChanged)="onBasicPropertyChanged($event)"
+      (promptChanged)="onPromptChanged($event)"
+      (validateRequested)="onValidateRequested($event)" />
   </main>
+
+  <div
+    *ngIf="isDslPreviewOpen()"
+    class="dsl-modal-backdrop"
+    (click)="closeDslPreview()">
+    <section
+      class="dsl-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Workflow semantic projection"
+      (click)="$event.stopPropagation()">
+      <header class="dsl-modal__header">
+        <div>
+          <p class="dsl-modal__eyebrow">Preview DSL</p>
+          <h2>Application Semantic Projection</h2>
+        </div>
+        <button type="button" class="dsl-modal__close" (click)="closeDslPreview()">Close</button>
+      </header>
+
+      <section class="dsl-modal__section">
+        <header>
+          <h3>Semantic DSL</h3>
+          <span>Whole application</span>
+        </header>
+        <pre>{{ semanticPreview() }}</pre>
+      </section>
+
+      <section class="dsl-modal__section">
+        <header>
+          <h3>Static Validation</h3>
+          <span>Workflow-wide constraints</span>
+        </header>
+        <pre>{{ validationPreview() }}</pre>
+      </section>
+    </section>
+  </div>
 </div>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-composer-toolbar',
@@ -10,4 +10,9 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 export class ComposerToolbarComponent {
   @Input({ required: true }) modelName = '';
   @Input({ required: true }) nodeCount = 0;
+  @Output() previewDslRequested = new EventEmitter<void>();
+
+  onPreviewDslClick(): void {
+    this.previewDslRequested.emit();
+  }
 }

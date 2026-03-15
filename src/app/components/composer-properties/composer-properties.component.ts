@@ -12,13 +12,16 @@ import { CanvasNode } from '../../models/composer.models';
 })
 export class ComposerPropertiesComponent {
   @Input() selectedNode: CanvasNode | null = null;
-  @Input({ required: true }) dslPreview = '';
-  @Input({ required: true }) validationPreview = '';
   @Output() basicPropertyChanged = new EventEmitter<{
     nodeId: string;
     field: 'name' | 'label' | 'description' | 'type';
     value: string;
   }>();
+  @Output() promptChanged = new EventEmitter<{
+    nodeId: string;
+    value: string;
+  }>();
+  @Output() validateRequested = new EventEmitter<string>();
 
   onBasicFieldInput(
     field: 'name' | 'label' | 'description' | 'type',
@@ -34,5 +37,24 @@ export class ComposerPropertiesComponent {
       field,
       value
     });
+  }
+
+  onPromptInput(event: Event): void {
+    if (!this.selectedNode) {
+      return;
+    }
+
+    this.promptChanged.emit({
+      nodeId: this.selectedNode.id,
+      value: (event.target as HTMLTextAreaElement).value
+    });
+  }
+
+  onValidateClick(): void {
+    if (!this.selectedNode) {
+      return;
+    }
+
+    this.validateRequested.emit(this.selectedNode.id);
   }
 }

@@ -2,13 +2,19 @@ export type PaletteCategory =
   | 'ui-elements'
   | 'logic'
   | 'data'
-  | 'workflow'
-  | 'security'
-  | 'integration';
+  | 'backend';
+
+export type ComposerNodeType =
+  | 'entity'
+  | 'page'
+  | 'service'
+  | 'endpoint'
+  | 'action'
+  | 'condition';
 
 export interface PaletteItem {
   id: string;
-  type: string;
+  type: ComposerNodeType;
   category: PaletteCategory;
   label: string;
   description: string;
@@ -25,11 +31,14 @@ export interface CanvasNodeProperty {
 
 export interface CanvasNode {
   id: string;
-  type: string;
+  type: ComposerNodeType;
   category: PaletteCategory;
   name: string;
   label: string;
   description: string;
+  prompt: string;
+  validatedSemanticCode: string;
+  validationState: 'unvalidated' | 'validated' | 'invalid';
   position: {
     x: number;
     y: number;

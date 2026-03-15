@@ -3,72 +3,6 @@ import { ComposerMockModel } from '../models/composer.models';
 export const COMPOSER_MOCK_MODEL: ComposerMockModel = {
   palette: [
     {
-      id: 'ui-elements',
-      label: 'UI Elements',
-      items: [
-        {
-          id: 'page',
-          type: 'page',
-          category: 'ui-elements',
-          label: 'Page',
-          description: 'Top-level application view or route projection.',
-          icon: 'P',
-          accent: 'accent-ui'
-        },
-        {
-          id: 'form',
-          type: 'form',
-          category: 'ui-elements',
-          label: 'Form',
-          description: 'Structured user input contract.',
-          icon: 'F',
-          accent: 'accent-ui'
-        },
-        {
-          id: 'table',
-          type: 'table',
-          category: 'ui-elements',
-          label: 'Table',
-          description: 'Structured tabular data projection.',
-          icon: 'T',
-          accent: 'accent-ui'
-        }
-      ]
-    },
-    {
-      id: 'logic',
-      label: 'Logic',
-      items: [
-        {
-          id: 'validation',
-          type: 'validation',
-          category: 'logic',
-          label: 'Validation',
-          description: 'Static or runtime semantic rule evaluation.',
-          icon: 'V',
-          accent: 'accent-logic'
-        },
-        {
-          id: 'condition',
-          type: 'condition',
-          category: 'logic',
-          label: 'Condition',
-          description: 'Decision point over semantic state.',
-          icon: 'C',
-          accent: 'accent-logic'
-        },
-        {
-          id: 'mapping',
-          type: 'mapping',
-          category: 'logic',
-          label: 'Mapping',
-          description: 'Data or contract transformation.',
-          icon: 'Mp',
-          accent: 'accent-logic'
-        }
-      ]
-    },
-    {
       id: 'data',
       label: 'Data',
       items: [
@@ -77,122 +11,77 @@ export const COMPOSER_MOCK_MODEL: ComposerMockModel = {
           type: 'entity',
           category: 'data',
           label: 'Entity',
-          description: 'Domain model declaration.',
+          description: 'Backend domain model persisted by Spring Boot.',
           icon: 'E',
-          accent: 'accent-data'
-        },
-        {
-          id: 'api-source',
-          type: 'apiSource',
-          category: 'data',
-          label: 'API Source',
-          description: 'External data source declaration.',
-          icon: 'API',
           accent: 'accent-data'
         }
       ]
     },
     {
-      id: 'workflow',
-      label: 'Workflow',
+      id: 'ui-elements',
+      label: 'Frontend',
       items: [
         {
-          id: 'start',
-          type: 'start',
-          category: 'workflow',
-          label: 'Start',
-          description: 'Workflow entry point.',
+          id: 'page',
+          type: 'page',
+          category: 'ui-elements',
+          label: 'Page',
+          description: 'Angular route or screen.',
+          icon: 'P',
+          accent: 'accent-ui'
+        },
+        {
+          id: 'action',
+          type: 'action',
+          category: 'ui-elements',
+          label: 'Action',
+          description: 'User interaction or page-level command.',
+          icon: 'A',
+          accent: 'accent-ui'
+        }
+      ]
+    },
+    {
+      id: 'backend',
+      label: 'Backend',
+      items: [
+        {
+          id: 'service',
+          type: 'service',
+          category: 'backend',
+          label: 'Service',
+          description: 'Spring Boot application service.',
           icon: 'S',
-          accent: 'accent-workflow'
+          accent: 'accent-backend'
         },
         {
-          id: 'task',
-          type: 'task',
-          category: 'workflow',
-          label: 'Task',
-          description: 'Executable semantic action.',
-          icon: 'Tk',
-          accent: 'accent-workflow'
-        },
-        {
-          id: 'approval',
-          type: 'approval',
-          category: 'workflow',
-          label: 'Approval',
-          description: 'Authorization-controlled progression.',
-          icon: 'Ap',
-          accent: 'accent-workflow'
-        },
-        {
-          id: 'notification',
-          type: 'notification',
-          category: 'workflow',
-          label: 'Notification',
-          description: 'Semantic notification emission.',
-          icon: 'N',
-          accent: 'accent-workflow'
-        },
-        {
-          id: 'end',
-          type: 'end',
-          category: 'workflow',
-          label: 'End',
-          description: 'Workflow termination.',
-          icon: 'E',
-          accent: 'accent-workflow'
+          id: 'endpoint',
+          type: 'endpoint',
+          category: 'backend',
+          label: 'Endpoint',
+          description: 'REST endpoint exposed by Spring Boot.',
+          icon: 'EP',
+          accent: 'accent-backend'
         }
       ]
     },
     {
-      id: 'security',
-      label: 'Security',
+      id: 'logic',
+      label: 'Logic',
       items: [
         {
-          id: 'role',
-          type: 'role',
-          category: 'security',
-          label: 'Role',
-          description: 'Security identity declaration.',
-          icon: 'R',
-          accent: 'accent-security'
-        },
-        {
-          id: 'policy',
-          type: 'policy',
-          category: 'security',
-          label: 'Policy',
-          description: 'Governance and pricing policy declaration.',
-          icon: 'Po',
-          accent: 'accent-security'
-        }
-      ]
-    },
-    {
-      id: 'integration',
-      label: 'Integration',
-      items: [
-        {
-          id: 'rest-call',
-          type: 'restCall',
-          category: 'integration',
-          label: 'REST Call',
-          description: 'HTTP integration operation.',
-          icon: 'Re',
-          accent: 'accent-integration'
-        },
-        {
-          id: 'webhook',
-          type: 'webhook',
-          category: 'integration',
-          label: 'Webhook',
-          description: 'Webhook integration operation.',
-          icon: 'Wh',
-          accent: 'accent-integration'
+          id: 'condition',
+          type: 'condition',
+          category: 'logic',
+          label: 'Condition',
+          description: 'Guard or conditional branch in the application flow.',
+          icon: 'C',
+          accent: 'accent-logic'
         }
       ]
     }
   ],
-  selectedNodeId: 'node-page-checkout',
+  selectedNodeId: 'node-page-catalog',
   canvasNodes: [
     {
       id: 'node-entity-product',
@@ -200,12 +89,18 @@ export const COMPOSER_MOCK_MODEL: ComposerMockModel = {
       category: 'data',
       name: 'product',
       label: 'Product',
-      description: 'Catalog product with price, stock, and discount fields.',
-      position: { x: 64, y: 56 },
-      size: { width: 180, height: 92 },
+      description: 'Represents items displayed in the storefront and managed by sales.',
+      prompt: 'Create a backend entity Product with fields id, sku, name, price and discount.',
+      validatedSemanticCode: `entity product {
+  label: "Product"
+  intent: "Create a backend entity Product with fields id, sku, name, price and discount."
+}`,
+      validationState: 'validated',
+      position: { x: 72, y: 72 },
+      size: { width: 186, height: 98 },
       status: 'configured',
       properties: [
-        { key: 'attributes', label: 'Attributes', value: 'sku,name,price,discount', group: 'general' }
+        { key: 'fields', label: 'Fields', value: 'id,sku,name,price,discount', group: 'general' }
       ]
     },
     {
@@ -214,84 +109,18 @@ export const COMPOSER_MOCK_MODEL: ComposerMockModel = {
       category: 'data',
       name: 'cart',
       label: 'Cart',
-      description: 'Shopping cart aggregate containing selected items.',
-      position: { x: 314, y: 56 },
-      size: { width: 170, height: 92 },
+      description: 'Holds the customer cart aggregate before checkout.',
+      prompt: 'Create a backend entity Cart with fields id, userId, items and totalAmount.',
+      validatedSemanticCode: `entity cart {
+  label: "Cart"
+  intent: "Create a backend entity Cart with fields id, userId, items and totalAmount."
+}`,
+      validationState: 'validated',
+      position: { x: 324, y: 72 },
+      size: { width: 176, height: 98 },
       status: 'configured',
       properties: [
-        { key: 'attributes', label: 'Attributes', value: 'id,items,total', group: 'general' }
-      ]
-    },
-    {
-      id: 'node-entity-order',
-      type: 'entity',
-      category: 'data',
-      name: 'order',
-      label: 'Order',
-      description: 'Completed purchase order with payment and shipment state.',
-      position: { x: 564, y: 56 },
-      size: { width: 170, height: 92 },
-      status: 'configured',
-      properties: [
-        { key: 'attributes', label: 'Attributes', value: 'id,customer,total,status', group: 'general' }
-      ]
-    },
-    {
-      id: 'node-role-customer',
-      type: 'role',
-      category: 'security',
-      name: 'customerRole',
-      label: 'Customer',
-      description: 'Role for storefront users purchasing products.',
-      position: { x: 820, y: 56 },
-      size: { width: 168, height: 92 },
-      status: 'configured',
-      properties: [
-        { key: 'capabilities', label: 'Capabilities', value: 'browse,cart,checkout', group: 'security' }
-      ]
-    },
-    {
-      id: 'node-sales-manager',
-      type: 'role',
-      category: 'security',
-      name: 'salesManagerRole',
-      label: 'Sales Manager',
-      description: 'Administrative role managing catalog pricing and discounts.',
-      position: { x: 1078, y: 56 },
-      size: { width: 192, height: 92 },
-      status: 'configured',
-      properties: [
-        { key: 'capabilities', label: 'Capabilities', value: 'add,remove,price,discount', group: 'security' }
-      ]
-    },
-    {
-      id: 'node-policy-discount',
-      type: 'policy',
-      category: 'security',
-      name: 'discountPolicy',
-      label: 'Discount Policy',
-      description: 'Pricing governance policy defining discount boundaries.',
-      position: { x: 1362, y: 56 },
-      size: { width: 184, height: 92 },
-      status: 'configured',
-      properties: [
-        { key: 'rule', label: 'Rule', value: 'maxDiscount <= 30%', group: 'security' }
-      ]
-    },
-
-    {
-      id: 'node-start-customer',
-      type: 'start',
-      category: 'workflow',
-      name: 'startCustomerPurchase',
-      label: 'Start',
-      description: 'Entry point for the customer shopping journey.',
-      position: { x: 76, y: 224 },
-      size: { width: 150, height: 88 },
-      status: 'configured',
-      properties: [
-        { key: 'workflowName', label: 'Workflow Name', value: 'customerPurchaseFlow', group: 'general' },
-        { key: 'workflowLabel', label: 'Workflow Label', value: 'Customer Purchase Flow', group: 'general' }
+        { key: 'fields', label: 'Fields', value: 'id,userId,items,totalAmount', group: 'general' }
       ]
     },
     {
@@ -300,9 +129,16 @@ export const COMPOSER_MOCK_MODEL: ComposerMockModel = {
       category: 'ui-elements',
       name: 'loginPage',
       label: 'Login Page',
-      description: 'Customer authentication page.',
-      position: { x: 278, y: 214 },
-      size: { width: 176, height: 96 },
+      description: 'Angular login page for customers and sales managers.',
+      prompt: 'Create an Angular login page at route /login with email and password fields.',
+      validatedSemanticCode: `page loginPage {
+  route: "Create an Angular login page at route /login with email and password fields."
+  label: "Login Page"
+  purpose: "Create an Angular login page at route /login with email and password fields."
+}`,
+      validationState: 'validated',
+      position: { x: 604, y: 72 },
+      size: { width: 190, height: 98 },
       status: 'configured',
       properties: [
         { key: 'route', label: 'Route', value: '/login', group: 'general' }
@@ -312,248 +148,220 @@ export const COMPOSER_MOCK_MODEL: ComposerMockModel = {
       id: 'node-page-catalog',
       type: 'page',
       category: 'ui-elements',
-      name: 'productCatalogPage',
-      label: 'Product Catalog',
-      description: 'One-page storefront where the customer browses products.',
-      position: { x: 532, y: 214 },
-      size: { width: 188, height: 96 },
+      name: 'catalogPage',
+      label: 'Catalog Page',
+      description: 'Angular product catalog page for storefront customers.',
+      prompt: 'Create an Angular catalog page at route /catalog showing product cards and add to cart buttons.',
+      validatedSemanticCode: `page catalogPage {
+  route: "Create an Angular catalog page at route /catalog showing product cards and add to cart buttons."
+  label: "Catalog Page"
+  purpose: "Create an Angular catalog page at route /catalog showing product cards and add to cart buttons."
+}`,
+      validationState: 'validated',
+      position: { x: 876, y: 72 },
+      size: { width: 196, height: 98 },
       status: 'configured',
       properties: [
         { key: 'route', label: 'Route', value: '/catalog', group: 'general' }
       ]
     },
     {
-      id: 'node-task-cart',
-      type: 'task',
-      category: 'workflow',
-      name: 'addProductsToCart',
-      label: 'Add To Cart',
-      description: 'User selects products and adds them to the cart aggregate.',
-      position: { x: 804, y: 214 },
-      size: { width: 176, height: 96 },
-      status: 'configured',
-      properties: [
-        { key: 'entityRef', label: 'Entity Ref', value: 'entity-node-entity-cart', group: 'binding' }
-      ]
-    },
-    {
-      id: 'node-page-checkout',
-      type: 'page',
+      id: 'node-action-add-to-cart',
+      type: 'action',
       category: 'ui-elements',
-      name: 'checkoutPage',
-      label: 'Checkout Page',
-      description: 'Checkout page where the user reviews cart and submits payment.',
-      position: { x: 1076, y: 214 },
-      size: { width: 182, height: 96 },
+      name: 'addToCart',
+      label: 'Add To Cart',
+      description: 'Frontend action for adding the selected product to the cart.',
+      prompt: 'When the user clicks add to cart, call the backend endpoint to append the product to the active cart and refresh cart state.',
+      validatedSemanticCode: `action addToCart {
+  label: "Add To Cart"
+  intent: "When the user clicks add to cart, call the backend endpoint to append the product to the active cart and refresh cart state."
+}`,
+      validationState: 'validated',
+      position: { x: 1160, y: 72 },
+      size: { width: 196, height: 98 },
       status: 'configured',
       properties: [
-        { key: 'route', label: 'Route', value: '/checkout', group: 'general' }
+        { key: 'trigger', label: 'Trigger', value: 'Button click', group: 'behavior' }
       ]
     },
     {
-      id: 'node-validation-checkout',
-      type: 'validation',
+      id: 'node-endpoint-cart',
+      type: 'endpoint',
+      category: 'backend',
+      name: 'cartItemsEndpoint',
+      label: 'Cart Items Endpoint',
+      description: 'REST endpoint for adding a product to the cart.',
+      prompt: 'Expose a Spring Boot POST endpoint /api/cart/items that receives productId and quantity and returns the updated cart.',
+      validatedSemanticCode: `endpoint cartItemsEndpoint {
+  method: "POST"
+  path: "Expose a Spring Boot POST endpoint /api/cart/items that receives productId and quantity and returns the updated cart."
+  contract: "Expose a Spring Boot POST endpoint /api/cart/items that receives productId and quantity and returns the updated cart."
+}`,
+      validationState: 'validated',
+      position: { x: 1448, y: 72 },
+      size: { width: 212, height: 98 },
+      status: 'configured',
+      properties: [
+        { key: 'path', label: 'Path', value: '/api/cart/items', group: 'integration' }
+      ]
+    },
+    {
+      id: 'node-service-cart',
+      type: 'service',
+      category: 'backend',
+      name: 'cartService',
+      label: 'Cart Service',
+      description: 'Spring Boot service handling cart operations.',
+      prompt: 'Implement a Spring Boot service that loads the active cart, adds a product item, recalculates totals and persists the cart.',
+      validatedSemanticCode: `service cartService {
+  layer: "spring-service"
+  responsibility: "Implement a Spring Boot service that loads the active cart, adds a product item, recalculates totals and persists the cart."
+}`,
+      validationState: 'validated',
+      position: { x: 1764, y: 72 },
+      size: { width: 204, height: 98 },
+      status: 'configured',
+      properties: [
+        { key: 'layer', label: 'Layer', value: 'application', group: 'behavior' }
+      ]
+    },
+    {
+      id: 'node-condition-cart-not-empty',
+      type: 'condition',
       category: 'logic',
-      name: 'checkoutValidation',
-      label: 'Checkout Validation',
-      description: 'Validates cart content, customer data, and payment preconditions.',
-      position: { x: 1354, y: 214 },
-      size: { width: 188, height: 96 },
+      name: 'cartNotEmpty',
+      label: 'Cart Not Empty',
+      description: 'Guard ensuring checkout is only available when items are present.',
+      prompt: 'Allow checkout only when the current cart contains at least one item.',
+      validatedSemanticCode: `condition cartNotEmpty {
+  expression: "Allow checkout only when the current cart contains at least one item."
+}`,
+      validationState: 'validated',
+      position: { x: 2068, y: 72 },
+      size: { width: 206, height: 98 },
       status: 'configured',
       properties: [
-        { key: 'ruleSet', label: 'Rule Set', value: 'CheckoutRules', group: 'behavior' }
-      ]
-    },
-    {
-      id: 'node-rest-payment',
-      type: 'restCall',
-      category: 'integration',
-      name: 'paymentGatewayCall',
-      label: 'Payment Gateway',
-      description: 'Invokes backend payment processing through the payment gateway API.',
-      position: { x: 1636, y: 214 },
-      size: { width: 186, height: 96 },
-      status: 'configured',
-      properties: [
-        { key: 'endpoint', label: 'Endpoint', value: 'POST /api/payments/checkout', group: 'integration' },
-        { key: 'method', label: 'Method', value: 'POST', group: 'integration' }
-      ]
-    },
-    {
-      id: 'node-notification-order',
-      type: 'notification',
-      category: 'workflow',
-      name: 'orderConfirmationNotice',
-      label: 'Order Confirmation',
-      description: 'Sends the final order confirmation after successful payment.',
-      position: { x: 1918, y: 214 },
-      size: { width: 196, height: 96 },
-      status: 'configured',
-      properties: [
-        { key: 'channel', label: 'Channel', value: 'Email', group: 'behavior' }
-      ]
-    },
-    {
-      id: 'node-end-customer',
-      type: 'end',
-      category: 'workflow',
-      name: 'purchaseCompleted',
-      label: 'End',
-      description: 'Marks the completion of the customer purchase flow.',
-      position: { x: 2208, y: 224 },
-      size: { width: 146, height: 88 },
-      status: 'configured',
-      properties: [
-        { key: 'result', label: 'Result', value: 'Order placed', group: 'general' }
+        { key: 'expression', label: 'Expression', value: 'cart.items.size > 0', group: 'behavior' }
       ]
     },
 
     {
-      id: 'node-start-admin',
-      type: 'start',
-      category: 'workflow',
-      name: 'startAdministration',
-      label: 'Start',
-      description: 'Entry point for the sales administration journey.',
-      position: { x: 76, y: 438 },
-      size: { width: 150, height: 88 },
-      status: 'configured',
-      properties: [
-        { key: 'workflowName', label: 'Workflow Name', value: 'productAdministrationFlow', group: 'general' },
-        { key: 'workflowLabel', label: 'Workflow Label', value: 'Product Administration Flow', group: 'general' }
-      ]
-    },
-    {
-      id: 'node-page-admin-login',
+      id: 'node-page-admin',
       type: 'page',
       category: 'ui-elements',
-      name: 'adminLoginPage',
-      label: 'Admin Login',
-      description: 'Sales Manager authentication entry page.',
-      position: { x: 278, y: 428 },
-      size: { width: 176, height: 96 },
-      status: 'configured',
-      properties: [
-        { key: 'route', label: 'Route', value: '/admin/login', group: 'general' }
-      ]
-    },
-    {
-      id: 'node-page-admin-products',
-      type: 'page',
-      category: 'ui-elements',
-      name: 'adminProductPage',
-      label: 'Admin Products',
-      description: 'Administration page where products, prices, and discounts are maintained.',
-      position: { x: 532, y: 428 },
-      size: { width: 188, height: 96 },
+      name: 'adminProductsPage',
+      label: 'Admin Products Page',
+      description: 'Angular administration page for maintaining products.',
+      prompt: 'Create an Angular admin products page at route /admin/products with product list, create form and price update actions.',
+      validatedSemanticCode: `page adminProductsPage {
+  route: "Create an Angular admin products page at route /admin/products with product list, create form and price update actions."
+  label: "Admin Products Page"
+  purpose: "Create an Angular admin products page at route /admin/products with product list, create form and price update actions."
+}`,
+      validationState: 'validated',
+      position: { x: 604, y: 292 },
+      size: { width: 208, height: 98 },
       status: 'configured',
       properties: [
         { key: 'route', label: 'Route', value: '/admin/products', group: 'general' }
       ]
     },
     {
-      id: 'node-task-manage-products',
-      type: 'task',
-      category: 'workflow',
-      name: 'manageProducts',
-      label: 'Manage Products',
-      description: 'Sales Manager adds or removes products from the catalog.',
-      position: { x: 804, y: 428 },
-      size: { width: 176, height: 96 },
+      id: 'node-action-update-pricing',
+      type: 'action',
+      category: 'ui-elements',
+      name: 'updatePricing',
+      label: 'Update Pricing',
+      description: 'Frontend action for changing product price and discount.',
+      prompt: 'When the sales manager edits a product, submit the new price and discount values to the backend and refresh the product table.',
+      validatedSemanticCode: `action updatePricing {
+  label: "Update Pricing"
+  intent: "When the sales manager edits a product, submit the new price and discount values to the backend and refresh the product table."
+}`,
+      validationState: 'validated',
+      position: { x: 924, y: 292 },
+      size: { width: 204, height: 98 },
       status: 'configured',
       properties: [
-        { key: 'entityRef', label: 'Entity Ref', value: 'entity-node-entity-product', group: 'binding' }
+        { key: 'trigger', label: 'Trigger', value: 'Form submit', group: 'behavior' }
       ]
     },
     {
-      id: 'node-task-pricing',
-      type: 'task',
-      category: 'workflow',
-      name: 'setPricesAndDiscounts',
-      label: 'Set Price & Discounts',
-      description: 'Sales Manager sets product prices and applies discount rules.',
-      position: { x: 1076, y: 428 },
-      size: { width: 188, height: 96 },
+      id: 'node-endpoint-admin-products',
+      type: 'endpoint',
+      category: 'backend',
+      name: 'adminProductsEndpoint',
+      label: 'Admin Products Endpoint',
+      description: 'REST endpoint for product maintenance actions.',
+      prompt: 'Expose a Spring Boot PUT endpoint /api/admin/products/{id} for updating product price and discount.',
+      validatedSemanticCode: `endpoint adminProductsEndpoint {
+  method: "PUT"
+  path: "Expose a Spring Boot PUT endpoint /api/admin/products/{id} for updating product price and discount."
+  contract: "Expose a Spring Boot PUT endpoint /api/admin/products/{id} for updating product price and discount."
+}`,
+      validationState: 'validated',
+      position: { x: 1248, y: 292 },
+      size: { width: 212, height: 98 },
       status: 'configured',
       properties: [
-        { key: 'policyRef', label: 'Policy Ref', value: 'policy-node-policy-discount', group: 'security' }
+        { key: 'path', label: 'Path', value: '/api/admin/products/{id}', group: 'integration' }
       ]
     },
     {
-      id: 'node-validation-admin',
-      type: 'validation',
+      id: 'node-service-product-admin',
+      type: 'service',
+      category: 'backend',
+      name: 'productAdminService',
+      label: 'Product Admin Service',
+      description: 'Spring Boot service for product creation, deletion, pricing and discounts.',
+      prompt: 'Implement a Spring Boot service that creates, removes and updates products including price and discount changes.',
+      validatedSemanticCode: `service productAdminService {
+  layer: "spring-service"
+  responsibility: "Implement a Spring Boot service that creates, removes and updates products including price and discount changes."
+}`,
+      validationState: 'validated',
+      position: { x: 1568, y: 292 },
+      size: { width: 214, height: 98 },
+      status: 'configured',
+      properties: [
+        { key: 'layer', label: 'Layer', value: 'application', group: 'behavior' }
+      ]
+    },
+    {
+      id: 'node-condition-manager-role',
+      type: 'condition',
       category: 'logic',
-      name: 'catalogValidation',
-      label: 'Catalog Validation',
-      description: 'Validates pricing limits and discount policy before publication.',
-      position: { x: 1354, y: 428 },
-      size: { width: 186, height: 96 },
+      name: 'userIsSalesManager',
+      label: 'User Is Sales Manager',
+      description: 'Guard ensuring product maintenance actions require the sales manager role.',
+      prompt: 'Allow product administration actions only if the authenticated user has the Sales Manager role.',
+      validatedSemanticCode: `condition userIsSalesManager {
+  expression: "Allow product administration actions only if the authenticated user has the Sales Manager role."
+}`,
+      validationState: 'validated',
+      position: { x: 1898, y: 292 },
+      size: { width: 212, height: 98 },
       status: 'configured',
       properties: [
-        { key: 'ruleSet', label: 'Rule Set', value: 'CatalogRules', group: 'behavior' }
-      ]
-    },
-    {
-      id: 'node-rest-catalog',
-      type: 'restCall',
-      category: 'integration',
-      name: 'catalogServiceUpdate',
-      label: 'Catalog Service',
-      description: 'Publishes product changes to the backend catalog service.',
-      position: { x: 1636, y: 428 },
-      size: { width: 184, height: 96 },
-      status: 'configured',
-      properties: [
-        { key: 'endpoint', label: 'Endpoint', value: 'PUT /api/admin/catalog', group: 'integration' },
-        { key: 'method', label: 'Method', value: 'PUT', group: 'integration' }
-      ]
-    },
-    {
-      id: 'node-notification-admin',
-      type: 'notification',
-      category: 'workflow',
-      name: 'catalogUpdatedNotice',
-      label: 'Catalog Updated',
-      description: 'Confirms that product updates have been propagated.',
-      position: { x: 1918, y: 428 },
-      size: { width: 190, height: 96 },
-      status: 'configured',
-      properties: [
-        { key: 'channel', label: 'Channel', value: 'Internal', group: 'behavior' }
-      ]
-    },
-    {
-      id: 'node-end-admin',
-      type: 'end',
-      category: 'workflow',
-      name: 'administrationCompleted',
-      label: 'End',
-      description: 'Marks the completion of the product administration flow.',
-      position: { x: 2208, y: 438 },
-      size: { width: 146, height: 88 },
-      status: 'configured',
-      properties: [
-        { key: 'result', label: 'Result', value: 'Catalog published', group: 'general' }
+        { key: 'expression', label: 'Expression', value: 'user.roles contains SALES_MANAGER', group: 'behavior' }
       ]
     }
   ],
   connections: [
-    { id: 'conn-customer-1', sourceNodeId: 'node-start-customer', targetNodeId: 'node-page-login', label: 'authenticate' },
-    { id: 'conn-customer-2', sourceNodeId: 'node-page-login', targetNodeId: 'node-page-catalog', label: 'browse' },
-    { id: 'conn-customer-3', sourceNodeId: 'node-page-catalog', targetNodeId: 'node-task-cart', label: 'select' },
-    { id: 'conn-customer-4', sourceNodeId: 'node-task-cart', targetNodeId: 'node-page-checkout', label: 'checkout' },
-    { id: 'conn-customer-5', sourceNodeId: 'node-page-checkout', targetNodeId: 'node-validation-checkout', label: 'validate' },
-    { id: 'conn-customer-6', sourceNodeId: 'node-validation-checkout', targetNodeId: 'node-rest-payment', label: 'pay' },
-    { id: 'conn-customer-7', sourceNodeId: 'node-rest-payment', targetNodeId: 'node-notification-order', label: 'confirm' },
-    { id: 'conn-customer-8', sourceNodeId: 'node-notification-order', targetNodeId: 'node-end-customer', label: 'complete' },
+    { id: 'conn-catalog-product', sourceNodeId: 'node-page-catalog', targetNodeId: 'node-entity-product', label: 'binds' },
+    { id: 'conn-login-catalog', sourceNodeId: 'node-page-login', targetNodeId: 'node-page-catalog', label: 'navigates' },
+    { id: 'conn-catalog-add', sourceNodeId: 'node-page-catalog', targetNodeId: 'node-action-add-to-cart', label: 'triggers' },
+    { id: 'conn-add-endpoint', sourceNodeId: 'node-action-add-to-cart', targetNodeId: 'node-endpoint-cart', label: 'calls' },
+    { id: 'conn-endpoint-service', sourceNodeId: 'node-endpoint-cart', targetNodeId: 'node-service-cart', label: 'delegates' },
+    { id: 'conn-service-cart', sourceNodeId: 'node-service-cart', targetNodeId: 'node-entity-cart', label: 'persists' },
+    { id: 'conn-cart-checkout', sourceNodeId: 'node-entity-cart', targetNodeId: 'node-condition-cart-not-empty', label: 'guards' },
 
-    { id: 'conn-admin-1', sourceNodeId: 'node-start-admin', targetNodeId: 'node-page-admin-login', label: 'authenticate' },
-    { id: 'conn-admin-2', sourceNodeId: 'node-page-admin-login', targetNodeId: 'node-page-admin-products', label: 'open' },
-    { id: 'conn-admin-3', sourceNodeId: 'node-page-admin-products', targetNodeId: 'node-task-manage-products', label: 'manage' },
-    { id: 'conn-admin-4', sourceNodeId: 'node-task-manage-products', targetNodeId: 'node-task-pricing', label: 'price' },
-    { id: 'conn-admin-5', sourceNodeId: 'node-task-pricing', targetNodeId: 'node-validation-admin', label: 'validate' },
-    { id: 'conn-admin-6', sourceNodeId: 'node-validation-admin', targetNodeId: 'node-rest-catalog', label: 'publish' },
-    { id: 'conn-admin-7', sourceNodeId: 'node-rest-catalog', targetNodeId: 'node-notification-admin', label: 'notify' },
-    { id: 'conn-admin-8', sourceNodeId: 'node-notification-admin', targetNodeId: 'node-end-admin', label: 'complete' }
+    { id: 'conn-admin-page-product', sourceNodeId: 'node-page-admin', targetNodeId: 'node-entity-product', label: 'manages' },
+    { id: 'conn-admin-action', sourceNodeId: 'node-page-admin', targetNodeId: 'node-action-update-pricing', label: 'triggers' },
+    { id: 'conn-action-endpoint-admin', sourceNodeId: 'node-action-update-pricing', targetNodeId: 'node-endpoint-admin-products', label: 'calls' },
+    { id: 'conn-endpoint-service-admin', sourceNodeId: 'node-endpoint-admin-products', targetNodeId: 'node-service-product-admin', label: 'delegates' },
+    { id: 'conn-service-product', sourceNodeId: 'node-service-product-admin', targetNodeId: 'node-entity-product', label: 'updates' },
+    { id: 'conn-condition-admin', sourceNodeId: 'node-condition-manager-role', targetNodeId: 'node-action-update-pricing', label: 'authorizes' }
   ]
 };

@@ -18,8 +18,8 @@
       <strong>{{ node.type }}</strong>
     </div>
     <div>
-      <span class="properties__label">Category</span>
-      <strong>{{ node.category }}</strong>
+      <span class="properties__label">Validation State</span>
+      <strong>{{ node.validationState }}</strong>
     </div>
   </section>
 
@@ -71,27 +71,36 @@
     </div>
   </section>
 
-  <footer class="properties__footer">
-    <button type="button">Reset</button>
-    <button type="button" class="properties__primary">Apply Changes</button>
-  </footer>
+  <section class="properties__section">
+    <header>
+      <h3>Prompt</h3>
+      <span>Natural language intent</span>
+    </header>
+
+    <label class="properties__full-width">
+      <span>Node Prompt</span>
+      <textarea
+        rows="6"
+        [value]="node.prompt"
+        (input)="onPromptInput($event)"
+        placeholder="Describe the exact full-stack behavior this node should generate."></textarea>
+    </label>
+
+    <div class="properties__actions">
+      <button type="button" class="properties__primary" (click)="onValidateClick()">
+        Validate
+      </button>
+    </div>
+  </section>
+
+  <section class="properties__section properties__preview">
+    <header>
+      <h3>Validated Semantic Code</h3>
+      <span>Node-local pseudo DSL</span>
+    </header>
+    <pre class="properties__code">{{ node.validatedSemanticCode || 'No validated semantic code yet.' }}</pre>
+  </section>
   </ng-container>
-
-  <section class="properties__section properties__preview">
-    <header>
-      <h3>Semantic Projection</h3>
-      <span>Canonical AST</span>
-    </header>
-    <pre>{{ dslPreview }}</pre>
-  </section>
-
-  <section class="properties__section properties__preview">
-    <header>
-      <h3>Validation</h3>
-      <span>Static constraints</span>
-    </header>
-    <pre>{{ validationPreview }}</pre>
-  </section>
 
   <ng-template #emptyState>
     <section class="properties__empty">
