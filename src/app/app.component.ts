@@ -11,6 +11,7 @@ import { ComposerProjectFileService } from './services/composer-project-file.ser
 import { SemanticDslRendererService } from './services/semantic-dsl-renderer.service';
 import { SemanticLinkRulesService } from './services/semantic-link-rules.service';
 import { NodeValidationService } from './services/node-validation.service';
+import { ProjectValidationService } from './services/project-validation.service';
 import { SemanticProjectionService } from './services/semantic-projection.service';
 
 @Component({
@@ -33,6 +34,7 @@ export class AppComponent {
   protected readonly modelName = signal('Ecommerce Reference Semantic Model');
   protected readonly composer = signal(COMPOSER_MOCK_MODEL);
   protected readonly isDslPreviewOpen = signal(false);
+  protected readonly isProjectValidationOpen = signal(false);
   protected readonly paletteWidth = signal(272);
   protected readonly propertiesWidth = signal(288);
   protected readonly semanticProjection = computed<SemanticProjectionResult>(() =>
@@ -62,6 +64,34 @@ export class AppComponent {
       .map((issue) => issue.elementId)
       .filter((elementId): elementId is string => !!elementId)
   );
+  protected readonly projectValidation = computed(() =>
+    this.projectValidationService.validate(
+      this.semanticProjection().ast,
+      this.semanticProjection().validationIssues
+    )
+  );
+  protected readonly projectValidationSummary = computed(() => {
+    const result = this.projectValidation();
+    return [
+      `Status: ${result.status.toUpperCase()}`,
+      `Syntax issues: ${result.syntaxIssues.length}`,
+      `Semantic issues: ${result.semanticIssues.length}`,
+      `Generation issues: ${result.generationIssues.length}`
+    ].join('\n');
+  });
+  protected readonly projectValidationDetails = computed(() => {
+    const result = this.projectValidation();
+    return [
+      'Syntax',
+      result.syntaxIssues.length > 0 ? this.formatIssues(result.syntaxIssues) : 'No syntax issues.',
+      '',
+      'Semantics',
+      result.semanticIssues.length > 0 ? this.formatIssues(result.semanticIssues) : 'No semantic issues.',
+      '',
+      'Generation',
+      result.generationIssues.length > 0 ? this.formatIssues(result.generationIssues) : 'No generation issues.'
+    ].join('\n');
+  });
   protected readonly workspaceColumns = computed(
     () => `${this.paletteWidth()}px 10px minmax(0, 1fr) 10px ${this.propertiesWidth()}px`
   );
@@ -73,6 +103,7 @@ export class AppComponent {
     private readonly semanticLinkRulesService: SemanticLinkRulesService,
     private readonly nodeValidationService: NodeValidationService,
     private readonly composerProjectFileService: ComposerProjectFileService,
+    private readonly projectValidationService: ProjectValidationService,
     private readonly semanticProjectionService: SemanticProjectionService
   ) {}
 
@@ -207,6 +238,10 @@ export class AppComponent {
     this.isDslPreviewOpen.set(true);
   }
 
+  protected openProjectValidation(): void {
+    this.isProjectValidationOpen.set(true);
+  }
+
   protected saveProject(): void {
     const payload = this.composerProjectFileService.serialize({
       version: 1,
@@ -257,6 +292,10 @@ export class AppComponent {
     this.isDslPreviewOpen.set(false);
   }
 
+  protected closeProjectValidation(): void {
+    this.isProjectValidationOpen.set(false);
+  }
+
   protected startResize(pane: 'palette' | 'properties', event: MouseEvent): void {
     event.preventDefault();
     this.resizingPane = pane;
@@ -290,6 +329,7 @@ export class AppComponent {
   @HostListener('window:keydown.escape')
   protected onEscapeKey(): void {
     this.closeDslPreview();
+    this.closeProjectValidation();
   }
 
   private createNodeFromPaletteItem(item: PaletteItem, position: { x: number; y: number }): CanvasNode {
@@ -375,5 +415,11 @@ export class AppComponent {
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '') || 'semantic-project';
+  }
+
+  private formatIssues(issues: SemanticProjectionResult['validationIssues']): string {
+    return issues
+      .map((issue) => `[${issue.severity.toUpperCase()}] ${issue.code}: ${issue.message}`)
+      .join('\n');
   }
 }

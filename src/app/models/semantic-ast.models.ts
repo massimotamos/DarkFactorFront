@@ -46,3 +46,10 @@ export interface AstValidationIssue {
   message: string;
   elementId?: string;
 }
+
+export interface ProjectValidationResult {
+  status: 'valid' | 'warning' | 'invalid';
+  syntaxIssues: AstValidationIssue[];
+  semanticIssues: AstValidationIssue[];
+  generationIssues: AstValidationIssue[];
+}

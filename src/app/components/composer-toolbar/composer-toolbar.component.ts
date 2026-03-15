@@ -10,9 +10,14 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 export class ComposerToolbarComponent {
   @Input({ required: true }) modelName = '';
   @Input({ required: true }) nodeCount = 0;
+  @Output() validateProjectRequested = new EventEmitter<void>();
   @Output() saveProjectRequested = new EventEmitter<void>();
   @Output() loadProjectRequested = new EventEmitter<void>();
   @Output() previewDslRequested = new EventEmitter<void>();
+
+  onValidateProjectClick(): void {
+    this.validateProjectRequested.emit();
+  }
 
   onSaveProjectClick(): void {
     this.saveProjectRequested.emit();

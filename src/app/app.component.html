@@ -2,6 +2,7 @@
   <app-composer-toolbar
     [modelName]="modelName()"
     [nodeCount]="composer().canvasNodes.length"
+    (validateProjectRequested)="openProjectValidation()"
     (saveProjectRequested)="saveProject()"
     (loadProjectRequested)="requestProjectLoad()"
     (previewDslRequested)="openDslPreview()" />
@@ -79,6 +80,42 @@
           <span>Workflow-wide constraints</span>
         </header>
         <pre>{{ validationPreview() }}</pre>
+      </section>
+    </section>
+  </div>
+
+  <div
+    *ngIf="isProjectValidationOpen()"
+    class="dsl-modal-backdrop"
+    (click)="closeProjectValidation()">
+    <section
+      class="dsl-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Project validation results"
+      (click)="$event.stopPropagation()">
+      <header class="dsl-modal__header">
+        <div>
+          <p class="dsl-modal__eyebrow">Validate Project</p>
+          <h2>Model Coherence And Code Generation Readiness</h2>
+        </div>
+        <button type="button" class="dsl-modal__close" (click)="closeProjectValidation()">Close</button>
+      </header>
+
+      <section class="dsl-modal__section">
+        <header>
+          <h3>Summary</h3>
+          <span>Overall assessment</span>
+        </header>
+        <pre>{{ projectValidationSummary() }}</pre>
+      </section>
+
+      <section class="dsl-modal__section">
+        <header>
+          <h3>Detailed Issues</h3>
+          <span>Syntax, semantics, and generation</span>
+        </header>
+        <pre>{{ projectValidationDetails() }}</pre>
       </section>
     </section>
   </div>
