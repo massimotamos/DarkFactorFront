@@ -1,0 +1,93 @@
+<aside class="properties">
+  <ng-container *ngIf="selectedNode as node; else emptyState">
+  <header class="panel-header">
+    <div>
+      <p class="panel-header__eyebrow">Inspector</p>
+      <h2>Properties</h2>
+    </div>
+    <span class="properties__status">{{ node.status }}</span>
+  </header>
+
+  <section class="properties__summary">
+    <div>
+      <span class="properties__label">Selected Node</span>
+      <strong>{{ node.label }}</strong>
+    </div>
+    <div>
+      <span class="properties__label">Semantic Type</span>
+      <strong>{{ node.type }}</strong>
+    </div>
+    <div>
+      <span class="properties__label">Category</span>
+      <strong>{{ node.category }}</strong>
+    </div>
+  </section>
+
+  <section class="properties__section">
+    <header>
+      <h3>Basic Properties</h3>
+      <span>In-memory edit</span>
+    </header>
+
+    <div class="properties__grid">
+      <label>
+        <span>Name</span>
+        <input [value]="node.name" (input)="onBasicFieldInput('name', $event)" />
+      </label>
+      <label>
+        <span>Node Type</span>
+        <input [value]="node.type" (input)="onBasicFieldInput('type', $event)" />
+      </label>
+      <label>
+        <span>Display Label</span>
+        <input [value]="node.label" (input)="onBasicFieldInput('label', $event)" />
+      </label>
+      <label>
+        <span>Category</span>
+        <input [value]="node.category" readonly />
+      </label>
+    </div>
+
+    <label class="properties__full-width">
+      <span>Description</span>
+      <textarea rows="4" [value]="node.description" (input)="onBasicFieldInput('description', $event)"></textarea>
+    </label>
+  </section>
+
+  <section class="properties__section">
+    <header>
+      <h3>Semantic Configuration</h3>
+      <span>{{ node.properties.length }} fields</span>
+    </header>
+
+    <div class="properties__list">
+      <article *ngFor="let property of node.properties">
+        <div>
+          <span class="properties__property-group">{{ property.group }}</span>
+          <strong>{{ property.label }}</strong>
+        </div>
+        <input [value]="property.value" />
+      </article>
+    </div>
+  </section>
+
+  <footer class="properties__footer">
+    <button type="button">Reset</button>
+    <button type="button" class="properties__primary">Apply Changes</button>
+  </footer>
+  </ng-container>
+
+  <section class="properties__section properties__preview">
+    <header>
+      <h3>DSL Preview</h3>
+      <span>Mock export</span>
+    </header>
+    <pre>{{ dslPreview }}</pre>
+  </section>
+
+  <ng-template #emptyState>
+    <section class="properties__empty">
+      <p>Select a node on the canvas to inspect and edit its semantic metadata.</p>
+    </section>
+  </ng-template>
+</aside>

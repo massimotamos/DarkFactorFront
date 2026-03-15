@@ -1,0 +1,202 @@
+.canvas {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-width: 0;
+  background:
+    radial-gradient(circle at top, rgba(14, 165, 233, 0.08), transparent 32%),
+    linear-gradient(180deg, #0f172a, #111827);
+}
+
+.canvas__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.canvas__eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #67e8f9;
+}
+
+.canvas__header h2 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 1rem;
+}
+
+.canvas__controls {
+  display: flex;
+  gap: 0.65rem;
+}
+
+.canvas__controls button {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 0.75rem;
+  background: rgba(30, 41, 59, 0.6);
+  color: #cbd5e1;
+}
+
+.canvas__surface {
+  position: relative;
+  overflow: hidden;
+  min-height: 38rem;
+  background-image:
+    linear-gradient(rgba(51, 65, 85, 0.28) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(51, 65, 85, 0.28) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.canvas__surface--drop-active {
+  box-shadow: inset 0 0 0 2px rgba(56, 189, 248, 0.4);
+}
+
+.canvas__connections {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.canvas__connection-path {
+  fill: none;
+  stroke: rgba(125, 211, 252, 0.7);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 8 6;
+  filter: drop-shadow(0 0 6px rgba(14, 165, 233, 0.18));
+}
+
+.canvas__connection-label {
+  fill: #bae6fd;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.canvas__guide {
+  position: absolute;
+  background: rgba(56, 189, 248, 0.16);
+}
+
+.canvas__guide--horizontal {
+  top: 9rem;
+  left: 0;
+  right: 0;
+  height: 1px;
+}
+
+.canvas__guide--vertical {
+  top: 0;
+  bottom: 0;
+  left: 12rem;
+  width: 1px;
+}
+
+.canvas-node {
+  position: absolute;
+  z-index: 1;
+  padding: 1rem;
+  border: 1px solid rgba(71, 85, 105, 0.86);
+  border-radius: 1rem;
+  background:
+    linear-gradient(180deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.98));
+  box-shadow: 0 18px 34px rgba(2, 6, 23, 0.34);
+  color: #e2e8f0;
+  cursor: grab;
+  user-select: none;
+}
+
+.canvas-node:active {
+  cursor: grabbing;
+}
+
+.canvas-node--selected {
+  border-color: rgba(56, 189, 248, 0.85);
+  box-shadow:
+    0 0 0 1px rgba(56, 189, 248, 0.32),
+    0 18px 38px rgba(2, 6, 23, 0.4);
+}
+
+.canvas-node--warning {
+  border-color: rgba(245, 158, 11, 0.7);
+}
+
+.canvas-node__header,
+.canvas-node__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.canvas-node__header {
+  margin-bottom: 0.75rem;
+}
+
+.canvas-node__type,
+.canvas-node__status,
+.canvas-node__footer span {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.canvas-node strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 1rem;
+}
+
+.canvas-node__name {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: #94a3b8;
+  font-size: 0.78rem;
+}
+
+.canvas-node p {
+  margin: 0 0 1rem;
+  color: #7dd3fc;
+  text-transform: capitalize;
+}
+
+.canvas__hint {
+  position: absolute;
+  z-index: 1;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  max-width: 22rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(56, 189, 248, 0.18);
+  border-radius: 1rem;
+  background: rgba(15, 23, 42, 0.82);
+  color: #cbd5e1;
+}
+
+.canvas__hint span {
+  display: inline-block;
+  margin-bottom: 0.45rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(8, 145, 178, 0.18);
+  color: #67e8f9;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.canvas__hint p {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}

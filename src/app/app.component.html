@@ -1,1 +1,26 @@
-<app-workflow-editor></app-workflow-editor>
+<div class="app-shell">
+  <app-composer-toolbar
+    [modelName]="modelName"
+    [nodeCount]="composer().canvasNodes.length" />
+
+  <main class="workspace">
+    <app-composer-palette
+      class="workspace__palette"
+      [palette]="composer().palette" />
+
+    <app-composer-canvas
+      class="workspace__canvas"
+      [nodes]="composer().canvasNodes"
+      [connections]="composer().connections"
+      [selectedNodeId]="composer().selectedNodeId"
+      (nodeSelected)="onNodeSelected($event)"
+      (nodeDropped)="onNodeDropped($event)"
+      (nodeMoved)="onNodeMoved($event)" />
+
+    <app-composer-properties
+      class="workspace__properties"
+      [selectedNode]="selectedNode()"
+      [dslPreview]="dslPreview()"
+      (basicPropertyChanged)="onBasicPropertyChanged($event)" />
+  </main>
+</div>
