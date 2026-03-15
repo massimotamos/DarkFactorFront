@@ -93,6 +93,19 @@ export class ComposerPropertiesComponent {
     return node.type === 'task' || node.type === 'rule' || node.type === 'integration';
   }
 
+  semanticKindOptions(node: CanvasNode): string[] {
+    switch (node.type) {
+      case 'task':
+        return ['interaction', 'business', 'system'];
+      case 'rule':
+        return ['validation', 'authorization', 'decision'];
+      case 'integration':
+        return ['payment', 'notification', 'external-api'];
+      default:
+        return [];
+    }
+  }
+
   isApplicationContext(node: CanvasNode): boolean {
     return node.type === 'applicationContext';
   }

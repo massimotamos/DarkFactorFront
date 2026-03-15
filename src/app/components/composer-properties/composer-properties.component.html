@@ -36,7 +36,7 @@
       </label>
       <label>
         <span>Node Type</span>
-        <input [value]="node.type" (input)="onBasicFieldInput('type', $event)" />
+        <input [value]="node.type" readonly />
       </label>
       <label>
         <span>Display Label</span>
@@ -68,7 +68,12 @@
 
       <label *ngIf="requiresKind(node)">
         <span>Semantic Kind</span>
-        <input [value]="node.semanticKind || ''" (input)="onSemanticFieldInput('semanticKind', $event)" />
+        <select [value]="node.semanticKind || ''" (change)="onSemanticFieldInput('semanticKind', $event)">
+          <option value="" disabled>Select semantic kind</option>
+          <option *ngFor="let option of semanticKindOptions(node)" [value]="option">
+            {{ option }}
+          </option>
+        </select>
       </label>
     </div>
   </section>

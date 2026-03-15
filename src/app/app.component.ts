@@ -148,18 +148,29 @@ export class AppComponent {
   }): void {
     this.composer.update((state) => ({
       ...state,
-      canvasNodes: state.canvasNodes.map((node) =>
-        node.id === event.nodeId
-          ? {
-              ...node,
-              [event.field]: event.value,
-              status: this.computeNodeStatus({
-                ...node,
-                [event.field]: event.value
-              })
-            }
-          : node
-      )
+      canvasNodes: state.canvasNodes.map((node) => {
+        if (node.id !== event.nodeId) {
+          return node;
+        }
+
+        const nextNode = {
+          ...node,
+          [event.field]: event.value
+        };
+
+        // Keep semantic keys predictable until the user explicitly diverges from the default.
+        if (event.field === 'name') {
+          const previousDefaultKey = this.nodeValidationService.defaultKey(node.type, node.name);
+          if (node.semanticKey === previousDefaultKey) {
+            nextNode.semanticKey = this.nodeValidationService.defaultKey(node.type, event.value);
+          }
+        }
+
+        return {
+          ...nextNode,
+          status: this.computeNodeStatus(nextNode)
+        };
+      })
     }));
   }
 

@@ -23,15 +23,20 @@ export class NodeValidationService {
   }
 
   defaultKind(type: ComposerNodeType): string | null {
+    const options = this.allowedKinds(type);
+    return options.length > 0 ? options[0] : null;
+  }
+
+  allowedKinds(type: ComposerNodeType): string[] {
     switch (type) {
       case 'task':
-        return 'business';
+        return ['interaction', 'business', 'system'];
       case 'rule':
-        return 'validation';
+        return ['validation', 'authorization', 'decision'];
       case 'integration':
-        return 'external-api';
+        return ['payment', 'notification', 'external-api'];
       default:
-        return null;
+        return [];
     }
   }
 
