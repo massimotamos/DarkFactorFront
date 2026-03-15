@@ -8,6 +8,12 @@ export interface SemanticNodeAst {
   kind: string | null;
   label: string;
   description: string;
+  contextBrief?: {
+    context: string;
+    objective: string;
+    constraints: string;
+    safetyConcerns: string;
+  } | null;
   prompt: string;
   semanticCode: string;
 }
@@ -31,6 +37,7 @@ export interface FullStackApplicationAst {
     nodeCount: number;
     connectionCount: number;
   };
+  applicationContexts: SemanticNodeAst[];
   roles: SemanticNodeAst[];
   entities: SemanticNodeAst[];
   views: SemanticNodeAst[];

@@ -44,8 +44,10 @@
       [selectedNode]="selectedNode()"
       (basicPropertyChanged)="onBasicPropertyChanged($event)"
       (semanticFieldChanged)="onSemanticFieldChanged($event)"
+      (contextBriefChanged)="onContextBriefChanged($event)"
       (promptChanged)="onPromptChanged($event)"
-      (validateRequested)="onValidateRequested($event)" />
+      (validateRequested)="onValidateRequested($event)"
+      (generateWorkflowRequested)="onGenerateWorkflowRequested($event)" />
   </main>
 
   <div

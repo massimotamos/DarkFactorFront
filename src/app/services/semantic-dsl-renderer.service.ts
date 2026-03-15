@@ -6,6 +6,7 @@ export class SemanticDslRendererService {
   render(ast: FullStackApplicationAst): string {
     const sections = [
       this.renderHeader(ast),
+      this.renderNodeBlock('applicationContexts', ast.applicationContexts),
       this.renderNodeBlock('roles', ast.roles),
       this.renderNodeBlock('entities', ast.entities),
       this.renderNodeBlock('views', ast.views),
@@ -51,6 +52,13 @@ export class SemanticDslRendererService {
 
     if (node.kind?.trim()) {
       lines.push(`  kind ${node.kind}`);
+    }
+
+    if (node.type === 'applicationContext' && node.contextBrief) {
+      lines.push(`  context "${this.escape(node.contextBrief.context)}"`);
+      lines.push(`  objective "${this.escape(node.contextBrief.objective)}"`);
+      lines.push(`  constraints "${this.escape(node.contextBrief.constraints)}"`);
+      lines.push(`  safety "${this.escape(node.contextBrief.safetyConcerns)}"`);
     }
 
     if (node.prompt.trim().length > 0) {

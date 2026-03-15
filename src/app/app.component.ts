@@ -8,6 +8,7 @@ import { COMPOSER_MOCK_MODEL } from './mock/composer.mock';
 import { CanvasConnection, CanvasNode, PaletteItem } from './models/composer.models';
 import { SemanticProjectionResult } from './models/semantic-language.models';
 import { ComposerProjectFileService } from './services/composer-project-file.service';
+import { ApplicationContextDraftService } from './services/application-context-draft.service';
 import { SemanticDslRendererService } from './services/semantic-dsl-renderer.service';
 import { SemanticLinkRulesService } from './services/semantic-link-rules.service';
 import { NodeValidationService } from './services/node-validation.service';
@@ -103,6 +104,7 @@ export class AppComponent {
     private readonly semanticLinkRulesService: SemanticLinkRulesService,
     private readonly nodeValidationService: NodeValidationService,
     private readonly composerProjectFileService: ComposerProjectFileService,
+    private readonly applicationContextDraftService: ApplicationContextDraftService,
     private readonly projectValidationService: ProjectValidationService,
     private readonly semanticProjectionService: SemanticProjectionService
   ) {}
@@ -185,6 +187,42 @@ export class AppComponent {
     }));
   }
 
+  protected onContextBriefChanged(event: {
+    nodeId: string;
+    field: 'context' | 'objective' | 'constraints' | 'safetyConcerns';
+    value: string;
+  }): void {
+    this.composer.update((state) => ({
+      ...state,
+      canvasNodes: state.canvasNodes.map((node) =>
+        node.id === event.nodeId
+          ? {
+              ...node,
+              contextBrief: {
+                context: node.contextBrief?.context ?? '',
+                objective: node.contextBrief?.objective ?? '',
+                constraints: node.contextBrief?.constraints ?? '',
+                safetyConcerns: node.contextBrief?.safetyConcerns ?? '',
+                [event.field]: event.value
+              },
+              validationState: 'unvalidated',
+              status: this.computeNodeStatus({
+                ...node,
+                contextBrief: {
+                  context: node.contextBrief?.context ?? '',
+                  objective: node.contextBrief?.objective ?? '',
+                  constraints: node.contextBrief?.constraints ?? '',
+                  safetyConcerns: node.contextBrief?.safetyConcerns ?? '',
+                  [event.field]: event.value
+                },
+                validationState: 'unvalidated'
+              })
+            }
+          : node
+      )
+    }));
+  }
+
   protected onPromptChanged(event: { nodeId: string; value: string }): void {
     this.composer.update((state) => ({
       ...state,
@@ -217,12 +255,15 @@ export class AppComponent {
         const hasKey = node.semanticKey.trim().length > 0;
         const hasRequiredKind = node.type === 'task' || node.type === 'rule' || node.type === 'integration';
         const hasKind = !hasRequiredKind || !!node.semanticKind?.trim();
+        const hasContextBrief = node.type !== 'applicationContext'
+          || (!!node.contextBrief?.context.trim() && !!node.contextBrief?.objective.trim());
         const validatedSemanticCode = hasPrompt
           && hasKey
           && hasKind
+          && hasContextBrief
           ? this.nodeValidationService.generateSemanticCode(node)
           : '';
-        const validationState = hasPrompt && hasKey && hasKind ? 'validated' : 'invalid';
+        const validationState = hasPrompt && hasKey && hasKind && hasContextBrief ? 'validated' : 'invalid';
 
         return {
           ...node,
@@ -231,6 +272,28 @@ export class AppComponent {
           status: validationState === 'validated' ? 'configured' : 'warning'
         };
       })
+    }));
+  }
+
+  protected onGenerateWorkflowRequested(nodeId: string): void {
+    const contextNode = this.composer().canvasNodes.find((node) => node.id === nodeId && node.type === 'applicationContext');
+    if (!contextNode) {
+      return;
+    }
+
+    const draft = this.applicationContextDraftService.generate(contextNode);
+    const draftedNodes = draft.nodes.map((node) => ({
+      ...node,
+      validatedSemanticCode: this.nodeValidationService.generateSemanticCode(node),
+      validationState: 'validated' as const,
+      status: 'configured' as const
+    }));
+
+    this.composer.update((state) => ({
+      ...state,
+      selectedNodeId: contextNode.id,
+      canvasNodes: [contextNode, ...draftedNodes],
+      connections: draft.connections
     }));
   }
 
@@ -347,6 +410,14 @@ export class AppComponent {
       description: item.description,
       semanticKey: this.nodeValidationService.defaultKey(item.type, normalizedName),
       semanticKind: this.nodeValidationService.defaultKind(item.type),
+      contextBrief: item.type === 'applicationContext'
+        ? {
+            context: '',
+            objective: '',
+            constraints: '',
+            safetyConcerns: ''
+          }
+        : null,
       prompt: '',
       validatedSemanticCode: '',
       validationState: 'unvalidated',
@@ -366,6 +437,10 @@ export class AppComponent {
     }
 
     if (!node.semanticKey.trim()) {
+      return 'draft';
+    }
+
+    if (node.type === 'applicationContext' && (!node.contextBrief?.context.trim() || !node.contextBrief?.objective.trim())) {
       return 'draft';
     }
 

@@ -11,6 +11,7 @@ export interface SemanticProjectionResult {
 }
 
 export function classifyNodeGroup(type: ComposerNodeType):
+  | 'applicationContexts'
   | 'roles'
   | 'entities'
   | 'views'
@@ -18,6 +19,8 @@ export function classifyNodeGroup(type: ComposerNodeType):
   | 'rules'
   | 'integrations' {
   switch (type) {
+    case 'applicationContext':
+      return 'applicationContexts';
     case 'role':
       return 'roles';
     case 'entity':

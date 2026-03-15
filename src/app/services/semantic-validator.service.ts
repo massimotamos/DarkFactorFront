@@ -9,6 +9,7 @@ export class SemanticValidatorService {
   validate(ast: FullStackApplicationAst): AstValidationIssue[] {
     const issues: AstValidationIssue[] = [];
 
+    this.ensureSingleApplicationContext(ast.applicationContexts, issues);
     this.ensureUniqueKeys(ast.roles, 'ROLE_DUPLICATE_KEY', 'Role', issues);
     this.ensureUniqueNames(ast.entities, 'ENTITY_DUPLICATE_NAME', 'Entity', issues);
     this.ensureUniqueKeys(ast.entities, 'ENTITY_DUPLICATE_KEY', 'Entity', issues);
@@ -18,6 +19,7 @@ export class SemanticValidatorService {
     this.ensureUniqueKeys(ast.integrations, 'INTEGRATION_DUPLICATE_KEY', 'Integration', issues);
 
     for (const node of [
+      ...ast.applicationContexts,
       ...ast.roles,
       ...ast.entities,
       ...ast.views,
@@ -43,6 +45,17 @@ export class SemanticValidatorService {
         });
       }
 
+      if (node.type === 'applicationContext') {
+        if (!node.contextBrief?.context.trim() || !node.contextBrief.objective.trim()) {
+          issues.push({
+            severity: 'error',
+            code: 'APPLICATION_CONTEXT_INCOMPLETE',
+            message: `Application Context "${node.label}" must define at least context and objective.`,
+            elementId: node.id
+          });
+        }
+      }
+
       if (!node.prompt.trim()) {
         issues.push({
           severity: 'warning',
@@ -64,6 +77,7 @@ export class SemanticValidatorService {
 
     const nodesById = new Map(
       [
+        ...ast.applicationContexts,
         ...ast.roles,
         ...ast.entities,
         ...ast.views,
@@ -117,6 +131,22 @@ export class SemanticValidatorService {
         });
       }
       seen.add(node.key);
+    }
+  }
+
+  private ensureSingleApplicationContext(
+    nodes: Array<{ id: string; label: string }>,
+    issues: AstValidationIssue[]
+  ): void {
+    if (nodes.length > 1) {
+      for (const node of nodes.slice(1)) {
+        issues.push({
+          severity: 'error',
+          code: 'APPLICATION_CONTEXT_DUPLICATE',
+          message: `Only one Application Context node is allowed, but "${node.label}" adds a duplicate.`,
+          elementId: node.id
+        });
+      }
     }
   }
 

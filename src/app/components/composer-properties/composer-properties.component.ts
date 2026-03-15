@@ -22,11 +22,17 @@ export class ComposerPropertiesComponent {
     field: 'semanticKey' | 'semanticKind';
     value: string;
   }>();
+  @Output() contextBriefChanged = new EventEmitter<{
+    nodeId: string;
+    field: 'context' | 'objective' | 'constraints' | 'safetyConcerns';
+    value: string;
+  }>();
   @Output() promptChanged = new EventEmitter<{
     nodeId: string;
     value: string;
   }>();
   @Output() validateRequested = new EventEmitter<string>();
+  @Output() generateWorkflowRequested = new EventEmitter<string>();
 
   onBasicFieldInput(
     field: 'name' | 'label' | 'description' | 'type',
@@ -63,6 +69,14 @@ export class ComposerPropertiesComponent {
     this.validateRequested.emit(this.selectedNode.id);
   }
 
+  onGenerateWorkflowClick(): void {
+    if (!this.selectedNode) {
+      return;
+    }
+
+    this.generateWorkflowRequested.emit(this.selectedNode.id);
+  }
+
   onSemanticFieldInput(field: 'semanticKey' | 'semanticKind', event: Event): void {
     if (!this.selectedNode) {
       return;
@@ -77,5 +91,24 @@ export class ComposerPropertiesComponent {
 
   requiresKind(node: CanvasNode): boolean {
     return node.type === 'task' || node.type === 'rule' || node.type === 'integration';
+  }
+
+  isApplicationContext(node: CanvasNode): boolean {
+    return node.type === 'applicationContext';
+  }
+
+  onContextBriefInput(
+    field: 'context' | 'objective' | 'constraints' | 'safetyConcerns',
+    event: Event
+  ): void {
+    if (!this.selectedNode) {
+      return;
+    }
+
+    this.contextBriefChanged.emit({
+      nodeId: this.selectedNode.id,
+      field,
+      value: (event.target as HTMLTextAreaElement | HTMLInputElement).value
+    });
   }
 }

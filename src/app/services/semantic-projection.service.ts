@@ -30,6 +30,7 @@ export class SemanticProjectionService {
         nodeCount: nodes.length,
         connectionCount: connections.length
       },
+      applicationContexts: [],
       roles: [],
       entities: [],
       views: [],
@@ -53,6 +54,7 @@ export class SemanticProjectionService {
         kind: node.semanticKind,
         label: node.label,
         description: node.description,
+        contextBrief: node.contextBrief,
         prompt: node.prompt,
         semanticCode: node.validatedSemanticCode
       });

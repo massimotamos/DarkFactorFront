@@ -1,4 +1,5 @@
 export type PaletteCategory =
+  | 'foundation'
   | 'security'
   | 'data'
   | 'experience'
@@ -6,12 +7,20 @@ export type PaletteCategory =
   | 'integration';
 
 export type ComposerNodeType =
+  | 'applicationContext'
   | 'role'
   | 'entity'
   | 'view'
   | 'task'
   | 'rule'
   | 'integration';
+
+export interface ApplicationContextBrief {
+  context: string;
+  objective: string;
+  constraints: string;
+  safetyConcerns: string;
+}
 
 export interface PaletteItem {
   id: string;
@@ -39,6 +48,7 @@ export interface CanvasNode {
   description: string;
   semanticKey: string;
   semanticKind: string | null;
+  contextBrief: ApplicationContextBrief | null;
   prompt: string;
   validatedSemanticCode: string;
   validationState: 'unvalidated' | 'validated' | 'invalid';

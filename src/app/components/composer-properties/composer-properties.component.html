@@ -73,6 +73,50 @@
     </div>
   </section>
 
+  <section class="properties__section" *ngIf="isApplicationContext(node)">
+    <header>
+      <h3>Application Brief</h3>
+      <span>Project-level intent</span>
+    </header>
+
+    <div class="properties__stack">
+      <label>
+        <span>Context</span>
+        <input
+          [value]="node.contextBrief?.context || ''"
+          (input)="onContextBriefInput('context', $event)"
+          placeholder="Ecommerce, trading, e-banking" />
+      </label>
+
+      <label>
+        <span>Objective</span>
+        <textarea
+          rows="3"
+          [value]="node.contextBrief?.objective || ''"
+          (input)="onContextBriefInput('objective', $event)"
+          placeholder="What the application needs to achieve"></textarea>
+      </label>
+
+      <label>
+        <span>Constraints</span>
+        <textarea
+          rows="3"
+          [value]="node.contextBrief?.constraints || ''"
+          (input)="onContextBriefInput('constraints', $event)"
+          placeholder="Technical, legal, or operational constraints"></textarea>
+      </label>
+
+      <label>
+        <span>Safety Concerns</span>
+        <textarea
+          rows="3"
+          [value]="node.contextBrief?.safetyConcerns || ''"
+          (input)="onContextBriefInput('safetyConcerns', $event)"
+          placeholder="Security, privacy, integrity, auditability"></textarea>
+      </label>
+    </div>
+  </section>
+
   <section class="properties__section">
     <header>
       <h3>Prompt</h3>
@@ -90,7 +134,13 @@
 
     <div class="properties__actions">
       <button type="button" class="properties__primary" (click)="onValidateClick()">
-        Validate
+        Validate Node
+      </button>
+      <button
+        *ngIf="isApplicationContext(node)"
+        type="button"
+        (click)="onGenerateWorkflowClick()">
+        Generate Workflow
       </button>
     </div>
   </section>

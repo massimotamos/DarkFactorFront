@@ -5,6 +5,8 @@ import { CanvasNode, ComposerNodeType } from '../models/composer.models';
 export class NodeValidationService {
   generateSemanticCode(node: CanvasNode): string {
     switch (node.type) {
+      case 'applicationContext':
+        return this.renderApplicationContext(node);
       case 'role':
         return this.renderRole(node);
       case 'entity':
@@ -43,6 +45,28 @@ export class NodeValidationService {
       `  key "${node.semanticKey}"`,
       `  label "${node.label}"`,
       `  description "${this.escape(node.description)}"`,
+      `  prompt "${this.escape(this.normalizePrompt(node.prompt))}"`,
+      '}'
+    ].join('\n');
+  }
+
+  private renderApplicationContext(node: CanvasNode): string {
+    const brief = node.contextBrief ?? {
+      context: '',
+      objective: '',
+      constraints: '',
+      safetyConcerns: ''
+    };
+
+    return [
+      `applicationContext ${node.name} {`,
+      `  key "${node.semanticKey}"`,
+      `  label "${node.label}"`,
+      `  description "${this.escape(node.description)}"`,
+      `  context "${this.escape(brief.context)}"`,
+      `  objective "${this.escape(brief.objective)}"`,
+      `  constraints "${this.escape(brief.constraints)}"`,
+      `  safety "${this.escape(brief.safetyConcerns)}"`,
       `  prompt "${this.escape(this.normalizePrompt(node.prompt))}"`,
       '}'
     ].join('\n');
