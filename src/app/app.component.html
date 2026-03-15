@@ -127,4 +127,32 @@
       </section>
     </section>
   </div>
+
+  <div
+    *ngIf="isImportDiagnosticsOpen()"
+    class="dsl-modal-backdrop"
+    (click)="closeImportDiagnostics()">
+    <section
+      class="dsl-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Import diagnostics"
+      (click)="$event.stopPropagation()">
+      <header class="dsl-modal__header">
+        <div>
+          <p class="dsl-modal__eyebrow">Load Project</p>
+          <h2>DSL Import Diagnostics</h2>
+        </div>
+        <button type="button" class="dsl-modal__close" (click)="closeImportDiagnostics()">Close</button>
+      </header>
+
+      <section class="dsl-modal__section dsl-modal__section--full">
+        <header>
+          <h3>Parser Output</h3>
+          <span>Structured diagnostics</span>
+        </header>
+        <pre>{{ importDiagnosticsText() }}</pre>
+      </section>
+    </section>
+  </div>
 </div>

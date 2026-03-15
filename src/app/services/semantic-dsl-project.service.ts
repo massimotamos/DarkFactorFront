@@ -4,6 +4,18 @@ import { ComposerProjectFile, ComposerProjectFileService } from './composer-proj
 import { SemanticProjectionResult } from '../models/semantic-language.models';
 import { SemanticDslRendererService } from './semantic-dsl-renderer.service';
 
+export interface DslParseIssue {
+  line: number | null;
+  section: string;
+  message: string;
+}
+
+export interface DslParseResult {
+  success: boolean;
+  project?: ComposerProjectFile;
+  issues: DslParseIssue[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class SemanticDslProjectService {
   constructor(
@@ -21,15 +33,43 @@ export class SemanticDslProjectService {
   }
 
   parse(raw: string): ComposerProjectFile {
+    const result = this.parseDetailed(raw);
+    if (!result.success || !result.project) {
+      throw new Error(
+        result.issues.map((issue) => `${issue.section}${issue.line ? ` line ${issue.line}` : ''}: ${issue.message}`).join('\n')
+      );
+    }
+
+    return result.project;
+  }
+
+  parseDetailed(raw: string): DslParseResult {
     const trimmed = raw.trim();
     if (trimmed.startsWith('{')) {
-      return this.composerProjectFileService.parse(trimmed);
+      try {
+        return {
+          success: true,
+          project: this.composerProjectFileService.parse(trimmed),
+          issues: []
+        };
+      } catch (error) {
+        return {
+          success: false,
+          issues: [
+            {
+              line: null,
+              section: 'json',
+              message: error instanceof Error ? error.message : 'Invalid JSON project file.'
+            }
+          ]
+        };
+      }
     }
 
     return this.parseDsl(trimmed);
   }
 
-  private parseDsl(raw: string): ComposerProjectFile {
+  private parseDsl(raw: string): DslParseResult {
     const cleaned = raw
       .split('\n')
       .filter((line) => !line.trim().startsWith('#'))
@@ -37,19 +77,38 @@ export class SemanticDslProjectService {
 
     const modelNameMatch = cleaned.match(/application\s+"([^"]+)"\s*\{/);
     if (!modelNameMatch) {
-      throw new Error('Invalid DSL: missing application header.');
+      return {
+        success: false,
+        issues: [
+          {
+            line: null,
+            section: 'application',
+            message: 'Missing application header.'
+          }
+        ]
+      };
     }
 
     const modelName = modelNameMatch[1];
     const canvasNodes = this.parseNodes(cleaned);
-    const connections = this.parseLinks(cleaned, canvasNodes);
+    const linkResult = this.parseLinks(cleaned, canvasNodes);
+    if (linkResult.issues.length > 0) {
+      return {
+        success: false,
+        issues: linkResult.issues
+      };
+    }
 
     return {
-      version: 1,
-      modelName,
-      selectedNodeId: canvasNodes[0]?.id ?? null,
-      canvasNodes,
-      connections
+      success: true,
+      project: {
+        version: 1,
+        modelName,
+        selectedNodeId: canvasNodes[0]?.id ?? null,
+        canvasNodes,
+        connections: linkResult.connections
+      },
+      issues: []
     };
   }
 
@@ -110,28 +169,38 @@ export class SemanticDslProjectService {
     return nodes;
   }
 
-  private parseLinks(raw: string, nodes: CanvasNode[]): CanvasConnection[] {
+  private parseLinks(raw: string, nodes: CanvasNode[]): { connections: CanvasConnection[]; issues: DslParseIssue[] } {
     const linksMatch = raw.match(/links\s*\{([\s\S]*?)\n\}/);
     if (!linksMatch) {
-      return [];
+      return { connections: [], issues: [] };
     }
 
     const nodeIdByKey = new Map(nodes.map((node) => [node.semanticKey, node.id]));
-
-    return linksMatch[1]
+    const issues: DslParseIssue[] = [];
+    const connections: Array<CanvasConnection | null> = linksMatch[1]
       .split('\n')
-      .map((line) => line.trim())
-      .filter((line) => line.startsWith('link '))
-      .map((line, index) => {
-        const match = line.match(/^link\s+([A-Za-z0-9._-]+)\s+->\s+([A-Za-z0-9._-]+)(?:\s+as\s+"([^"]+)")?$/);
+      .map((line) => ({ raw: line, trimmed: line.trim() }))
+      .filter((entry) => entry.trimmed.startsWith('link '))
+      .map((entry, index) => {
+        const match = entry.trimmed.match(/^link\s+([A-Za-z0-9._-]+)\s+->\s+([A-Za-z0-9._-]+)(?:\s+as\s+"([^"]+)")?$/);
         if (!match) {
-          throw new Error(`Invalid DSL link: ${line}`);
+          issues.push({
+            line: this.findLineNumber(raw, entry.raw),
+            section: 'links',
+            message: `Invalid link syntax: ${entry.trimmed}`
+          });
+          return null;
         }
 
         const sourceNodeId = nodeIdByKey.get(match[1]);
         const targetNodeId = nodeIdByKey.get(match[2]);
         if (!sourceNodeId || !targetNodeId) {
-          throw new Error(`DSL link references unknown semantic key: ${line}`);
+          issues.push({
+            line: this.findLineNumber(raw, entry.raw),
+            section: 'links',
+            message: `Link references unknown semantic key: ${entry.trimmed}`
+          });
+          return null;
         }
 
         return {
@@ -141,6 +210,11 @@ export class SemanticDslProjectService {
           label: match[3]
         };
       });
+
+    return {
+      connections: connections.filter((connection): connection is NonNullable<typeof connection> => connection !== null),
+      issues
+    };
   }
 
   private extractQuoted(body: string, key: string): string | null {
@@ -185,5 +259,11 @@ export class SemanticDslProjectService {
 
   private unescape(value: string): string {
     return value.replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+  }
+
+  private findLineNumber(raw: string, lineFragment: string): number | null {
+    const lines = raw.split('\n');
+    const index = lines.findIndex((line) => line === lineFragment);
+    return index >= 0 ? index + 1 : null;
   }
 }

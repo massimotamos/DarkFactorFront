@@ -9,7 +9,7 @@ import { CanvasConnection, CanvasNode, PaletteItem } from './models/composer.mod
 import { SemanticProjectionResult } from './models/semantic-language.models';
 import { ApplicationContextDraftService } from './services/application-context-draft.service';
 import { SemanticDslRendererService } from './services/semantic-dsl-renderer.service';
-import { SemanticDslProjectService } from './services/semantic-dsl-project.service';
+import { DslParseIssue, SemanticDslProjectService } from './services/semantic-dsl-project.service';
 import { SemanticLinkRulesService } from './services/semantic-link-rules.service';
 import { NodeValidationService } from './services/node-validation.service';
 import { ProjectValidationService } from './services/project-validation.service';
@@ -39,6 +39,8 @@ export class AppComponent {
   );
   protected readonly isDslPreviewOpen = signal(false);
   protected readonly isProjectValidationOpen = signal(false);
+  protected readonly isImportDiagnosticsOpen = signal(false);
+  protected readonly importDiagnostics = signal<DslParseIssue[]>([]);
   protected readonly pendingConnectionSourceId = signal<string | null>(null);
   protected readonly paletteWidth = signal(272);
   protected readonly propertiesWidth = signal(288);
@@ -117,6 +119,13 @@ export class AppComponent {
       result.generationIssues.length > 0 ? this.formatIssues(result.generationIssues) : 'No generation issues.'
     ].join('\n');
   });
+  protected readonly importDiagnosticsText = computed(() =>
+    this.importDiagnostics().length > 0
+      ? this.importDiagnostics()
+          .map((issue) => `[${issue.section.toUpperCase()}${issue.line ? ` line ${issue.line}` : ''}] ${issue.message}`)
+          .join('\n')
+      : 'No import diagnostics.'
+  );
   protected readonly isProjectDirty = computed(
     () => this.buildProjectSignature(this.modelName(), this.composer()) !== this.lastSavedSignature()
   );
@@ -446,7 +455,14 @@ export class AppComponent {
 
     try {
       const raw = await file.text();
-      const project = this.semanticDslProjectService.parse(raw);
+      const result = this.semanticDslProjectService.parseDetailed(raw);
+      if (!result.success || !result.project) {
+        this.importDiagnostics.set(result.issues);
+        this.isImportDiagnosticsOpen.set(true);
+        return;
+      }
+
+      const project = result.project;
       this.modelName.set(project.modelName);
       const nextProject = {
         ...this.composer(),
@@ -458,7 +474,14 @@ export class AppComponent {
       this.lastSavedSignature.set(this.buildProjectSignature(project.modelName, nextProject));
     } catch (error) {
       console.error(error);
-      window.alert('The selected project file could not be loaded.');
+      this.importDiagnostics.set([
+        {
+          line: null,
+          section: 'import',
+          message: error instanceof Error ? error.message : 'The selected project file could not be loaded.'
+        }
+      ]);
+      this.isImportDiagnosticsOpen.set(true);
     } finally {
       input.value = '';
     }
@@ -470,6 +493,10 @@ export class AppComponent {
 
   protected closeProjectValidation(): void {
     this.isProjectValidationOpen.set(false);
+  }
+
+  protected closeImportDiagnostics(): void {
+    this.isImportDiagnosticsOpen.set(false);
   }
 
   protected startResize(pane: 'palette' | 'properties', event: MouseEvent): void {
@@ -507,6 +534,7 @@ export class AppComponent {
     this.pendingConnectionSourceId.set(null);
     this.closeDslPreview();
     this.closeProjectValidation();
+    this.closeImportDiagnostics();
   }
 
   private createNodeFromPaletteItem(item: PaletteItem, position: { x: number; y: number }): CanvasNode {

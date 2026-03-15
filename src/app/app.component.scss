@@ -120,6 +120,10 @@
   min-height: 0;
 }
 
+.dsl-modal__section--full pre {
+  min-height: 22rem;
+}
+
 .dsl-modal__section pre {
   height: calc(100% - 2rem);
   min-height: 12rem;
