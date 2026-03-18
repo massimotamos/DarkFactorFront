@@ -1,0 +1,20 @@
+package com.darkfactor.platform.dsl.core;
+
+public enum SemanticElementType {
+  PROJECT,
+  INITIATIVE,
+  ACTOR,
+  CONSTRAINT,
+  ASSUMPTION,
+  RISK,
+  EPIC,
+  USER_STORY,
+  ACCEPTANCE_CRITERION,
+  BUSINESS_RULE,
+  WORKFLOW_NODE,
+  DOMAIN_ENTITY,
+  CAPABILITY,
+  SERVICE_CANDIDATE,
+  NFR,
+  ARCHITECTURE_CONCERN
+}

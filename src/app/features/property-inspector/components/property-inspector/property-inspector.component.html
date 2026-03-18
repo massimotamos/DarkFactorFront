@@ -1,0 +1,80 @@
+<section class="inspector">
+  <header>
+    <p>Property Inspector</p>
+    <h2>{{ selectedNode ? selectedNode.name : 'No selection' }}</h2>
+  </header>
+
+  <ng-container *ngIf="selectedNode && selectedNodeVisual; else emptyState">
+    <h3>Semantic Properties</h3>
+
+    <label>
+      <span>Name</span>
+      <input [ngModel]="selectedNode.name" (ngModelChange)="updateSemantic('name', $event)" />
+    </label>
+
+    <label>
+      <span>Description</span>
+      <textarea [ngModel]="selectedNode.description" (ngModelChange)="updateSemantic('description', $event)"></textarea>
+    </label>
+
+    <label>
+      <span>Actor</span>
+      <select [ngModel]="selectedNode.actorId" (ngModelChange)="updateSemantic('actorId', $event)">
+        <option [ngValue]="null">None</option>
+        <option *ngFor="let actor of actors" [ngValue]="actor.id">{{ actor.name }}</option>
+      </select>
+    </label>
+
+    <label>
+      <span>Story</span>
+      <select [ngModel]="selectedNode.storyId" (ngModelChange)="updateSemantic('storyId', $event)">
+        <option [ngValue]="null">None</option>
+        <option *ngFor="let story of stories" [ngValue]="story.id">{{ story.key }} - {{ story.name }}</option>
+      </select>
+    </label>
+
+    <label>
+      <span>Capability</span>
+      <select [ngModel]="selectedNode.capabilityId" (ngModelChange)="updateSemantic('capabilityId', $event)">
+        <option [ngValue]="null">None</option>
+        <option *ngFor="let capability of capabilities" [ngValue]="capability.id">{{ capability.name }}</option>
+      </select>
+    </label>
+
+    <label>
+      <span>Service Candidate</span>
+      <select [ngModel]="selectedNode.serviceCandidateId" (ngModelChange)="updateSemantic('serviceCandidateId', $event)">
+        <option [ngValue]="null">None</option>
+        <option *ngFor="let service of serviceCandidates" [ngValue]="service.id">{{ service.name }}</option>
+      </select>
+    </label>
+
+    <h3>Visual Projection</h3>
+
+    <div class="grid">
+      <label>
+        <span>X</span>
+        <input [ngModel]="selectedNodeVisual.position.x" (ngModelChange)="updateVisual('x', $event)" />
+      </label>
+
+      <label>
+        <span>Y</span>
+        <input [ngModel]="selectedNodeVisual.position.y" (ngModelChange)="updateVisual('y', $event)" />
+      </label>
+
+      <label>
+        <span>Width</span>
+        <input [ngModel]="selectedNodeVisual.size.width" (ngModelChange)="updateVisual('width', $event)" />
+      </label>
+
+      <label>
+        <span>Height</span>
+        <input [ngModel]="selectedNodeVisual.size.height" (ngModelChange)="updateVisual('height', $event)" />
+      </label>
+    </div>
+  </ng-container>
+
+  <ng-template #emptyState>
+    <p class="empty-state">Select a workflow node to edit semantic references separately from visual layout.</p>
+  </ng-template>
+</section>

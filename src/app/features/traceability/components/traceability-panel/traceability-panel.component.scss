@@ -1,0 +1,47 @@
+.trace-panel {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+  border-radius: 24px;
+  background: rgba(10, 14, 24, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+header p,
+header h2,
+.trace-card p {
+  margin: 0;
+}
+
+header p {
+  color: #8dd0ff;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.74rem;
+}
+
+.trace-panel__summary {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.trace-panel__summary span {
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.trace-card {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.8rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.trace-card span,
+.trace-card p {
+  color: #cdd5ea;
+  font-size: 0.82rem;
+}

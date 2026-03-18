@@ -1,0 +1,383 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://darkfactor.local/schema/platform-dsl-2.0.0.json",
+  "title": "DarkFactor Canonical Platform DSL",
+  "type": "object",
+  "required": [
+    "metadata",
+    "versioning",
+    "project",
+    "initiative",
+    "businessContext",
+    "backlog",
+    "workflowModel",
+    "domainModel",
+    "capabilityModel",
+    "serviceDesign",
+    "nonFunctionalRequirements",
+    "traceability",
+    "validation"
+  ],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["schemaId", "schemaVersion", "documentKind", "source", "exportedAt"],
+      "properties": {
+        "schemaId": { "const": "darkfactor.platform.dsl" },
+        "schemaVersion": { "const": "2.0.0" },
+        "documentKind": { "const": "canonical-specification" },
+        "source": { "type": "string" },
+        "exportedAt": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "versioning": {
+      "type": "object",
+      "required": ["documentVersion", "baselineVersion", "migrationReadiness", "changeInfo"],
+      "properties": {
+        "documentVersion": { "type": "integer", "minimum": 1 },
+        "baselineVersion": { "type": "string" },
+        "migrationReadiness": { "enum": ["native", "requires-upgrade"] },
+        "changeInfo": {
+          "type": "object",
+          "required": ["summary", "changedBy", "changedAt"],
+          "properties": {
+            "summary": { "type": "string" },
+            "changedBy": { "type": "string" },
+            "changedAt": { "type": "string", "format": "date-time" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "project": { "$ref": "#/$defs/canonicalElementWithSlug" },
+    "initiative": {
+      "allOf": [
+        { "$ref": "#/$defs/canonicalElement" },
+        {
+          "type": "object",
+          "required": ["key", "summary", "vision"],
+          "properties": {
+            "type": { "const": "initiative" },
+            "key": { "type": "string" },
+            "summary": { "type": "string" },
+            "vision": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "businessContext": {
+      "type": "object",
+      "required": ["domain", "problemStatement", "targetOutcome", "actors", "constraints", "assumptions", "risks"],
+      "properties": {
+        "domain": { "type": "string" },
+        "problemStatement": { "type": "string" },
+        "targetOutcome": { "type": "string" },
+        "actors": { "type": "array", "items": { "$ref": "#/$defs/actor" } },
+        "constraints": { "type": "array", "items": { "$ref": "#/$defs/constraint" } },
+        "assumptions": { "type": "array", "items": { "$ref": "#/$defs/assumption" } },
+        "risks": { "type": "array", "items": { "$ref": "#/$defs/risk" } }
+      },
+      "additionalProperties": false
+    },
+    "backlog": {
+      "type": "object",
+      "required": ["epics", "userStories", "businessRules"],
+      "properties": {
+        "epics": { "type": "array", "items": { "$ref": "#/$defs/epic" } },
+        "userStories": { "type": "array", "items": { "$ref": "#/$defs/userStory" } },
+        "businessRules": { "type": "array", "items": { "$ref": "#/$defs/businessRule" } }
+      },
+      "additionalProperties": false
+    },
+    "workflowModel": {
+      "type": "object",
+      "required": ["id", "name", "description", "semanticNodes", "visualNodes", "connections"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "semanticNodes": { "type": "array", "items": { "$ref": "#/$defs/workflowSemanticNode" } },
+        "visualNodes": { "type": "array", "items": { "$ref": "#/$defs/workflowVisualNode" } },
+        "connections": { "type": "array", "items": { "$ref": "#/$defs/workflowConnection" } }
+      },
+      "additionalProperties": false
+    },
+    "domainModel": {
+      "type": "object",
+      "required": ["entities"],
+      "properties": {
+        "entities": { "type": "array", "items": { "$ref": "#/$defs/domainEntity" } }
+      },
+      "additionalProperties": false
+    },
+    "capabilityModel": {
+      "type": "object",
+      "required": ["capabilities"],
+      "properties": {
+        "capabilities": { "type": "array", "items": { "$ref": "#/$defs/capability" } }
+      },
+      "additionalProperties": false
+    },
+    "serviceDesign": {
+      "type": "object",
+      "required": ["serviceCandidates", "architectureConcerns"],
+      "properties": {
+        "serviceCandidates": { "type": "array", "items": { "$ref": "#/$defs/serviceCandidate" } },
+        "architectureConcerns": { "type": "array", "items": { "$ref": "#/$defs/architectureConcern" } }
+      },
+      "additionalProperties": false
+    },
+    "nonFunctionalRequirements": {
+      "type": "object",
+      "required": ["requirements"],
+      "properties": {
+        "requirements": { "type": "array", "items": { "$ref": "#/$defs/nfr" } }
+      },
+      "additionalProperties": false
+    },
+    "traceability": {
+      "type": "object",
+      "required": ["relationships"],
+      "properties": {
+        "relationships": { "type": "array", "items": { "$ref": "#/$defs/traceabilityLink" } }
+      },
+      "additionalProperties": false
+    },
+    "validation": {
+      "type": "object",
+      "required": ["structural", "semantic", "traceability", "requirementCompleteness"],
+      "properties": {
+        "structural": { "type": "array", "items": { "$ref": "#/$defs/validationIssue" } },
+        "semantic": { "type": "array", "items": { "$ref": "#/$defs/validationIssue" } },
+        "traceability": { "type": "array", "items": { "$ref": "#/$defs/validationIssue" } },
+        "requirementCompleteness": { "type": "array", "items": { "$ref": "#/$defs/validationIssue" } }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "provenance": {
+      "type": "object",
+      "required": ["source", "author", "createdAt", "updatedAt"],
+      "properties": {
+        "source": { "enum": ["analyst", "architect", "system", "import"] },
+        "author": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "canonicalElement": {
+      "type": "object",
+      "required": ["id", "type", "name", "description", "status", "provenance"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "status": { "enum": ["identified", "draft", "approved", "validated", "deprecated"] },
+        "provenance": { "$ref": "#/$defs/provenance" }
+      },
+      "additionalProperties": true
+    },
+    "canonicalElementWithSlug": {
+      "allOf": [
+        { "$ref": "#/$defs/canonicalElement" },
+        {
+          "type": "object",
+          "required": ["slug"],
+          "properties": {
+            "type": { "const": "project" },
+            "slug": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "actor": {
+      "allOf": [
+        { "$ref": "#/$defs/canonicalElement" },
+        {
+          "type": "object",
+          "required": ["actorKind", "responsibilities"],
+          "properties": {
+            "type": { "const": "actor" },
+            "actorKind": { "enum": ["human", "system", "external"] },
+            "responsibilities": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      ]
+    },
+    "constraint": {
+      "allOf": [
+        { "$ref": "#/$defs/canonicalElement" },
+        { "type": "object", "required": ["category"], "properties": { "type": { "const": "constraint" }, "category": { "enum": ["regulatory", "organizational", "technical"] } } }
+      ]
+    },
+    "assumption": {
+      "allOf": [
+        { "$ref": "#/$defs/canonicalElement" },
+        { "type": "object", "required": ["confidence"], "properties": { "type": { "const": "assumption" }, "confidence": { "enum": ["low", "medium", "high"] } } }
+      ]
+    },
+    "risk": {
+      "allOf": [
+        { "$ref": "#/$defs/canonicalElement" },
+        { "type": "object", "required": ["impact", "mitigation"], "properties": { "type": { "const": "risk" }, "impact": { "enum": ["low", "medium", "high"] }, "mitigation": { "type": "string" } } }
+      ]
+    },
+    "epic": {
+      "allOf": [
+        { "$ref": "#/$defs/canonicalElement" },
+        { "type": "object", "required": ["initiativeId", "key", "outcome", "priority"], "properties": { "type": { "const": "epic" }, "initiativeId": { "type": "string" }, "key": { "type": "string" }, "outcome": { "type": "string" }, "priority": { "enum": ["critical", "high", "medium", "low"] } } }
+      ]
+    },
+    "acceptanceCriterion": {
+      "allOf": [
+        { "$ref": "#/$defs/canonicalElement" },
+        { "type": "object", "required": ["userStoryId", "fitCriterion"], "properties": { "type": { "const": "acceptanceCriterion" }, "userStoryId": { "type": "string" }, "fitCriterion": { "type": "string" } } }
+      ]
+    },
+    "businessRule": {
+      "allOf": [
+        { "$ref": "#/$defs/canonicalElement" },
+        { "type": "object", "required": ["ruleExpression", "ruleKind"], "properties": { "type": { "const": "businessRule" }, "ruleExpression": { "type": "string" }, "ruleKind": { "enum": ["decision", "validation", "policy"] } } }
+      ]
+    },
+    "userStory": {
+      "allOf": [
+        { "$ref": "#/$defs/canonicalElement" },
+        {
+          "type": "object",
+          "required": ["initiativeId", "epicId", "key", "narrative", "acceptanceCriteria", "businessRuleIds", "domainEntityIds"],
+          "properties": {
+            "type": { "const": "userStory" },
+            "initiativeId": { "type": "string" },
+            "epicId": { "type": "string" },
+            "key": { "type": "string" },
+            "narrative": { "type": "string" },
+            "acceptanceCriteria": { "type": "array", "items": { "$ref": "#/$defs/acceptanceCriterion" } },
+            "businessRuleIds": { "type": "array", "items": { "type": "string" } },
+            "domainEntityIds": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      ]
+    },
+    "workflowSemanticNode": {
+      "allOf": [
+        { "$ref": "#/$defs/canonicalElement" },
+        {
+          "type": "object",
+          "required": ["nodeType", "actorId", "storyId", "businessRuleIds", "capabilityId", "serviceCandidateId"],
+          "properties": {
+            "type": { "const": "workflowNode" },
+            "nodeType": { "enum": ["startEvent", "processStep", "decisionGateway", "systemInteraction", "endEvent"] },
+            "actorId": { "type": ["string", "null"] },
+            "storyId": { "type": ["string", "null"] },
+            "businessRuleIds": { "type": "array", "items": { "type": "string" } },
+            "capabilityId": { "type": ["string", "null"] },
+            "serviceCandidateId": { "type": ["string", "null"] }
+          }
+        }
+      ]
+    },
+    "workflowVisualNode": {
+      "type": "object",
+      "required": ["nodeId", "position", "size"],
+      "properties": {
+        "nodeId": { "type": "string" },
+        "position": {
+          "type": "object",
+          "required": ["x", "y"],
+          "properties": { "x": { "type": "integer" }, "y": { "type": "integer" } },
+          "additionalProperties": false
+        },
+        "size": {
+          "type": "object",
+          "required": ["width", "height"],
+          "properties": { "width": { "type": "integer" }, "height": { "type": "integer" } },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "workflowConnection": {
+      "type": "object",
+      "required": ["id", "type", "sourceNodeId", "targetNodeId", "label"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "enum": ["sequence", "conditional", "integration"] },
+        "sourceNodeId": { "type": "string" },
+        "targetNodeId": { "type": "string" },
+        "label": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "domainEntity": {
+      "allOf": [
+        { "$ref": "#/$defs/canonicalElement" },
+        {
+          "type": "object",
+          "required": ["entityKind", "attributes"],
+          "properties": {
+            "type": { "const": "domainEntity" },
+            "entityKind": { "enum": ["aggregate", "reference", "event"] },
+            "attributes": { "type": "array", "items": { "type": "object", "required": ["name", "type", "required"], "properties": { "name": { "type": "string" }, "type": { "type": "string" }, "required": { "type": "boolean" } }, "additionalProperties": false } }
+          }
+        }
+      ]
+    },
+    "capability": {
+      "allOf": [
+        { "$ref": "#/$defs/canonicalElement" },
+        { "type": "object", "required": ["capabilityKind", "outcome"], "properties": { "type": { "const": "capability" }, "capabilityKind": { "enum": ["business", "application", "integration"] }, "outcome": { "type": "string" } } }
+      ]
+    },
+    "serviceCandidate": {
+      "allOf": [
+        { "$ref": "#/$defs/canonicalElement" },
+        { "type": "object", "required": ["capabilityIds", "serviceStyle"], "properties": { "type": { "const": "serviceCandidate" }, "capabilityIds": { "type": "array", "items": { "type": "string" } }, "serviceStyle": { "enum": ["module", "application-service", "integration-adapter"] } } }
+      ]
+    },
+    "architectureConcern": {
+      "allOf": [
+        { "$ref": "#/$defs/canonicalElement" },
+        { "type": "object", "required": ["concernKind"], "properties": { "type": { "const": "architectureConcern" }, "concernKind": { "enum": ["security", "scalability", "operability", "auditability"] } } }
+      ]
+    },
+    "nfr": {
+      "allOf": [
+        { "$ref": "#/$defs/canonicalElement" },
+        { "type": "object", "required": ["qualityAttribute", "measure"], "properties": { "type": { "const": "nfr" }, "qualityAttribute": { "enum": ["security", "performance", "availability", "auditability", "maintainability"] }, "measure": { "type": "string" } } }
+      ]
+    },
+    "traceabilityLink": {
+      "type": "object",
+      "required": ["id", "type", "sourceId", "targetId", "rationale", "provenance"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "enum": ["initiative_to_epic", "epic_to_user_story", "user_story_to_acceptance_criterion", "user_story_to_workflow_step", "workflow_step_to_capability", "capability_to_service_candidate", "user_story_to_domain_entity", "user_story_to_business_rule", "initiative_to_nfr", "nfr_to_architecture_concern"] },
+        "sourceId": { "type": "string" },
+        "targetId": { "type": "string" },
+        "rationale": { "type": "string" },
+        "provenance": { "$ref": "#/$defs/provenance" }
+      },
+      "additionalProperties": false
+    },
+    "validationIssue": {
+      "type": "object",
+      "required": ["id", "category", "severity", "code", "message", "elementId"],
+      "properties": {
+        "id": { "type": "string" },
+        "category": { "enum": ["structural", "semantic", "traceability", "requirement-completeness"] },
+        "severity": { "enum": ["info", "warning", "error"] },
+        "code": { "type": "string" },
+        "message": { "type": "string" },
+        "elementId": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

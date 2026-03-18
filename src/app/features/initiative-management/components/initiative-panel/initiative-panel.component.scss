@@ -1,0 +1,56 @@
+.panel {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+  border-radius: 24px;
+  background: rgba(10, 14, 24, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.panel__header p,
+.panel__header h2 {
+  margin: 0;
+}
+
+.panel__header p {
+  color: #ffb46c;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.74rem;
+}
+
+.panel__summary {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.panel__summary span {
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+}
+
+span {
+  color: #9ca7c4;
+  font-size: 0.82rem;
+}
+
+input,
+textarea {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 0.8rem 0.9rem;
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+}
+
+textarea {
+  min-height: 5rem;
+  resize: vertical;
+}

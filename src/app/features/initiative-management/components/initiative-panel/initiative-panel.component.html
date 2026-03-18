@@ -1,0 +1,43 @@
+<section class="panel">
+  <header class="panel__header">
+    <p>Initiative And Business Context</p>
+    <h2>{{ initiative.key }}</h2>
+  </header>
+
+  <label>
+    <span>Name</span>
+    <input [ngModel]="initiative.name" (ngModelChange)="updateInitiative('name', $event)" />
+  </label>
+
+  <label>
+    <span>Summary</span>
+    <textarea [ngModel]="initiative.summary" (ngModelChange)="updateInitiative('summary', $event)"></textarea>
+  </label>
+
+  <label>
+    <span>Vision</span>
+    <textarea [ngModel]="initiative.vision" (ngModelChange)="updateInitiative('vision', $event)"></textarea>
+  </label>
+
+  <label>
+    <span>Domain</span>
+    <input [ngModel]="businessContext.domain" (ngModelChange)="updateBusinessContext('domain', $event)" />
+  </label>
+
+  <label>
+    <span>Problem Statement</span>
+    <textarea [ngModel]="businessContext.problemStatement" (ngModelChange)="updateBusinessContext('problemStatement', $event)"></textarea>
+  </label>
+
+  <label>
+    <span>Target Outcome</span>
+    <textarea [ngModel]="businessContext.targetOutcome" (ngModelChange)="updateBusinessContext('targetOutcome', $event)"></textarea>
+  </label>
+
+  <div class="panel__summary">
+    <span>Actors: {{ businessContext.actors.length }}</span>
+    <span>Constraints: {{ businessContext.constraints.length }}</span>
+    <span>Assumptions: {{ businessContext.assumptions.length }}</span>
+    <span>Risks: {{ businessContext.risks.length }}</span>
+  </div>
+</section>

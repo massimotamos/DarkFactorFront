@@ -1,0 +1,280 @@
+{
+  "metadata": {
+    "schemaId": "darkfactor.platform.dsl",
+    "schemaVersion": "2.0.0",
+    "documentKind": "canonical-specification",
+    "source": "angular-workbench",
+    "exportedAt": "2026-03-18T10:00:00Z"
+  },
+  "versioning": {
+    "documentVersion": 2,
+    "baselineVersion": "1.0.0",
+    "migrationReadiness": "native",
+    "changeInfo": {
+      "summary": "Upgraded to semantic canonical DSL with first-class traceability.",
+      "changedBy": "platform-seed",
+      "changedAt": "2026-03-18T10:00:00Z"
+    }
+  },
+  "project": {
+    "id": "project-customer-onboarding",
+    "type": "project",
+    "name": "Customer Onboarding Platform",
+    "description": "Canonical modeling workspace for onboarding.",
+    "status": "approved",
+    "provenance": {
+      "source": "analyst",
+      "author": "platform-seed",
+      "createdAt": "2026-03-18T10:00:00Z",
+      "updatedAt": "2026-03-18T10:00:00Z"
+    },
+    "slug": "customer-onboarding-platform"
+  },
+  "initiative": {
+    "id": "initiative-digital-onboarding",
+    "type": "initiative",
+    "name": "Digital Customer Onboarding",
+    "description": "Formal business initiative for onboarding transformation.",
+    "status": "approved",
+    "provenance": {
+      "source": "analyst",
+      "author": "platform-seed",
+      "createdAt": "2026-03-18T10:00:00Z",
+      "updatedAt": "2026-03-18T10:00:00Z"
+    },
+    "key": "INIT-001",
+    "summary": "Reduce onboarding lead time and standardize approvals across channels.",
+    "vision": "Turn onboarding requirements into a canonical generation-ready specification."
+  },
+  "businessContext": {
+    "domain": "Retail Banking",
+    "problemStatement": "Customer onboarding is fragmented across channels.",
+    "targetOutcome": "Unified auditable onboarding operating model.",
+    "actors": [
+      {
+        "id": "actor-applicant",
+        "type": "actor",
+        "name": "Applicant",
+        "description": "Customer applying for onboarding.",
+        "status": "approved",
+        "provenance": {
+          "source": "analyst",
+          "author": "platform-seed",
+          "createdAt": "2026-03-18T10:00:00Z",
+          "updatedAt": "2026-03-18T10:00:00Z"
+        },
+        "actorKind": "human",
+        "responsibilities": ["Provide onboarding information"]
+      }
+    ],
+    "constraints": [],
+    "assumptions": [],
+    "risks": []
+  },
+  "backlog": {
+    "epics": [
+      {
+        "id": "epic-intake",
+        "type": "epic",
+        "name": "Capture customer intake",
+        "description": "Model intake path and mandatory data collection.",
+        "status": "approved",
+        "provenance": {
+          "source": "analyst",
+          "author": "platform-seed",
+          "createdAt": "2026-03-18T10:00:00Z",
+          "updatedAt": "2026-03-18T10:00:00Z"
+        },
+        "initiativeId": "initiative-digital-onboarding",
+        "key": "EPC-001",
+        "outcome": "Analysts can formalize intake requirements before implementation.",
+        "priority": "critical"
+      }
+    ],
+    "userStories": [
+      {
+        "id": "story-intake-1",
+        "type": "userStory",
+        "name": "Collect applicant profile",
+        "description": "Applicant intake is modeled as structured workflow behavior.",
+        "status": "approved",
+        "provenance": {
+          "source": "analyst",
+          "author": "platform-seed",
+          "createdAt": "2026-03-18T10:00:00Z",
+          "updatedAt": "2026-03-18T10:00:00Z"
+        },
+        "initiativeId": "initiative-digital-onboarding",
+        "epicId": "epic-intake",
+        "key": "USR-001",
+        "narrative": "As a business analyst I need intake modeled.",
+        "acceptanceCriteria": [
+          {
+            "id": "ac-profile-captured",
+            "type": "acceptanceCriterion",
+            "name": "Profile Captured",
+            "description": "Applicant profile data is collected completely.",
+            "status": "approved",
+            "provenance": {
+              "source": "analyst",
+              "author": "platform-seed",
+              "createdAt": "2026-03-18T10:00:00Z",
+              "updatedAt": "2026-03-18T10:00:00Z"
+            },
+            "userStoryId": "story-intake-1",
+            "fitCriterion": "Mandatory applicant identity and profile fields are present."
+          }
+        ],
+        "businessRuleIds": [],
+        "domainEntityIds": ["entity-onboarding-application"]
+      }
+    ],
+    "businessRules": []
+  },
+  "workflowModel": {
+    "id": "workflow-onboarding-v2",
+    "name": "Onboarding Flow",
+    "description": "Semantic workflow model with separate visual projection.",
+    "semanticNodes": [
+      {
+        "id": "node-intake",
+        "type": "workflowNode",
+        "name": "Capture Applicant Profile",
+        "description": "Collect the customer intake form.",
+        "status": "approved",
+        "provenance": {
+          "source": "analyst",
+          "author": "platform-seed",
+          "createdAt": "2026-03-18T10:00:00Z",
+          "updatedAt": "2026-03-18T10:00:00Z"
+        },
+        "nodeType": "processStep",
+        "actorId": "actor-applicant",
+        "storyId": "story-intake-1",
+        "businessRuleIds": [],
+        "capabilityId": "capability-capture-intake",
+        "serviceCandidateId": "service-intake-orchestrator"
+      }
+    ],
+    "visualNodes": [
+      {
+        "nodeId": "node-intake",
+        "position": { "x": 310, "y": 145 },
+        "size": { "width": 220, "height": 96 }
+      }
+    ],
+    "connections": []
+  },
+  "domainModel": {
+    "entities": [
+      {
+        "id": "entity-onboarding-application",
+        "type": "domainEntity",
+        "name": "OnboardingApplication",
+        "description": "Aggregate root for customer onboarding.",
+        "status": "approved",
+        "provenance": {
+          "source": "analyst",
+          "author": "platform-seed",
+          "createdAt": "2026-03-18T10:00:00Z",
+          "updatedAt": "2026-03-18T10:00:00Z"
+        },
+        "entityKind": "aggregate",
+        "attributes": [
+          { "name": "applicationId", "type": "UUID", "required": true }
+        ]
+      }
+    ]
+  },
+  "capabilityModel": {
+    "capabilities": [
+      {
+        "id": "capability-capture-intake",
+        "type": "capability",
+        "name": "Capture Intake Data",
+        "description": "Capture onboarding data for applicants.",
+        "status": "approved",
+        "provenance": {
+          "source": "analyst",
+          "author": "platform-seed",
+          "createdAt": "2026-03-18T10:00:00Z",
+          "updatedAt": "2026-03-18T10:00:00Z"
+        },
+        "capabilityKind": "business",
+        "outcome": "The onboarding application is recorded."
+      }
+    ]
+  },
+  "serviceDesign": {
+    "serviceCandidates": [
+      {
+        "id": "service-intake-orchestrator",
+        "type": "serviceCandidate",
+        "name": "Intake Orchestrator",
+        "description": "Coordinates onboarding capture workflow.",
+        "status": "draft",
+        "provenance": {
+          "source": "architect",
+          "author": "platform-seed",
+          "createdAt": "2026-03-18T10:00:00Z",
+          "updatedAt": "2026-03-18T10:00:00Z"
+        },
+        "capabilityIds": ["capability-capture-intake"],
+        "serviceStyle": "application-service"
+      }
+    ],
+    "architectureConcerns": []
+  },
+  "nonFunctionalRequirements": {
+    "requirements": []
+  },
+  "traceability": {
+    "relationships": [
+      {
+        "id": "trace-1",
+        "type": "initiative_to_epic",
+        "sourceId": "initiative-digital-onboarding",
+        "targetId": "epic-intake",
+        "rationale": "Initiative drives intake epic.",
+        "provenance": {
+          "source": "analyst",
+          "author": "platform-seed",
+          "createdAt": "2026-03-18T10:00:00Z",
+          "updatedAt": "2026-03-18T10:00:00Z"
+        }
+      },
+      {
+        "id": "trace-2",
+        "type": "epic_to_user_story",
+        "sourceId": "epic-intake",
+        "targetId": "story-intake-1",
+        "rationale": "Epic decomposes into story.",
+        "provenance": {
+          "source": "analyst",
+          "author": "platform-seed",
+          "createdAt": "2026-03-18T10:00:00Z",
+          "updatedAt": "2026-03-18T10:00:00Z"
+        }
+      },
+      {
+        "id": "trace-3",
+        "type": "user_story_to_workflow_step",
+        "sourceId": "story-intake-1",
+        "targetId": "node-intake",
+        "rationale": "Story manifests as a workflow step.",
+        "provenance": {
+          "source": "analyst",
+          "author": "platform-seed",
+          "createdAt": "2026-03-18T10:00:00Z",
+          "updatedAt": "2026-03-18T10:00:00Z"
+        }
+      }
+    ]
+  },
+  "validation": {
+    "structural": [],
+    "semantic": [],
+    "traceability": [],
+    "requirementCompleteness": []
+  }
+}

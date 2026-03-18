@@ -1,0 +1,43 @@
+<section class="panel">
+  <header class="panel__header">
+    <div>
+      <p>Backlog Meta-Model</p>
+      <h2>Epics, Stories, Criteria, Rules</h2>
+    </div>
+    <button type="button" (click)="epicAdded.emit()">Add Epic</button>
+  </header>
+
+  <article
+    *ngFor="let epic of epics"
+    class="epic-card"
+    [class.epic-card--active]="epic.id === selectedEpicId">
+    <button type="button" class="epic-card__select" (click)="epicSelected.emit(epic.id)">
+      <strong>{{ epic.key }}</strong>
+      <span>{{ epic.name }}</span>
+    </button>
+
+    <div *ngIf="epic.id === selectedEpicId" class="epic-card__editor">
+      <input [ngModel]="epic.name" (ngModelChange)="updateEpic(epic.id, 'name', $event)" />
+      <textarea [ngModel]="epic.description" (ngModelChange)="updateEpic(epic.id, 'description', $event)"></textarea>
+      <button type="button" (click)="storyAdded.emit(epic.id)">Add Story</button>
+
+      <article
+        *ngFor="let story of storiesForEpic(epic.id)"
+        class="story-card"
+        [class.story-card--active]="story.id === selectedStoryId">
+        <button type="button" class="story-card__select" (click)="storySelected.emit(story.id)">
+          <strong>{{ story.key }}</strong>
+          <span>{{ story.name }}</span>
+        </button>
+
+        <div *ngIf="story.id === selectedStoryId" class="story-card__editor">
+          <textarea [ngModel]="story.narrative" (ngModelChange)="updateStory(story.id, 'narrative', $event)"></textarea>
+          <div class="story-card__meta">
+            <span>Acceptance criteria: {{ story.acceptanceCriteria.length }}</span>
+            <span>{{ storyRuleNames(story) }}</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </article>
+</section>
