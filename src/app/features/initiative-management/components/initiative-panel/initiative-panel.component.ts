@@ -18,13 +18,16 @@ export class InitiativePanelComponent {
   @Output() businessContextChanged = new EventEmitter<Partial<BusinessContextRecord>>();
 
   protected updateInitiative(field: keyof InitiativeRecord, value: string): void {
-    this.initiativeChanged.emit({ [field]: value });
+    const patch = field === 'targetOutcomes'
+      ? { [field]: value.split('\n').map((entry) => entry.trim()).filter(Boolean) }
+      : { [field]: value };
+    this.initiativeChanged.emit(patch);
   }
 
   protected updateBusinessContext(field: keyof BusinessContextRecord, value: string): void {
-    if (field === 'actors' || field === 'constraints' || field === 'assumptions' || field === 'risks') {
-      return;
-    }
-    this.businessContextChanged.emit({ [field]: value });
+    const patch = field === 'stakeholders'
+      ? { [field]: value.split('\n').map((entry) => entry.trim()).filter(Boolean) }
+      : { [field]: value };
+    this.businessContextChanged.emit(patch);
   }
 }

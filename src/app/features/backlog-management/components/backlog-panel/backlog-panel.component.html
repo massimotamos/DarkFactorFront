@@ -1,7 +1,7 @@
 <section class="panel">
   <header class="panel__header">
     <div>
-      <p>Backlog Meta-Model</p>
+      <p>Backlog Semantics</p>
       <h2>Epics, Stories, Criteria, Rules</h2>
     </div>
     <button type="button" (click)="epicAdded.emit()">Add Epic</button>
@@ -18,7 +18,7 @@
 
     <div *ngIf="epic.id === selectedEpicId" class="epic-card__editor">
       <input [ngModel]="epic.name" (ngModelChange)="updateEpic(epic.id, 'name', $event)" />
-      <textarea [ngModel]="epic.description" (ngModelChange)="updateEpic(epic.id, 'description', $event)"></textarea>
+      <textarea [ngModel]="epic.businessOutcome" (ngModelChange)="updateEpic(epic.id, 'businessOutcome', $event)"></textarea>
       <button type="button" (click)="storyAdded.emit(epic.id)">Add Story</button>
 
       <article
@@ -32,9 +32,10 @@
 
         <div *ngIf="story.id === selectedStoryId" class="story-card__editor">
           <textarea [ngModel]="story.narrative" (ngModelChange)="updateStory(story.id, 'narrative', $event)"></textarea>
+          <textarea [ngModel]="story.businessValue" (ngModelChange)="updateStory(story.id, 'businessValue', $event)"></textarea>
           <div class="story-card__meta">
-            <span>Acceptance criteria: {{ story.acceptanceCriteria.length }}</span>
-            <span>{{ storyRuleNames(story) }}</span>
+            <span>Acceptance criteria: {{ criteriaForStory(story.id).length }}</span>
+            <span>Business rules: {{ ruleNames() }}</span>
           </div>
         </div>
       </article>

@@ -10,8 +10,8 @@
   </div>
 
   <article *ngFor="let relationship of relationships" class="trace-card">
-    <strong>{{ relationship.type }}</strong>
-    <span>{{ relationship.sourceId }} -> {{ relationship.targetId }}</span>
+    <strong>{{ relationship.relationshipType }}</strong>
+    <span>{{ relationship.sourceRef }} -> {{ relationship.targetRef }}</span>
     <p>{{ relationship.rationale }}</p>
   </article>
 </section>

@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   ActorRecord,
-  CapabilityRecord,
   BusinessRuleRecord,
+  CapabilityRecord,
+  DomainEntityRecord,
   EpicRecord,
   ServiceCandidateRecord,
   UserStoryRecord,
@@ -28,6 +29,7 @@ export class PropertyInspectorComponent {
   @Input() actors: ActorRecord[] = [];
   @Input() capabilities: CapabilityRecord[] = [];
   @Input() serviceCandidates: ServiceCandidateRecord[] = [];
+  @Input() domainEntities: DomainEntityRecord[] = [];
   @Input() businessRules: BusinessRuleRecord[] = [];
   @Output() nodeUpdated = new EventEmitter<{
     nodeId: string;
@@ -49,10 +51,9 @@ export class PropertyInspectorComponent {
     if (!this.selectedNodeVisual || Number.isNaN(Number(value))) {
       return;
     }
-
     const numeric = Number(value);
     this.nodeUpdated.emit({
-      nodeId: this.selectedNodeVisual.nodeId,
+      nodeId: this.selectedNodeVisual.semanticNodeId,
       visualPatch: field === 'x' || field === 'y'
         ? { position: { ...this.selectedNodeVisual.position, [field]: numeric } }
         : { size: { ...this.selectedNodeVisual.size, [field]: numeric } }

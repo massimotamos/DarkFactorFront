@@ -24,8 +24,8 @@ public class ProjectCommandController {
   public ProjectSnapshotResponse createProject(@Valid @RequestBody ProjectSnapshotRequest request) {
     return new ProjectSnapshotResponse(
         request.document().project().id(),
-        request.document().version(),
-        "dsl/" + request.document().project().slug() + "/v" + request.document().version() + ".json",
+        request.document().versioning().documentVersion(),
+        "dsl/" + request.document().project().slug() + "/v" + request.document().versioning().documentVersion() + ".json",
         "PERSISTENCE_STUB"
     );
   }

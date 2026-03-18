@@ -18,18 +18,18 @@
     </label>
 
     <label>
-      <span>Actor</span>
-      <select [ngModel]="selectedNode.actorId" (ngModelChange)="updateSemantic('actorId', $event)">
-        <option [ngValue]="null">None</option>
-        <option *ngFor="let actor of actors" [ngValue]="actor.id">{{ actor.name }}</option>
-      </select>
-    </label>
-
-    <label>
       <span>Story</span>
       <select [ngModel]="selectedNode.storyId" (ngModelChange)="updateSemantic('storyId', $event)">
         <option [ngValue]="null">None</option>
         <option *ngFor="let story of stories" [ngValue]="story.id">{{ story.key }} - {{ story.name }}</option>
+      </select>
+    </label>
+
+    <label>
+      <span>Actor</span>
+      <select [ngModel]="selectedNode.actorId" (ngModelChange)="updateSemantic('actorId', $event)">
+        <option [ngValue]="null">None</option>
+        <option *ngFor="let actor of actors" [ngValue]="actor.id">{{ actor.name }}</option>
       </select>
     </label>
 
@@ -41,13 +41,7 @@
       </select>
     </label>
 
-    <label>
-      <span>Service Candidate</span>
-      <select [ngModel]="selectedNode.serviceCandidateId" (ngModelChange)="updateSemantic('serviceCandidateId', $event)">
-        <option [ngValue]="null">None</option>
-        <option *ngFor="let service of serviceCandidates" [ngValue]="service.id">{{ service.name }}</option>
-      </select>
-    </label>
+    <div class="hint">Semantic workflow meaning is edited here. Canvas layout remains separate below.</div>
 
     <h3>Visual Projection</h3>
 
@@ -56,17 +50,14 @@
         <span>X</span>
         <input [ngModel]="selectedNodeVisual.position.x" (ngModelChange)="updateVisual('x', $event)" />
       </label>
-
       <label>
         <span>Y</span>
         <input [ngModel]="selectedNodeVisual.position.y" (ngModelChange)="updateVisual('y', $event)" />
       </label>
-
       <label>
         <span>Width</span>
         <input [ngModel]="selectedNodeVisual.size.width" (ngModelChange)="updateVisual('width', $event)" />
       </label>
-
       <label>
         <span>Height</span>
         <input [ngModel]="selectedNodeVisual.size.height" (ngModelChange)="updateVisual('height', $event)" />
@@ -75,6 +66,6 @@
   </ng-container>
 
   <ng-template #emptyState>
-    <p class="empty-state">Select a workflow node to edit semantic references separately from visual layout.</p>
+    <p class="empty-state">Select a workflow node to edit semantic and visual layers independently.</p>
   </ng-template>
 </section>

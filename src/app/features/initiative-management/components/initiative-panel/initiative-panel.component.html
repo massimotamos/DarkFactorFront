@@ -1,6 +1,6 @@
 <section class="panel">
   <header class="panel__header">
-    <p>Initiative And Business Context</p>
+    <p>Initiative And Context</p>
     <h2>{{ initiative.key }}</h2>
   </header>
 
@@ -20,8 +20,18 @@
   </label>
 
   <label>
-    <span>Domain</span>
-    <input [ngModel]="businessContext.domain" (ngModelChange)="updateBusinessContext('domain', $event)" />
+    <span>Target Outcomes</span>
+    <textarea [ngModel]="initiative.targetOutcomes.join('\n')" (ngModelChange)="updateInitiative('targetOutcomes', $event)"></textarea>
+  </label>
+
+  <label>
+    <span>Industry</span>
+    <input [ngModel]="businessContext.industry" (ngModelChange)="updateBusinessContext('industry', $event)" />
+  </label>
+
+  <label>
+    <span>Business Domain</span>
+    <input [ngModel]="businessContext.businessDomain" (ngModelChange)="updateBusinessContext('businessDomain', $event)" />
   </label>
 
   <label>
@@ -30,14 +40,12 @@
   </label>
 
   <label>
-    <span>Target Outcome</span>
-    <textarea [ngModel]="businessContext.targetOutcome" (ngModelChange)="updateBusinessContext('targetOutcome', $event)"></textarea>
+    <span>Business Value</span>
+    <textarea [ngModel]="businessContext.businessValue" (ngModelChange)="updateBusinessContext('businessValue', $event)"></textarea>
   </label>
 
-  <div class="panel__summary">
-    <span>Actors: {{ businessContext.actors.length }}</span>
-    <span>Constraints: {{ businessContext.constraints.length }}</span>
-    <span>Assumptions: {{ businessContext.assumptions.length }}</span>
-    <span>Risks: {{ businessContext.risks.length }}</span>
-  </div>
+  <label>
+    <span>Stakeholders</span>
+    <textarea [ngModel]="businessContext.stakeholders.join('\n')" (ngModelChange)="updateBusinessContext('stakeholders', $event)"></textarea>
+  </label>
 </section>

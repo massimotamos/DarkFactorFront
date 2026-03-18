@@ -1,12 +1,12 @@
 <section class="canvas-shell">
   <header>
     <div>
-      <p>Semantic Workflow Model</p>
+      <p>Workflow Projection</p>
       <h2>{{ workflowModel.name }}</h2>
     </div>
     <div class="validation">
-      <span>Structural: {{ validationReport.byCategory.structural.length }}</span>
-      <span>Traceability: {{ validationReport.byCategory.traceability.length }}</span>
+      <span>Semantic nodes: {{ workflowModel.semanticNodes.length }}</span>
+      <span>Semantic links: {{ workflowModel.semanticConnections.length }}</span>
     </div>
   </header>
 
@@ -19,12 +19,10 @@
     (drop)="onSurfaceDrop($event)"
     (mousedown)="onCanvasPointerDown()">
     <svg class="canvas__connections">
-      <g *ngFor="let connection of workflowModel.connections">
-        <path [attr.d]="getConnectionPath(connection.sourceNodeId, connection.targetNodeId)"></path>
-        <text
-          [attr.x]="connectionLabelPosition(connection.sourceNodeId, connection.targetNodeId).x"
-          [attr.y]="connectionLabelPosition(connection.sourceNodeId, connection.targetNodeId).y">
-          {{ connection.label }}
+      <g *ngFor="let connection of workflowModel.semanticConnections">
+        <path [attr.d]="connectionPath(connection.sourceNodeId, connection.targetNodeId)"></path>
+        <text [attr.x]="labelPosition(connection.id).x" [attr.y]="labelPosition(connection.id).y">
+          {{ connection.connectionType }}
         </text>
       </g>
     </svg>

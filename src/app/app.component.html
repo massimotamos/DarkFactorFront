@@ -34,6 +34,7 @@
       <app-backlog-panel
         [epics]="workspace.epics()"
         [stories]="workspace.userStories()"
+        [acceptanceCriteria]="workspace.acceptanceCriteria()"
         [businessRules]="workspace.businessRules()"
         [selectedEpicId]="workspace.selectedEpicId()"
         [selectedStoryId]="workspace.selectedStoryId()"
@@ -43,6 +44,19 @@
         (storyAdded)="workspace.addStory($event)"
         (epicUpdated)="workspace.updateEpic($event)"
         (storyUpdated)="workspace.updateStory($event)" />
+
+      <app-domain-panel
+        [domainModel]="workspace.domainModel()"
+        [constraints]="workspace.document().constraints"
+        [assumptions]="workspace.document().assumptions"
+        [risks]="workspace.document().risks" />
+
+      <app-capability-service-panel
+        [capabilityModel]="workspace.capabilityModel()"
+        [serviceDesign]="workspace.serviceDesign()"
+        [nonFunctionalRequirements]="workspace.document().nonFunctionalRequirements"
+        [architectureInputs]="workspace.document().architectureInputs"
+        [deployableSolutionInputs]="workspace.document().deployableSolutionInputs" />
     </section>
 
     <section class="platform-shell__column platform-shell__column--center">
@@ -68,11 +82,14 @@
         [selectedNodeVisual]="workspace.selectedNodeVisual()"
         [epics]="workspace.epics()"
         [stories]="workspace.selectedEpicStories()"
-        [actors]="workspace.businessContext().actors"
-        [capabilities]="workspace.document().capabilityModel.capabilities"
-        [serviceCandidates]="workspace.document().serviceDesign.serviceCandidates"
+        [actors]="workspace.domainModel().actors"
+        [capabilities]="workspace.capabilityModel().capabilities"
+        [serviceCandidates]="workspace.serviceDesign().serviceCandidates"
+        [domainEntities]="workspace.domainModel().domainEntities"
         [businessRules]="workspace.businessRules()"
         (nodeUpdated)="workspace.updateNode($event)" />
+
+      <app-validation-summary-panel [validationReport]="workspace.validationReport()" />
 
       <app-dsl-panel
         [document]="workspace.document()"

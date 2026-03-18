@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { BusinessRuleRecord, EpicRecord, UserStoryRecord } from '../../../../core/models/platform.models';
+import { AcceptanceCriterionRecord, BusinessRuleRecord, EpicRecord, UserStoryRecord } from '../../../../core/models/platform.models';
 
 @Component({
   selector: 'app-backlog-panel',
@@ -14,6 +14,7 @@ import { BusinessRuleRecord, EpicRecord, UserStoryRecord } from '../../../../cor
 export class BacklogPanelComponent {
   @Input({ required: true }) epics: EpicRecord[] = [];
   @Input({ required: true }) stories: UserStoryRecord[] = [];
+  @Input({ required: true }) acceptanceCriteria: AcceptanceCriterionRecord[] = [];
   @Input({ required: true }) businessRules: BusinessRuleRecord[] = [];
   @Input() selectedEpicId: string | null = null;
   @Input() selectedStoryId: string | null = null;
@@ -28,18 +29,19 @@ export class BacklogPanelComponent {
     return this.stories.filter((story) => story.epicId === epicId);
   }
 
+  protected criteriaForStory(storyId: string): AcceptanceCriterionRecord[] {
+    return this.acceptanceCriteria.filter((criterion) => criterion.userStoryId === storyId);
+  }
+
+  protected ruleNames(): string {
+    return this.businessRules.map((rule) => rule.name).join(', ') || 'No business rules';
+  }
+
   protected updateEpic(epicId: string, field: keyof EpicRecord, value: string): void {
     this.epicUpdated.emit({ epicId, patch: { [field]: value } });
   }
 
   protected updateStory(storyId: string, field: keyof UserStoryRecord, value: string): void {
     this.storyUpdated.emit({ storyId, patch: { [field]: value } });
-  }
-
-  protected storyRuleNames(story: UserStoryRecord): string {
-    return this.businessRules
-      .filter((rule) => story.businessRuleIds.includes(rule.id))
-      .map((rule) => rule.name)
-      .join(', ') || 'No linked rules';
   }
 }

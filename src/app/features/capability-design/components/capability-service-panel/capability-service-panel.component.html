@@ -1,0 +1,25 @@
+<section class="panel">
+  <header>
+    <p>Capability And Service Design</p>
+    <h2>Derivation Readiness</h2>
+  </header>
+
+  <div class="chips">
+    <span>Capabilities: {{ capabilityModel.capabilities.length }}</span>
+    <span>Services: {{ serviceDesign.serviceCandidates.length }}</span>
+    <span>Interfaces: {{ serviceDesign.interfaces.length }}</span>
+    <span>Events: {{ serviceDesign.events.length }}</span>
+  </div>
+
+  <article *ngFor="let service of serviceDesign.serviceCandidates" class="card">
+    <strong>{{ service.name }}</strong>
+    <span>{{ service.boundedDomainName }}</span>
+    <p>{{ service.responsibilityStatement }}</p>
+  </article>
+
+  <div class="chips">
+    <span>NFRs: {{ nonFunctionalRequirements.requirements.length }}</span>
+    <span>Architecture concerns: {{ architectureInputs.concerns.length }}</span>
+    <span>Deployable targets: {{ deployableSolutionInputs.targets.length }}</span>
+  </div>
+</section>

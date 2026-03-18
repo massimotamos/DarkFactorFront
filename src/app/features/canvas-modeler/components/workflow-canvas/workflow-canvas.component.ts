@@ -17,7 +17,7 @@ export class WorkflowCanvasComponent {
   @Output() nodeSelected = new EventEmitter<string>();
   @Output() nodeMoved = new EventEmitter<{ nodeId: string; position: { x: number; y: number } }>();
   @Output() nodeConnected = new EventEmitter<{ sourceNodeId: string; targetNodeId: string }>();
-  @Output() nodePropertyEdited = new EventEmitter<{ nodeId: string; patch: Partial<WorkflowNodeSemanticRecord> }>();
+  @Output() nodePropertyEdited = new EventEmitter<{ nodeId: string; semanticPatch?: Partial<WorkflowNodeSemanticRecord> }>();
   @Output() nodeDeleted = new EventEmitter<string>();
   @Output() surfaceDropRequested = new EventEmitter<{ type: WorkflowNodeSemanticRecord['nodeType']; position: { x: number; y: number } }>();
 
@@ -25,7 +25,6 @@ export class WorkflowCanvasComponent {
 
   protected pendingSourceNodeId: string | null = null;
   protected dropActive = false;
-
   private draggingNodeId: string | null = null;
   private dragOffset = { x: 0, y: 0 };
 
@@ -34,20 +33,19 @@ export class WorkflowCanvasComponent {
   }
 
   protected visual(nodeId: string): WorkflowNodeVisualRecord | undefined {
-    return this.workflowModel.visualNodes.find((node) => node.nodeId === nodeId);
+    return this.workflowModel.visualNodes.find((node) => node.semanticNodeId === nodeId);
   }
 
   protected isDisconnected(nodeId: string): boolean {
-    return this.validationReport.byCategory.structural.some((issue) => issue.code === 'WORKFLOW_NODE_DISCONNECTED' && issue.elementId === nodeId);
+    return this.validationReport.byCategory.completeness.some((issue) => issue.code === 'WORKFLOW_STEP_STORY_MISSING' && issue.elementId === nodeId);
   }
 
-  protected getConnectionPath(sourceNodeId: string, targetNodeId: string): string {
-    const source = this.visual(sourceNodeId);
-    const target = this.visual(targetNodeId);
+  protected connectionPath(sourceId: string, targetId: string): string {
+    const source = this.visual(sourceId);
+    const target = this.visual(targetId);
     if (!source || !target) {
       return '';
     }
-
     const sourceX = source.position.x + source.size.width;
     const sourceY = source.position.y + source.size.height / 2;
     const targetX = target.position.x;
@@ -56,16 +54,9 @@ export class WorkflowCanvasComponent {
     return `M ${sourceX} ${sourceY} C ${sourceX + curve} ${sourceY}, ${targetX - curve} ${targetY}, ${targetX} ${targetY}`;
   }
 
-  protected connectionLabelPosition(sourceNodeId: string, targetNodeId: string): { x: number; y: number } {
-    const source = this.visual(sourceNodeId);
-    const target = this.visual(targetNodeId);
-    if (!source || !target) {
-      return { x: 0, y: 0 };
-    }
-    return {
-      x: (source.position.x + source.size.width + target.position.x) / 2,
-      y: (source.position.y + target.position.y) / 2 + 10
-    };
+  protected labelPosition(connectionId: string): { x: number; y: number } {
+    const visualConnection = this.workflowModel.visualConnections.find((item) => item.semanticConnectionId === connectionId);
+    return visualConnection?.labelPosition ?? { x: 0, y: 0 };
   }
 
   protected onSurfaceDragOver(event: DragEvent): void {
@@ -86,7 +77,6 @@ export class WorkflowCanvasComponent {
     if (!payload) {
       return;
     }
-
     const template = JSON.parse(payload) as { type: WorkflowNodeSemanticRecord['nodeType'] };
     const rect = this.surfaceRef.nativeElement.getBoundingClientRect();
     this.surfaceDropRequested.emit({
@@ -100,15 +90,14 @@ export class WorkflowCanvasComponent {
 
   protected onNodePointerDown(event: MouseEvent, node: WorkflowNodeSemanticRecord): void {
     event.stopPropagation();
+    const visual = this.visual(node.id);
+    if (!visual) {
+      return;
+    }
 
     if (this.pendingSourceNodeId && this.pendingSourceNodeId !== node.id) {
       this.nodeConnected.emit({ sourceNodeId: this.pendingSourceNodeId, targetNodeId: node.id });
       this.pendingSourceNodeId = null;
-      return;
-    }
-
-    const visual = this.visual(node.id);
-    if (!visual) {
       return;
     }
 
@@ -142,17 +131,17 @@ export class WorkflowCanvasComponent {
       return;
     }
 
-    const node = this.visual(this.draggingNodeId);
-    if (!node) {
+    const visual = this.visual(this.draggingNodeId);
+    if (!visual) {
       return;
     }
 
     const rect = this.surfaceRef.nativeElement.getBoundingClientRect();
     this.nodeMoved.emit({
-      nodeId: node.nodeId,
+      nodeId: visual.semanticNodeId,
       position: {
-        x: Math.min(Math.max(24, event.clientX - rect.left - this.dragOffset.x), Math.max(24, rect.width - node.size.width - 24)),
-        y: Math.min(Math.max(24, event.clientY - rect.top - this.dragOffset.y), Math.max(24, rect.height - node.size.height - 24))
+        x: Math.min(Math.max(24, event.clientX - rect.left - this.dragOffset.x), Math.max(24, rect.width - visual.size.width - 24)),
+        y: Math.min(Math.max(24, event.clientY - rect.top - this.dragOffset.y), Math.max(24, rect.height - visual.size.height - 24))
       }
     });
   }
