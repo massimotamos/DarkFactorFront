@@ -25,7 +25,7 @@ export class InitiativePanelComponent {
   }
 
   protected updateBusinessContext(field: keyof BusinessContextRecord, value: string): void {
-    const patch = field === 'stakeholders'
+    const patch = field === 'stakeholders' || field === 'regulatoryContext' || field === 'expectedOutcomes'
       ? { [field]: value.split('\n').map((entry) => entry.trim()).filter(Boolean) }
       : { [field]: value };
     this.businessContextChanged.emit(patch);

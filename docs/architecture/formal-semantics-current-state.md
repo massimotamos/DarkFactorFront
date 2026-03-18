@@ -1,21 +1,21 @@
 # Formal Semantics Current State
 
-The language is semantically stronger than before, but it is not yet mathematically complete.
+## What Is Formalized
 
-Current maturity:
-- Business semantics are modeled ahead of workflow.
-- Traceability is explicit and typed.
-- Workflow semantics and visual layout are separated.
-- Service derivation inputs, architecture concerns, and deployable solution inputs now exist as first-class sections.
-- Validation categories exist for structural, semantic, traceability, completeness, and evolution concerns.
+- Stable element identifiers
+- Explicit semantic layers
+- Typed traceability links
+- Typed derivation rules and derivation records
+- Governance state for inferred architecture artifacts
+- Clear separation between execution semantics and visualization
 
-Current limitations:
-- No formal proof system exists.
-- No executable semantic inference engine exists yet.
-- Migration logic is only represented as contracts and version fields.
-- Service boundaries, event contracts, and architecture concerns are structured but still analyst-authored, not derived.
+## What Is Not Yet Formalized
 
-Interpretation guidance:
-- `initiative`, `businessContext`, `backlog`, `domainModel`, `capabilityModel`, and `serviceDesign` define primary business/system semantics.
-- `workflowModel` is a projection tied back to higher-level semantics through references and trace links.
-- `traceability.links` is the authoritative relationship layer for cross-section reasoning.
+- Full derivation execution engine
+- Complete well-formedness proof system
+- Automatic migration logic
+- Generator-specific lowering rules for Spring Boot, Angular, PostgreSQL, Kafka, Keycloak, or Kubernetes
+
+## Honest Maturity Statement
+
+The DSL is now semantically stratified and machine-transformable enough to serve as a compiler foundation. It is not yet a mathematically complete language or a full transformation runtime.

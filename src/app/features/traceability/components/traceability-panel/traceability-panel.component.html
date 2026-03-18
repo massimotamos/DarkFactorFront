@@ -12,6 +12,8 @@
   <article *ngFor="let relationship of relationships" class="trace-card">
     <strong>{{ relationship.relationshipType }}</strong>
     <span>{{ relationship.sourceRef }} -> {{ relationship.targetRef }}</span>
+    <span>{{ relationship.derivationStage }} / {{ relationship.derivationMethod }}</span>
+    <span>Approval: {{ relationship.analystApprovalStatus }} | Validation: {{ relationship.validationStatus }}</span>
     <p>{{ relationship.rationale }}</p>
   </article>
 </section>

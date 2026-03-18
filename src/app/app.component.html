@@ -47,16 +47,18 @@
 
       <app-domain-panel
         [domainModel]="workspace.domainModel()"
-        [constraints]="workspace.document().constraints"
-        [assumptions]="workspace.document().assumptions"
-        [risks]="workspace.document().risks" />
+        [constraints]="workspace.document().requirementLayer.constraints"
+        [assumptions]="workspace.document().requirementLayer.assumptions"
+        [risks]="workspace.document().requirementLayer.risks" />
 
       <app-capability-service-panel
         [capabilityModel]="workspace.capabilityModel()"
         [serviceDesign]="workspace.serviceDesign()"
-        [nonFunctionalRequirements]="workspace.document().nonFunctionalRequirements"
-        [architectureInputs]="workspace.document().architectureInputs"
-        [deployableSolutionInputs]="workspace.document().deployableSolutionInputs" />
+        [nonFunctionalRequirements]="workspace.document().requirementLayer.nonFunctionalRequirements"
+        [architectureInputs]="workspace.architectureInputs()"
+        [deployableSolutionInputs]="workspace.document().deploymentIntentLayer" />
+
+      <app-architecture-decision-panel [decisions]="workspace.architectureDecisions()" />
     </section>
 
     <section class="platform-shell__column platform-shell__column--center">
@@ -90,6 +92,8 @@
         (nodeUpdated)="workspace.updateNode($event)" />
 
       <app-validation-summary-panel [validationReport]="workspace.validationReport()" />
+
+      <app-derivation-panel [derivationModel]="workspace.derivationModel()" />
 
       <app-dsl-panel
         [document]="workspace.document()"

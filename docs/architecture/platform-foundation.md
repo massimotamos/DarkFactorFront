@@ -1,49 +1,52 @@
-# DarkFactor Business-To-System Foundation
+# DarkFactor Platform Foundation
 
-## Refactored module plan
+## Module Plan
 
-Frontend
-- `src/app/core/models/platform.models.ts`: business-first canonical meta-model
-- `src/app/core/state/platform-workspace.service.ts`: DSL-first workspace state
-- `src/app/core/services/platform-validation.service.ts`: layered validation framework
-- `src/app/features/initiative-management`: initiative and business context
-- `src/app/features/backlog-management`: epics, stories, acceptance criteria, rules
-- `src/app/features/domain-model`: actors, domain entities, aggregates, constraints, assumptions, risks
-- `src/app/features/capability-design`: capabilities, service candidates, interfaces, events, NFR and architecture/deployment inputs
-- `src/app/features/canvas-modeler`: workflow projection editor only
-- `src/app/features/property-inspector`: semantic vs visual workflow separation
-- `src/app/features/traceability`: typed trace links
-- `src/app/features/validation`: validation summary
+### Frontend
+- `core/models/platform.models.ts`: canonical stratified DSL types
+- `core/state/platform-workspace.service.ts`: seeded canonical document and mutation logic
+- `core/services/platform-validation.service.ts`: structural, semantic, traceability, completeness, and evolution validators
+- `features/initiative-management`: intent and business context editing
+- `features/backlog-management`: epics, stories, acceptance criteria, and rule summaries
+- `features/domain-model`: actors, entities, constraints, assumptions, and risks
+- `features/capability-design`: capabilities, services, NFRs, architecture concerns, and deployable targets
+- `features/architecture-decision`: architecture decision panel skeleton
+- `features/derivation`: derivation and governance panel skeleton
+- `features/canvas-modeler`: execution semantics projection and visualization editing
+- `features/property-inspector`: semantic workflow meaning vs visual layout separation
+- `features/traceability`: first-class machine-readable trace links
+- `features/validation`: validation summary surface
 
-Backend
-- `backend/platform-dsl-core`: canonical Java DSL, validation/migration contracts, semantic registries
-- `backend/platform-rest-api`: richer canonical document endpoints
-- `backend/platform-persistence`: filesystem/database persistence stubs aligned with canonical snapshots
+### Backend
+- `platform-dsl-core`: canonical Java records for the stratified DSL
+- `platform-rest-api`: document, validation, and traceability API surface
+- `platform-persistence`: filesystem and database persistence adapters
 
-## Top-level DSL structure
+## Canonical Top Level
 
-- `metadata`
-- `versioning`
-- `project`
-- `initiative`
-- `businessContext`
-- `backlog`
-- `domainModel`
-- `capabilityModel`
-- `serviceDesign`
-- `workflowModel`
-- `nonFunctionalRequirements`
-- `constraints`
-- `assumptions`
-- `risks`
-- `architectureInputs`
-- `deployableSolutionInputs`
-- `traceability`
-- `validation`
+```json
+{
+  "metadata": {},
+  "semanticLayers": [],
+  "derivationModel": {},
+  "versioning": {},
+  "project": {},
+  "intentLayer": {},
+  "requirementLayer": {},
+  "domainLayer": {},
+  "capabilityLayer": {},
+  "architectureLayer": {},
+  "executionLayer": {},
+  "deploymentIntentLayer": {},
+  "visualizationLayer": {},
+  "traceability": {},
+  "validation": {}
+}
+```
 
-## Architectural intent
+## Current Maturity
 
-The canonical specification now prioritizes business-to-system semantics in this order:
-`Initiative -> Business Context -> Backlog -> Domain Model -> Capability Model -> Service Design -> Workflow -> Architecture Inputs -> Deployable Solution Inputs`
-
-Workflow is intentionally subordinate. It exists to project and edit process semantics that are already anchored in stories, actors, rules, entities, and capabilities.
+- The DSL is now explicitly layered and derivation-aware.
+- Workflow is downstream of requirements, domain, capability, and architecture.
+- Service candidates and architecture decisions carry governance state.
+- Generation logic is still intentionally absent; this stage only formalizes compiler inputs.

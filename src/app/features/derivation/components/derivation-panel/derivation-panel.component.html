@@ -1,0 +1,18 @@
+<section class="panel">
+  <header>
+    <p>Derivation Inspector</p>
+    <h2>Inference And Approval State</h2>
+  </header>
+
+  <div class="chips">
+    <span>Rules: {{ derivationModel.derivationRules.length }}</span>
+    <span>Records: {{ derivationModel.derivationRecords.length }}</span>
+  </div>
+
+  <article *ngFor="let record of derivationModel.derivationRecords" class="card">
+    <strong>{{ record.ruleId }}</strong>
+    <span>{{ record.derivationStage }} / {{ record.derivationMethod }}</span>
+    <span>Status: {{ record.derivationStatus }} | Approval: {{ record.analystApprovalStatus }}</span>
+    <p>{{ record.rationale }}</p>
+  </article>
+</section>

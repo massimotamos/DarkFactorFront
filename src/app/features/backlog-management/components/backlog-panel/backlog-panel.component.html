@@ -35,7 +35,11 @@
           <textarea [ngModel]="story.businessValue" (ngModelChange)="updateStory(story.id, 'businessValue', $event)"></textarea>
           <div class="story-card__meta">
             <span>Acceptance criteria: {{ criteriaForStory(story.id).length }}</span>
-            <span>Business rules: {{ ruleNames() }}</span>
+            <span>Business rules: {{ story.businessRuleIds.length }}</span>
+            <span>Actors: {{ story.actorIds.length }}</span>
+            <span>Entities: {{ story.domainEntityIds.length }}</span>
+            <span>Capabilities: {{ story.capabilityIds.length }}</span>
+            <span>Workflow steps: {{ story.workflowNodeIds.length }}</span>
           </div>
         </div>
       </article>

@@ -10,7 +10,7 @@ export class PlatformDslService {
   parse(raw: string): PlatformDslDocument {
     const parsed = JSON.parse(raw) as PlatformDslDocument;
 
-    if (parsed.metadata.schemaId !== 'darkfactor.platform.dsl' || parsed.metadata.schemaVersion !== '3.0.0') {
+    if (parsed.metadata.schemaId !== 'darkfactor.platform.dsl' || parsed.metadata.schemaVersion !== '4.1.0') {
       throw new Error('Unsupported DSL document version.');
     }
 

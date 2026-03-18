@@ -48,4 +48,19 @@
     <span>Stakeholders</span>
     <textarea [ngModel]="businessContext.stakeholders.join('\n')" (ngModelChange)="updateBusinessContext('stakeholders', $event)"></textarea>
   </label>
+
+  <label>
+    <span>Operating Model</span>
+    <textarea [ngModel]="businessContext.operatingModel" (ngModelChange)="updateBusinessContext('operatingModel', $event)"></textarea>
+  </label>
+
+  <label>
+    <span>Regulatory Context</span>
+    <textarea [ngModel]="businessContext.regulatoryContext.join('\n')" (ngModelChange)="updateBusinessContext('regulatoryContext', $event)"></textarea>
+  </label>
+
+  <label>
+    <span>Expected Outcomes</span>
+    <textarea [ngModel]="businessContext.expectedOutcomes.join('\n')" (ngModelChange)="updateBusinessContext('expectedOutcomes', $event)"></textarea>
+  </label>
 </section>

@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ArchitectureDecisionPanelComponent } from './features/architecture-decision/components/architecture-decision-panel/architecture-decision-panel.component';
 import { BacklogPanelComponent } from './features/backlog-management/components/backlog-panel/backlog-panel.component';
 import { WorkflowCanvasComponent } from './features/canvas-modeler/components/workflow-canvas/workflow-canvas.component';
 import { NodePaletteComponent } from './features/canvas-modeler/components/node-palette/node-palette.component';
 import { CapabilityServicePanelComponent } from './features/capability-design/components/capability-service-panel/capability-service-panel.component';
+import { DerivationPanelComponent } from './features/derivation/components/derivation-panel/derivation-panel.component';
 import { DomainPanelComponent } from './features/domain-model/components/domain-panel/domain-panel.component';
 import { DslPanelComponent } from './features/dsl-visualization/components/dsl-panel/dsl-panel.component';
 import { InitiativePanelComponent } from './features/initiative-management/components/initiative-panel/initiative-panel.component';
@@ -21,9 +23,11 @@ import { PlatformWorkspaceService } from './core/state/platform-workspace.servic
     BacklogPanelComponent,
     DomainPanelComponent,
     CapabilityServicePanelComponent,
+    ArchitectureDecisionPanelComponent,
     NodePaletteComponent,
     WorkflowCanvasComponent,
     PropertyInspectorComponent,
+    DerivationPanelComponent,
     DslPanelComponent,
     TraceabilityPanelComponent,
     ValidationSummaryPanelComponent

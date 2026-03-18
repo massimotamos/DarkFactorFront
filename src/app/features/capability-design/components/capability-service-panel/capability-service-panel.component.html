@@ -15,11 +15,18 @@
     <strong>{{ service.name }}</strong>
     <span>{{ service.boundedDomainName }}</span>
     <p>{{ service.responsibilityStatement }}</p>
+    <div class="chips">
+      <span>Type: {{ service.candidateType }}</span>
+      <span>Derivation: {{ service.derivationMethod }}</span>
+      <span>Confidence: {{ service.confidence }}</span>
+      <span>Approval: {{ service.approvalStatus || 'proposed' }}</span>
+    </div>
   </article>
 
   <div class="chips">
     <span>NFRs: {{ nonFunctionalRequirements.requirements.length }}</span>
     <span>Architecture concerns: {{ architectureInputs.concerns.length }}</span>
+    <span>Architecture decisions: {{ architectureInputs.decisions.length }}</span>
     <span>Deployable targets: {{ deployableSolutionInputs.targets.length }}</span>
   </div>
 </section>

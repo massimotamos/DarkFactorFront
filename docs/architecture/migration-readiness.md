@@ -1,22 +1,30 @@
 # Migration Readiness
 
-Current schema version: `3.0.0`
+## Current Schema State
 
-Migration-ready structures now include:
+- Current schema version: `4.1.0`
+- Current migration state values:
+  - `native`
+  - `requires-upgrade`
+  - `upgrade-in-progress`
+
+## Versioning Fields
+
+- `metadata.schemaVersion`
 - `versioning.documentVersion`
 - `versioning.createdAt`
 - `versioning.updatedAt`
 - `versioning.migrationState`
+- `versioning.targetSchemaVersion`
 - `versioning.changeSummary`
-- backend `DocumentUpgradeStrategy`
 
-Planned upgrade flow from older documents:
-1. Normalize older `graph`-centric documents into `backlog`, `domainModel`, `capabilityModel`, and `serviceDesign`.
-2. Split workflow semantics from visual layout.
-3. Promote text-only references into typed trace links.
-4. Mark partially normalized documents as `requires-upgrade`.
+## Migration Hook Readiness
 
-Not implemented yet:
-- Automatic migrators
-- Version-to-version transformers
-- Backward-compatibility runtime loaders beyond schema version checks
+The document model is now prepared for future migration tooling because:
+
+- the top-level section boundaries are stable
+- semantic layers are explicit
+- derivation records and trace links already capture governance state
+- visual workflow data is isolated from execution semantics
+
+Migration logic is still a placeholder. The platform can detect unsupported schema versions, but it does not yet transform older documents automatically.

@@ -31,24 +31,30 @@ export class PlatformValidationService {
 
   private validateStructural(document: PlatformDslDocument): ValidationIssueRecord[] {
     const issues: ValidationIssueRecord[] = [];
-    const nodeIds = new Set(document.workflowModel.semanticNodes.map((node) => node.id));
+    const nodeIds = new Set(document.executionLayer.semanticNodes.map((node) => node.id));
 
-    for (const visualNode of document.workflowModel.visualNodes) {
+    for (const visualNode of document.visualizationLayer.visualNodes) {
       if (!nodeIds.has(visualNode.semanticNodeId)) {
         issues.push(this.issue('structural', 'error', 'WORKFLOW_VISUAL_NODE_ORPHAN', 'Visual workflow node has no semantic counterpart.', visualNode.id));
       }
     }
 
-    for (const connection of document.workflowModel.semanticConnections) {
+    for (const connection of document.executionLayer.semanticConnections) {
       if (!nodeIds.has(connection.sourceNodeId) || !nodeIds.has(connection.targetNodeId)) {
         issues.push(this.issue('structural', 'error', 'WORKFLOW_CONNECTION_ORPHAN', 'Semantic workflow connection references a missing semantic node.', connection.id));
       }
     }
 
-    if (!document.workflowModel.semanticNodes.some((node) => node.nodeType === 'startEvent')) {
+    for (const visualConnection of document.visualizationLayer.visualConnections) {
+      if (!document.executionLayer.semanticConnections.some((connection) => connection.id === visualConnection.semanticConnectionId)) {
+        issues.push(this.issue('structural', 'error', 'WORKFLOW_VISUAL_CONNECTION_ORPHAN', 'Visual workflow connection has no semantic counterpart.', visualConnection.id));
+      }
+    }
+
+    if (!document.executionLayer.semanticNodes.some((node) => node.nodeType === 'startEvent')) {
       issues.push(this.issue('structural', 'error', 'WORKFLOW_START_MISSING', 'Workflow model is missing a start event.', null));
     }
-    if (!document.workflowModel.semanticNodes.some((node) => node.nodeType === 'endEvent')) {
+    if (!document.executionLayer.semanticNodes.some((node) => node.nodeType === 'endEvent')) {
       issues.push(this.issue('structural', 'error', 'WORKFLOW_END_MISSING', 'Workflow model is missing an end event.', null));
     }
 
@@ -58,22 +64,28 @@ export class PlatformValidationService {
   private validateSemantic(document: PlatformDslDocument): ValidationIssueRecord[] {
     const issues: ValidationIssueRecord[] = [];
 
-    for (const story of document.backlog.userStories) {
+    for (const story of document.requirementLayer.backlog.userStories) {
       if (story.actorIds.length === 0) {
         issues.push(this.issue('semantic', 'warning', 'USER_STORY_ACTOR_MISSING', 'User story is missing an actor reference.', story.id));
       }
       if (!story.businessValue.trim()) {
         issues.push(this.issue('semantic', 'warning', 'USER_STORY_VALUE_MISSING', 'User story is missing explicit business value.', story.id));
       }
-    }
-
-    for (const service of document.serviceDesign.serviceCandidates) {
-      if (service.supportedCapabilityIds.length === 0) {
-        issues.push(this.issue('semantic', 'warning', 'SERVICE_CAPABILITY_MISSING', 'Service candidate has no supported capabilities.', service.id));
+      if (story.capabilityIds.length === 0) {
+        issues.push(this.issue('semantic', 'info', 'USER_STORY_CAPABILITY_MISSING', 'User story is not linked to any capability yet.', story.id));
       }
     }
 
-    for (const entity of document.domainModel.domainEntities) {
+    for (const service of document.architectureLayer.serviceDesign.serviceCandidates) {
+      if (service.supportedCapabilityIds.length === 0) {
+        issues.push(this.issue('semantic', 'warning', 'SERVICE_CAPABILITY_MISSING', 'Service candidate has no supported capabilities.', service.id));
+      }
+      if (!service.approvalStatus || service.approvalStatus === 'proposed') {
+        issues.push(this.issue('semantic', 'info', 'SERVICE_GOVERNANCE_PENDING', 'Service candidate still requires governance review.', service.id));
+      }
+    }
+
+    for (const entity of document.domainLayer.domainEntities) {
       const linked = document.traceability.links.some((link) =>
         link.targetRef === entity.id || link.sourceRef === entity.id
       );
@@ -95,9 +107,15 @@ export class PlatformValidationService {
       }
     }
 
-    issues.push(...this.expectTargets(document, 'initiative_to_epic', document.initiative.id, document.backlog.epics.map((epic) => epic.id)));
-    issues.push(...this.expectTargets(document, 'epic_to_userStory', null, document.backlog.userStories.map((story) => story.id)));
-    issues.push(...this.expectTargets(document, 'userStory_to_acceptanceCriterion', null, document.backlog.acceptanceCriteria.map((criterion) => criterion.id)));
+    issues.push(...this.expectTargets(document, 'initiative_to_epic', document.intentLayer.initiative.id, document.requirementLayer.backlog.epics.map((epic) => epic.id)));
+    issues.push(...this.expectTargets(document, 'epic_to_userStory', null, document.requirementLayer.backlog.userStories.map((story) => story.id)));
+    issues.push(...this.expectTargets(document, 'userStory_to_acceptanceCriterion', null, document.requirementLayer.backlog.acceptanceCriteria.map((criterion) => criterion.id)));
+
+    for (const derivation of document.derivationModel.derivationRecords) {
+      if (derivation.analystApprovalRequired && derivation.analystApprovalStatus === 'proposed') {
+        issues.push(this.issue('traceability', 'info', 'DERIVATION_APPROVAL_PENDING', 'A derivation record still requires analyst review.', derivation.id));
+      }
+    }
 
     return issues;
   }
@@ -105,26 +123,32 @@ export class PlatformValidationService {
   private validateCompleteness(document: PlatformDslDocument): ValidationIssueRecord[] {
     const issues: ValidationIssueRecord[] = [];
 
-    for (const story of document.backlog.userStories) {
-      const criteriaCount = document.backlog.acceptanceCriteria.filter((criterion) => criterion.userStoryId === story.id).length;
+    for (const story of document.requirementLayer.backlog.userStories) {
+      const criteriaCount = document.requirementLayer.backlog.acceptanceCriteria.filter((criterion) => criterion.userStoryId === story.id).length;
       if (criteriaCount === 0) {
         issues.push(this.issue('completeness', 'warning', 'USER_STORY_ACCEPTANCE_MISSING', 'User story has no acceptance criteria.', story.id));
       }
     }
 
-    for (const semanticNode of document.workflowModel.semanticNodes) {
+    for (const semanticNode of document.executionLayer.semanticNodes) {
       if (!semanticNode.storyId) {
         issues.push(this.issue('completeness', 'warning', 'WORKFLOW_STEP_STORY_MISSING', 'Workflow step is not linked to any story.', semanticNode.id));
       }
     }
 
-    for (const nfr of document.nonFunctionalRequirements.requirements) {
+    for (const nfr of document.requirementLayer.nonFunctionalRequirements.requirements) {
       const linked = document.traceability.links.some((link) =>
         (link.relationshipType === 'nfr_to_architectureConcern' || link.relationshipType === 'nfr_to_serviceCandidate') &&
         link.sourceRef === nfr.id
       );
       if (!linked) {
         issues.push(this.issue('completeness', 'warning', 'NFR_TRACE_MISSING', 'NFR is not linked to a service candidate or architecture concern.', nfr.id));
+      }
+    }
+
+    for (const decision of document.architectureLayer.architectureInputs.decisions) {
+      if (decision.linkedNfrIds.length === 0) {
+        issues.push(this.issue('completeness', 'warning', 'ARCH_DECISION_NFR_MISSING', 'Architecture decision is not linked to any NFR.', decision.id));
       }
     }
 
@@ -136,7 +160,7 @@ export class PlatformValidationService {
     if (document.versioning.migrationState !== 'native') {
       issues.push(this.issue('evolution', 'warning', 'MIGRATION_PENDING', 'Document still requires migration or normalization.', null));
     }
-    if (document.metadata.schemaVersion !== '3.0.0') {
+    if (document.metadata.schemaVersion !== '4.1.0') {
       issues.push(this.issue('evolution', 'error', 'SCHEMA_VERSION_UNSUPPORTED', 'Schema version is not supported by the current frontend.', null));
     }
     return issues;
@@ -162,29 +186,38 @@ export class PlatformValidationService {
   private index(document: PlatformDslDocument): Set<string> {
     return new Set([
       document.project.id,
-      document.initiative.id,
-      ...document.backlog.epics.map((item) => item.id),
-      ...document.backlog.userStories.map((item) => item.id),
-      ...document.backlog.acceptanceCriteria.map((item) => item.id),
-      ...document.backlog.businessRules.map((item) => item.id),
-      ...document.domainModel.actors.map((item) => item.id),
-      ...document.domainModel.domainEntities.map((item) => item.id),
-      ...document.domainModel.aggregateGroups.map((item) => item.id),
-      ...document.capabilityModel.capabilities.map((item) => item.id),
-      ...document.serviceDesign.serviceCandidates.map((item) => item.id),
-      ...document.serviceDesign.responsibilities.map((item) => item.id),
-      ...document.serviceDesign.interfaces.map((item) => item.id),
-      ...document.serviceDesign.events.map((item) => item.id),
-      ...document.workflowModel.semanticNodes.map((item) => item.id),
-      ...document.workflowModel.visualNodes.map((item) => item.id),
-      ...document.workflowModel.semanticConnections.map((item) => item.id),
-      ...document.workflowModel.visualConnections.map((item) => item.id),
-      ...document.nonFunctionalRequirements.requirements.map((item) => item.id),
-      ...document.constraints.map((item) => item.id),
-      ...document.assumptions.map((item) => item.id),
-      ...document.risks.map((item) => item.id),
-      ...document.architectureInputs.concerns.map((item) => item.id),
-      ...document.deployableSolutionInputs.targets.map((item) => item.id)
+      document.intentLayer.initiative.id,
+      document.intentLayer.businessContext.id,
+      ...document.intentLayer.goals.map((item) => item.id),
+      ...document.requirementLayer.backlog.epics.map((item) => item.id),
+      ...document.requirementLayer.backlog.userStories.map((item) => item.id),
+      ...document.requirementLayer.backlog.acceptanceCriteria.map((item) => item.id),
+      ...document.requirementLayer.backlog.businessRules.map((item) => item.id),
+      ...document.domainLayer.actors.map((item) => item.id),
+      ...document.domainLayer.domainEntities.map((item) => item.id),
+      ...document.domainLayer.aggregateGroups.map((item) => item.id),
+      ...document.domainLayer.domainRelationships.map((item) => item.id),
+      ...document.capabilityLayer.capabilities.map((item) => item.id),
+      ...document.capabilityLayer.capabilityGroups.map((item) => item.id),
+      ...document.architectureLayer.serviceDesign.serviceCandidates.map((item) => item.id),
+      ...document.architectureLayer.serviceDesign.responsibilities.map((item) => item.id),
+      ...document.architectureLayer.serviceDesign.interfaces.map((item) => item.id),
+      ...document.architectureLayer.serviceDesign.events.map((item) => item.id),
+      ...document.architectureLayer.serviceDesign.orchestrationStrategyCandidates.map((item) => item.id),
+      ...document.architectureLayer.architectureInputs.concerns.map((item) => item.id),
+      ...document.architectureLayer.architectureInputs.decisions.map((item) => item.id),
+      ...document.executionLayer.semanticNodes.map((item) => item.id),
+      ...document.executionLayer.semanticConnections.map((item) => item.id),
+      ...document.executionLayer.executionResponsibilities.map((item) => item.id),
+      ...document.visualizationLayer.visualNodes.map((item) => item.id),
+      ...document.visualizationLayer.visualConnections.map((item) => item.id),
+      ...document.requirementLayer.nonFunctionalRequirements.requirements.map((item) => item.id),
+      ...document.requirementLayer.constraints.map((item) => item.id),
+      ...document.requirementLayer.assumptions.map((item) => item.id),
+      ...document.requirementLayer.risks.map((item) => item.id),
+      ...document.deploymentIntentLayer.targets.map((item) => item.id),
+      ...document.derivationModel.derivationRecords.map((item) => item.id),
+      ...document.derivationModel.derivationRules.map((item) => item.id)
     ]);
   }
 

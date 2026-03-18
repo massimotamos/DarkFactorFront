@@ -41,6 +41,14 @@
       </select>
     </label>
 
+    <label>
+      <span>Responsible Service</span>
+      <select [ngModel]="selectedNode.responsibleServiceCandidateId" (ngModelChange)="updateSemantic('responsibleServiceCandidateId', $event)">
+        <option [ngValue]="null">None</option>
+        <option *ngFor="let service of serviceCandidates" [ngValue]="service.id">{{ service.name }}</option>
+      </select>
+    </label>
+
     <div class="hint">Semantic workflow meaning is edited here. Canvas layout remains separate below.</div>
 
     <h3>Visual Projection</h3>

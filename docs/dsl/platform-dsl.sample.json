@@ -1,16 +1,59 @@
 {
   "metadata": {
     "schemaId": "darkfactor.platform.dsl",
-    "schemaVersion": "3.0.0",
-    "documentKind": "business-to-system-canonical-specification",
+    "schemaVersion": "4.1.0",
+    "documentKind": "business-intent-to-executable-system-specification",
     "source": "angular-workbench"
   },
+  "semanticLayers": [
+    {
+      "id": "intent",
+      "name": "Intent Layer",
+      "purpose": "Business intent, goals, and expected outcomes.",
+      "upstreamDependencies": [],
+      "downstreamDerivationTargets": ["requirement", "architecture"]
+    }
+  ],
+  "derivationModel": {
+    "derivationRules": [
+      {
+        "id": "rule-cap-service",
+        "name": "Capability To Service Candidate",
+        "sourceLayer": "capability",
+        "targetLayer": "architecture",
+        "sourceTypes": ["capability"],
+        "targetTypes": ["serviceCandidate"],
+        "derivationMethod": "ai-heuristic-inferred",
+        "analystApprovalRequired": true,
+        "description": "Capabilities suggest service boundaries."
+      }
+    ],
+    "derivationRecords": [
+      {
+        "id": "drv-cap-services",
+        "ruleId": "rule-cap-service",
+        "sourceRefs": ["capability-capture-intake"],
+        "targetRefs": ["service-intake-orchestrator"],
+        "derivationStage": "capability-to-architecture",
+        "derivationStatus": "proposed",
+        "derivationMethod": "ai-heuristic-inferred",
+        "analystApprovalRequired": true,
+        "analystApprovalStatus": "reviewed",
+        "confidence": "medium",
+        "rationale": "Capability ownership and coordination needs suggest an orchestration service.",
+        "validationStatus": "unvalidated",
+        "supersedes": null,
+        "supersededBy": null
+      }
+    ]
+  },
   "versioning": {
-    "documentVersion": 3,
+    "documentVersion": 1,
     "createdAt": "2026-03-18T10:00:00Z",
     "updatedAt": "2026-03-18T10:00:00Z",
     "migrationState": "native",
-    "changeSummary": "Rebalanced from workflow-centric semantics to business-to-system canonical structure."
+    "targetSchemaVersion": null,
+    "changeSummary": "Sample stratified compiler-ready DSL document."
   },
   "project": {
     "id": "project-customer-onboarding",
@@ -25,78 +68,198 @@
       "updatedAt": "2026-03-18T10:00:00Z"
     },
     "tags": ["platform"],
+    "approvalStatus": "approved",
     "slug": "customer-onboarding-platform"
   },
-  "initiative": {
-    "id": "initiative-digital-onboarding",
-    "type": "initiative",
-    "name": "Digital Customer Onboarding",
-    "description": "Transform customer onboarding into a generation-ready specification.",
-    "status": "approved",
-    "provenance": {
-      "source": "analyst",
-      "author": "platform-seed",
-      "createdAt": "2026-03-18T10:00:00Z",
-      "updatedAt": "2026-03-18T10:00:00Z"
+  "intentLayer": {
+    "initiative": {
+      "id": "initiative-digital-onboarding",
+      "type": "initiative",
+      "name": "Digital Customer Onboarding",
+      "description": "Transform onboarding into a generation-ready specification.",
+      "status": "approved",
+      "provenance": {
+        "source": "analyst",
+        "author": "platform-seed",
+        "createdAt": "2026-03-18T10:00:00Z",
+        "updatedAt": "2026-03-18T10:00:00Z"
+      },
+      "tags": ["initiative"],
+      "approvalStatus": "approved",
+      "key": "INIT-001",
+      "summary": "Reduce onboarding lead time and standardize approvals across channels.",
+      "vision": "Turn business requirements into deployable system inputs.",
+      "targetOutcomes": ["Reduce lead time", "Increase auditability"],
+      "goalIds": ["goal-lead-time"]
     },
-    "tags": ["initiative"],
-    "key": "INIT-001",
-    "summary": "Reduce onboarding lead time and standardize approvals across channels.",
-    "vision": "Turn business requirements into deployable system inputs.",
-    "targetOutcomes": ["Reduce lead time", "Increase auditability", "Prepare for service derivation"]
+    "goals": [],
+    "businessContext": {
+      "id": "business-context-onboarding",
+      "industry": "Banking",
+      "businessDomain": "Retail Banking Onboarding",
+      "problemStatement": "Onboarding is fragmented across channels and manual handoffs.",
+      "businessValue": "Create a consistent, traceable, automation-ready onboarding model.",
+      "stakeholders": ["Business Analyst", "Compliance Lead"],
+      "operatingModel": "Centralized onboarding operations with manual compliance escalation.",
+      "regulatoryContext": ["KYC", "AML"],
+      "expectedOutcomes": ["Service derivation readiness"]
+    }
   },
-  "businessContext": {
-    "industry": "Banking",
-    "businessDomain": "Retail Banking Onboarding",
-    "problemStatement": "Onboarding is fragmented across channels and manual handoffs.",
-    "businessValue": "Create a consistent, traceable, automation-ready onboarding model.",
-    "stakeholders": ["Business Analyst", "Operations Lead", "Compliance Lead"]
+  "requirementLayer": {
+    "backlog": {
+      "epics": [],
+      "userStories": [
+        {
+          "id": "story-intake-1",
+          "type": "userStory",
+          "name": "Collect applicant profile",
+          "description": "Capture onboarding information as canonical requirements.",
+          "status": "approved",
+          "provenance": {
+            "source": "analyst",
+            "author": "platform-seed",
+            "createdAt": "2026-03-18T10:00:00Z",
+            "updatedAt": "2026-03-18T10:00:00Z"
+          },
+          "tags": ["intake"],
+          "approvalStatus": "approved",
+          "initiativeId": "initiative-digital-onboarding",
+          "epicId": "epic-intake",
+          "key": "USR-001",
+          "narrative": "As an applicant I want to submit onboarding details so the bank can assess my request.",
+          "businessValue": "Reduce manual intake handling and standardize required information.",
+          "actorIds": ["actor-applicant"],
+          "acceptanceCriterionIds": ["ac-intake-required-data"],
+          "businessRuleIds": [],
+          "domainEntityIds": ["entity-onboarding-application"],
+          "capabilityIds": ["capability-capture-intake"],
+          "nfrIds": ["nfr-security"],
+          "workflowNodeIds": ["node-intake"]
+        }
+      ],
+      "acceptanceCriteria": [],
+      "businessRules": []
+    },
+    "nonFunctionalRequirements": {
+      "requirements": []
+    },
+    "constraints": [],
+    "assumptions": [],
+    "risks": []
   },
-  "backlog": {
-    "epics": [],
-    "userStories": [],
-    "acceptanceCriteria": [],
-    "businessRules": []
-  },
-  "domainModel": {
+  "domainLayer": {
     "actors": [],
     "domainEntities": [],
-    "aggregateGroups": []
+    "aggregateGroups": [],
+    "domainRelationships": []
   },
-  "capabilityModel": {
-    "capabilities": []
+  "capabilityLayer": {
+    "capabilities": [],
+    "capabilityGroups": []
   },
-  "serviceDesign": {
-    "serviceCandidates": [],
-    "responsibilities": [],
-    "interfaces": [],
-    "events": []
+  "architectureLayer": {
+    "serviceDesign": {
+      "serviceCandidates": [
+        {
+          "id": "service-intake-orchestrator",
+          "type": "serviceCandidate",
+          "name": "Intake Orchestrator",
+          "description": "Candidate service owning intake orchestration.",
+          "status": "draft",
+          "provenance": {
+            "source": "analyst",
+            "author": "platform-seed",
+            "createdAt": "2026-03-18T10:00:00Z",
+            "updatedAt": "2026-03-18T10:00:00Z"
+          },
+          "tags": ["service"],
+          "approvalStatus": "reviewed",
+          "boundedDomainName": "onboarding-intake",
+          "responsibilityStatement": "Manage customer onboarding intake and initial validation.",
+          "ownedEntityIds": ["entity-onboarding-application"],
+          "supportedCapabilityIds": ["capability-capture-intake"],
+          "inboundInterfaceIds": ["interface-submit-application"],
+          "outboundEventIds": ["event-application-submitted"],
+          "dependencyIds": [],
+          "securitySensitivity": "high",
+          "dataClassification": "confidential",
+          "derivationSource": ["story-intake-1", "capability-capture-intake"],
+          "derivationMethod": "ai-heuristic-inferred",
+          "confidence": "medium",
+          "candidateType": "orchestration-service"
+        }
+      ],
+      "responsibilities": [],
+      "interfaces": [],
+      "events": [],
+      "orchestrationStrategyCandidates": []
+    },
+    "architectureInputs": {
+      "concerns": [],
+      "decisions": [
+        {
+          "id": "decision-onboarding-strategy",
+          "type": "architectureDecision",
+          "name": "Onboarding orchestration strategy",
+          "description": "Choose the runtime coordination style for onboarding and review.",
+          "status": "draft",
+          "provenance": {
+            "source": "analyst",
+            "author": "platform-seed",
+            "createdAt": "2026-03-18T10:00:00Z",
+            "updatedAt": "2026-03-18T10:00:00Z"
+          },
+          "tags": ["architecture"],
+          "approvalStatus": "reviewed",
+          "decisionType": "orchestration-strategy",
+          "optionsConsidered": ["orchestration", "choreography", "hybrid"],
+          "selectedOption": "hybrid",
+          "rationale": "Explicit intake coordination is needed, but review notifications can remain event-driven.",
+          "linkedNfrIds": ["nfr-security"],
+          "linkedServiceIds": ["service-intake-orchestrator"],
+          "linkedCapabilityIds": ["capability-capture-intake"],
+          "linkedWorkflowNodeIds": ["node-intake"],
+          "derivationMethod": "analyst-approved",
+          "analystApprovalRequired": true,
+          "confidence": "medium"
+        }
+      ],
+      "deploymentConstraints": [],
+      "dataStores": []
+    }
   },
-  "workflowModel": {
+  "executionLayer": {
     "id": "workflow-onboarding",
-    "name": "Onboarding Workflow Projection",
-    "description": "Workflow is only a projection of higher-level semantics.",
+    "name": "Onboarding Workflow Semantics",
+    "description": "Workflow is a downstream semantic projection.",
     "semanticNodes": [],
-    "visualNodes": [],
     "semanticConnections": [],
-    "visualConnections": []
+    "executionResponsibilities": []
   },
-  "nonFunctionalRequirements": {
-    "requirements": []
-  },
-  "constraints": [],
-  "assumptions": [],
-  "risks": [],
-  "architectureInputs": {
-    "concerns": [],
-    "deploymentConstraints": [],
-    "dataStores": []
-  },
-  "deployableSolutionInputs": {
+  "deploymentIntentLayer": {
     "targets": []
   },
+  "visualizationLayer": {
+    "visualNodes": [],
+    "visualConnections": []
+  },
   "traceability": {
-    "links": []
+    "links": [
+      {
+        "id": "trace-cap-service-intake",
+        "sourceRef": "capability-capture-intake",
+        "targetRef": "service-intake-orchestrator",
+        "relationshipType": "capability_to_serviceCandidate",
+        "rationale": "Capability maps to intake service.",
+        "confidence": "medium",
+        "derivationStage": "capability-to-architecture",
+        "derivationMethod": "ai-heuristic-inferred",
+        "analystApprovalStatus": "reviewed",
+        "validationStatus": "validated",
+        "supersedes": null,
+        "supersededBy": null
+      }
+    ]
   },
   "validation": {
     "structural": [],
