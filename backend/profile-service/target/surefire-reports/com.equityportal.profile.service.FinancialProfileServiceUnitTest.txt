@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.equityportal.profile.service.FinancialProfileServiceUnitTest
--------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.969 s -- in com.equityportal.profile.service.FinancialProfileServiceUnitTest

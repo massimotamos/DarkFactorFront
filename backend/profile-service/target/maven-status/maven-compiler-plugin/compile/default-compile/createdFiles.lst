@@ -1,5 +1,0 @@
-com\equityportal\profile\exception\ProfileValidationException.class
-com\equityportal\profile\service\FinancialProfileService.class
-com\equityportal\profile\dto\FinancialProfileRequest.class
-com\equityportal\profile\dto\FinancialProfileResponse.class
-com\equityportal\profile\exception\ProfileNotFoundException.class

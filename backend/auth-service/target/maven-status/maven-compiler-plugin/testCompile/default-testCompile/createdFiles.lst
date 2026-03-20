@@ -1,8 +1,0 @@
-com\equityportal\auth\service\AuthServiceUnitTest.class
-com\equityportal\auth\service\JwtServiceTokenStructureProperties.class
-com\equityportal\auth\service\UserRegistrationServiceProperties.class
-com\equityportal\auth\service\UserRegistrationServiceShortPasswordProperties.class
-com\equityportal\auth\service\AuthenticationServiceInvalidCredentialsProperties.class
-com\equityportal\auth\service\JwtServiceProperties.class
-com\equityportal\auth\service\AuthenticationServiceRefreshProperties.class
-com\equityportal\auth\service\AuthenticationServiceLogoutProperties.class
