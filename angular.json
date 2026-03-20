@@ -3,7 +3,7 @@
   "version":1,
   "newProjectRoot":"projects",
   "projects":{
-    "dark-factor-frontend":{
+    "equity-trading-portal":{
       "projectType":"application",
       "schematics":{
         "@schematics/angular:component":{
@@ -17,7 +17,7 @@
         "build":{
           "builder":"@angular-devkit/build-angular:browser",
           "options":{
-            "outputPath":"dist/dark-factor-frontend",
+            "outputPath":"dist/equity-trading-portal-frontend",
             "index":"src/index.html",
             "main":"src/main.ts",
             "polyfills":"src/polyfills.ts",
@@ -62,10 +62,10 @@
           "builder":"@angular-devkit/build-angular:dev-server",
           "configurations":{
             "production":{
-              "buildTarget":"dark-factor-frontend:build:production"
+              "buildTarget":"equity-trading-portal:build:production"
             },
             "development":{
-              "buildTarget":"dark-factor-frontend:build:development"
+              "buildTarget":"equity-trading-portal:build:development"
             }
           },
           "defaultConfiguration":"development"
@@ -73,7 +73,7 @@
         "extract-i18n":{
           "builder":"@angular-devkit/build-angular:extract-i18n",
           "options":{
-            "buildTarget":"dark-factor-frontend:build"
+            "buildTarget":"equity-trading-portal:build"
           }
         },
         "test":{

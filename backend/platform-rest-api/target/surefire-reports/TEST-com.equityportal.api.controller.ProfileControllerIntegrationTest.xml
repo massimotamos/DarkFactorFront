@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.equityportal.api.controller.ProfileControllerIntegrationTest" time="0.001" tests="2" errors="0" skipped="2" failures="0">
+  <properties/>
+  <testcase name="invalidHorizonReturns400" classname="com.equityportal.api.controller.ProfileControllerIntegrationTest" time="0.0">
+    <skipped message="Docker not available — skipping integration test: Previous attempts to find a Docker environment failed. Will not retry. Please see logs and check configuration"/>
+    <system-out><![CDATA[02:30:10.551 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.21.0
+]]></system-out>
+  </testcase>
+  <testcase name="createAndGetProfile" classname="com.equityportal.api.controller.ProfileControllerIntegrationTest" time="0.0">
+    <skipped message="Docker not available — skipping integration test: Previous attempts to find a Docker environment failed. Will not retry. Please see logs and check configuration"/>
+  </testcase>
+</testsuite>

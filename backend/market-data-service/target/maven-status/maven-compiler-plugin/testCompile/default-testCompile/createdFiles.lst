@@ -1,0 +1,8 @@
+com\equityportal\marketdata\service\MarketDataServiceUnitTest.class
+com\equityportal\marketdata\serializer\MarketDataSnapshotSerializationProperties.class
+com\equityportal\marketdata\client\YahooFinanceClientWireMockTest.class
+com\equityportal\marketdata\service\MarketDataStalenessProperties.class
+com\equityportal\marketdata\service\MarketDataCacheRoundTripProperties.class
+com\equityportal\marketdata\serializer\MarketDataSnapshotSerializerRoundTripProperties.class
+com\equityportal\marketdata\serializer\MarketDataSnapshotSerializerIncompletePayloadProperties.class
+com\equityportal\marketdata\serializer\MarketDataSnapshotSerializerTest.class

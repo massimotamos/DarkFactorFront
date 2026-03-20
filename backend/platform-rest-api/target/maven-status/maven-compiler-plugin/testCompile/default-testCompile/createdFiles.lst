@@ -1,0 +1,7 @@
+com\equityportal\api\security\InputSanitisationProperties.class
+com\equityportal\api\AbstractIntegrationTest.class
+com\equityportal\api\controller\AuthControllerIntegrationTest.class
+com\equityportal\api\exception\GlobalExceptionHandlerProperties.class
+com\equityportal\api\TestPlatformApplication.class
+com\equityportal\api\DockerAvailableCondition.class
+com\equityportal\api\controller\ProfileControllerIntegrationTest.class

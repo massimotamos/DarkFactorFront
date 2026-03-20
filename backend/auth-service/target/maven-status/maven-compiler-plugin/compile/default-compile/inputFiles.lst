@@ -1,0 +1,12 @@
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\auth-service\src\main\java\com\equityportal\auth\config\AuthConfig.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\auth-service\src\main\java\com\equityportal\auth\dto\AuthTokens.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\auth-service\src\main\java\com\equityportal\auth\dto\LoginRequest.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\auth-service\src\main\java\com\equityportal\auth\dto\RefreshRequest.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\auth-service\src\main\java\com\equityportal\auth\dto\RegistrationRequest.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\auth-service\src\main\java\com\equityportal\auth\exception\EmailAlreadyExistsException.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\auth-service\src\main\java\com\equityportal\auth\exception\InvalidCredentialsException.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\auth-service\src\main\java\com\equityportal\auth\exception\InvalidPasswordException.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\auth-service\src\main\java\com\equityportal\auth\exception\InvalidRefreshTokenException.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\auth-service\src\main\java\com\equityportal\auth\service\AuthenticationService.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\auth-service\src\main\java\com\equityportal\auth\service\JwtService.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\auth-service\src\main\java\com\equityportal\auth\service\UserRegistrationService.java

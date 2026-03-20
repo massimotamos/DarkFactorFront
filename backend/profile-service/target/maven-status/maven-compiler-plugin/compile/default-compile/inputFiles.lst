@@ -1,0 +1,5 @@
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\profile-service\src\main\java\com\equityportal\profile\dto\FinancialProfileRequest.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\profile-service\src\main\java\com\equityportal\profile\dto\FinancialProfileResponse.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\profile-service\src\main\java\com\equityportal\profile\exception\ProfileNotFoundException.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\profile-service\src\main\java\com\equityportal\profile\exception\ProfileValidationException.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\profile-service\src\main\java\com\equityportal\profile\service\FinancialProfileService.java

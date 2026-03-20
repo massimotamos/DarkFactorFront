@@ -1,0 +1,12 @@
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\market-data-service\src\main\java\com\equityportal\marketdata\client\AlphaVantageClient.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\market-data-service\src\main\java\com\equityportal\marketdata\client\MarketDataProvider.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\market-data-service\src\main\java\com\equityportal\marketdata\client\YahooFinanceClient.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\market-data-service\src\main\java\com\equityportal\marketdata\config\MarketDataConfig.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\market-data-service\src\main\java\com\equityportal\marketdata\dto\OhlcvBar.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\market-data-service\src\main\java\com\equityportal\marketdata\dto\QuoteDto.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\market-data-service\src\main\java\com\equityportal\marketdata\event\MarketDataUpdatedEvent.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\market-data-service\src\main\java\com\equityportal\marketdata\exception\InvalidMarketDataException.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\market-data-service\src\main\java\com\equityportal\marketdata\exception\MarketDataUnavailableException.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\market-data-service\src\main\java\com\equityportal\marketdata\exception\TickerNotFoundException.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\market-data-service\src\main\java\com\equityportal\marketdata\serializer\MarketDataSnapshotSerializer.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\market-data-service\src\main\java\com\equityportal\marketdata\service\MarketDataIngestionService.java

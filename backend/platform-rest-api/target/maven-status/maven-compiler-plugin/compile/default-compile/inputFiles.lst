@@ -1,0 +1,11 @@
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\platform-rest-api\src\main\java\com\equityportal\api\controller\AuthController.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\platform-rest-api\src\main\java\com\equityportal\api\controller\MarketDataController.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\platform-rest-api\src\main\java\com\equityportal\api\controller\PortfolioController.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\platform-rest-api\src\main\java\com\equityportal\api\controller\ProfileController.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\platform-rest-api\src\main\java\com\equityportal\api\controller\RiskController.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\platform-rest-api\src\main\java\com\equityportal\api\exception\GlobalExceptionHandler.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\platform-rest-api\src\main\java\com\equityportal\api\security\JwtAuthenticationFilter.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\platform-rest-api\src\main\java\com\equityportal\api\security\SecurityConfig.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\platform-rest-api\src\main\java\com\equityportal\api\websocket\MarketDataWebSocketPublisher.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\platform-rest-api\src\main\java\com\equityportal\api\websocket\PriceUpdateMessage.java
+C:\Users\tamosma\Documents\SpringBootProjects\TradingPortal\backend\platform-rest-api\src\main\java\com\equityportal\api\websocket\WebSocketConfig.java

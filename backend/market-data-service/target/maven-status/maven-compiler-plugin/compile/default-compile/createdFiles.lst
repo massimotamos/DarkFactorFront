@@ -1,0 +1,12 @@
+com\equityportal\marketdata\event\MarketDataUpdatedEvent.class
+com\equityportal\marketdata\serializer\MarketDataSnapshotSerializer.class
+com\equityportal\marketdata\config\MarketDataConfig.class
+com\equityportal\marketdata\dto\QuoteDto.class
+com\equityportal\marketdata\exception\MarketDataUnavailableException.class
+com\equityportal\marketdata\client\MarketDataProvider.class
+com\equityportal\marketdata\client\YahooFinanceClient.class
+com\equityportal\marketdata\exception\TickerNotFoundException.class
+com\equityportal\marketdata\exception\InvalidMarketDataException.class
+com\equityportal\marketdata\service\MarketDataIngestionService.class
+com\equityportal\marketdata\client\AlphaVantageClient.class
+com\equityportal\marketdata\dto\OhlcvBar.class

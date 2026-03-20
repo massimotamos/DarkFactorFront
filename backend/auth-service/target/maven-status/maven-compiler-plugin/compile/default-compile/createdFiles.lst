@@ -1,0 +1,12 @@
+com\equityportal\auth\config\AuthConfig.class
+com\equityportal\auth\dto\RefreshRequest.class
+com\equityportal\auth\dto\AuthTokens.class
+com\equityportal\auth\service\AuthenticationService.class
+com\equityportal\auth\dto\LoginRequest.class
+com\equityportal\auth\service\UserRegistrationService.class
+com\equityportal\auth\exception\InvalidCredentialsException.class
+com\equityportal\auth\service\JwtService.class
+com\equityportal\auth\dto\RegistrationRequest.class
+com\equityportal\auth\exception\EmailAlreadyExistsException.class
+com\equityportal\auth\exception\InvalidPasswordException.class
+com\equityportal\auth\exception\InvalidRefreshTokenException.class
