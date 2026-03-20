@@ -13,8 +13,9 @@ public class DerivativePosition {
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
-    @Column(name = "overlay_id", nullable = false)
-    private UUID overlayId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "overlay_id", nullable = false)
+    private DerivativeOverlay overlay;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
@@ -52,8 +53,9 @@ public class DerivativePosition {
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
 
-    public UUID getOverlayId() { return overlayId; }
-    public void setOverlayId(UUID overlayId) { this.overlayId = overlayId; }
+    public UUID getOverlayId() { return overlay != null ? overlay.getId() : null; }
+    public DerivativeOverlay getOverlay() { return overlay; }
+    public void setOverlay(DerivativeOverlay overlay) { this.overlay = overlay; }
 
     public DerivativeType getType() { return type; }
     public void setType(DerivativeType type) { this.type = type; }

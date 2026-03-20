@@ -28,7 +28,7 @@ public class PortfolioRecommendation {
     @Column(name = "volatility_percent", nullable = false, precision = 6, scale = 2)
     private BigDecimal volatilityPercent;
 
-    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<AllocationLine> allocations = new ArrayList<>();
 
     @Transient

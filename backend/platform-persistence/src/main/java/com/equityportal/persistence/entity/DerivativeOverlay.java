@@ -21,8 +21,7 @@ public class DerivativeOverlay {
     @Column(name = "generated_at", nullable = false)
     private Instant generatedAt;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "overlay_id")
+    @OneToMany(mappedBy = "overlay", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<DerivativePosition> positions = new ArrayList<>();
 
     public DerivativeOverlay() {}
@@ -37,5 +36,13 @@ public class DerivativeOverlay {
     public void setGeneratedAt(Instant generatedAt) { this.generatedAt = generatedAt; }
 
     public List<DerivativePosition> getPositions() { return positions; }
-    public void setPositions(List<DerivativePosition> positions) { this.positions = positions; }
+    public void setPositions(List<DerivativePosition> positions) {
+        this.positions.clear();
+        if (positions != null) {
+            for (DerivativePosition p : positions) {
+                p.setOverlay(this);
+                this.positions.add(p);
+            }
+        }
+    }
 }

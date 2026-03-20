@@ -50,6 +50,9 @@ public class AuthenticationService {
     }
 
     public AuthTokens refresh(RefreshRequest request) {
+        if (request.refreshToken() == null || request.refreshToken().isBlank()) {
+            throw new InvalidRefreshTokenException();
+        }
         String tokenHash = sha256Hex(request.refreshToken());
 
         RefreshToken stored = refreshTokenRepository.findByTokenHashAndRevokedFalse(tokenHash)

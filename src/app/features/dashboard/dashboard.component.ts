@@ -134,6 +134,9 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
           this.recommendation = history[0];
           this.subscribeToLivePrices();
         }
+      },
+      error: () => {
+        // History fetch failed — non-fatal, user can still generate a new recommendation
       }
     });
 
@@ -168,6 +171,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
         if (err.status === 404) {
           this.needsProfile = true;
           this.errorMessage = 'No financial profile found. Please complete the profile wizard first.';
+          this.router.navigate(['/wizard']);
         } else {
           this.errorMessage = 'Failed to generate recommendation. Please try again.';
         }
