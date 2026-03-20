@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: equityportal
+      POSTGRES_USER: equityportal
+      POSTGRES_PASSWORD: equityportal
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U equityportal"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8180:8180"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/equityportal
+      SPRING_DATASOURCE_USERNAME: equityportal
+      SPRING_DATASOURCE_PASSWORD: equityportal
+      SPRING_FLYWAY_ENABLED: "true"
+      SERVER_PORT: "8180"
+      JWT_SECRET: dGhpcyBpcyBhIHZlcnkgbG9uZyBzZWNyZXQga2V5IGZvciBqd3QgdGVzdGluZyBwdXJwb3Nlcw==
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "4300:4300"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

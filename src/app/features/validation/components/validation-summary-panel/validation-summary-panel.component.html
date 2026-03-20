@@ -1,0 +1,14 @@
+<section class="panel">
+  <header>
+    <p>Validation Summary</p>
+    <h2>Model Coherence</h2>
+  </header>
+
+  <div class="chips">
+    <span>Structural: {{ validationReport.byCategory.structural.length }}</span>
+    <span>Semantic: {{ validationReport.byCategory.semantic.length }}</span>
+    <span>Traceability: {{ validationReport.byCategory.traceability.length }}</span>
+    <span>Completeness: {{ validationReport.byCategory.completeness.length }}</span>
+    <span>Evolution: {{ validationReport.byCategory.evolution.length }}</span>
+  </div>
+</section>

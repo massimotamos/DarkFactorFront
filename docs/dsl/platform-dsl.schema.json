@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://darkfactor.dev/schema/platform-dsl-4.1.0.json",
+  "title": "DarkFactor Platform DSL",
+  "type": "object",
+  "required": [
+    "metadata",
+    "semanticLayers",
+    "derivationModel",
+    "versioning",
+    "project",
+    "intentLayer",
+    "requirementLayer",
+    "domainLayer",
+    "capabilityLayer",
+    "architectureLayer",
+    "executionLayer",
+    "deploymentIntentLayer",
+    "visualizationLayer",
+    "traceability",
+    "validation"
+  ],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["schemaId", "schemaVersion", "documentKind", "source"],
+      "properties": {
+        "schemaId": { "const": "darkfactor.platform.dsl" },
+        "schemaVersion": { "const": "4.1.0" },
+        "documentKind": { "const": "business-intent-to-executable-system-specification" },
+        "source": { "type": "string" }
+      }
+    },
+    "semanticLayers": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/semanticLayer" }
+    },
+    "derivationModel": {
+      "type": "object",
+      "required": ["derivationRules", "derivationRecords"],
+      "properties": {
+        "derivationRules": { "type": "array", "items": { "$ref": "#/$defs/derivationRule" } },
+        "derivationRecords": { "type": "array", "items": { "$ref": "#/$defs/derivationRecord" } }
+      }
+    },
+    "versioning": {
+      "type": "object",
+      "required": ["documentVersion", "createdAt", "updatedAt", "migrationState", "targetSchemaVersion", "changeSummary"]
+    },
+    "project": { "$ref": "#/$defs/baseElement" },
+    "intentLayer": {
+      "type": "object",
+      "required": ["initiative", "goals", "businessContext"]
+    },
+    "requirementLayer": {
+      "type": "object",
+      "required": ["backlog", "nonFunctionalRequirements", "constraints", "assumptions", "risks"]
+    },
+    "domainLayer": { "type": "object" },
+    "capabilityLayer": { "type": "object" },
+    "architectureLayer": { "type": "object" },
+    "executionLayer": { "type": "object" },
+    "deploymentIntentLayer": { "type": "object" },
+    "visualizationLayer": { "type": "object" },
+    "traceability": {
+      "type": "object",
+      "required": ["links"],
+      "properties": {
+        "links": { "type": "array", "items": { "$ref": "#/$defs/traceLink" } }
+      }
+    },
+    "validation": { "type": "object" }
+  },
+  "$defs": {
+    "baseElement": {
+      "type": "object",
+      "required": ["id", "type", "name", "description", "status", "provenance", "tags"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "status": { "type": "string" },
+        "approvalStatus": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "provenance": {
+          "type": "object",
+          "required": ["source", "author", "createdAt", "updatedAt"]
+        }
+      }
+    },
+    "semanticLayer": {
+      "type": "object",
+      "required": ["id", "name", "purpose", "upstreamDependencies", "downstreamDerivationTargets"]
+    },
+    "derivationRule": {
+      "type": "object",
+      "required": ["id", "name", "sourceLayer", "targetLayer", "sourceTypes", "targetTypes", "derivationMethod", "analystApprovalRequired", "description"]
+    },
+    "derivationRecord": {
+      "type": "object",
+      "required": ["id", "ruleId", "sourceRefs", "targetRefs", "derivationStage", "derivationStatus", "derivationMethod", "analystApprovalRequired", "analystApprovalStatus", "confidence", "rationale", "validationStatus"]
+    },
+    "userStory": {
+      "allOf": [
+        { "$ref": "#/$defs/baseElement" },
+        {
+          "type": "object",
+          "required": ["initiativeId", "epicId", "key", "narrative", "businessValue", "actorIds", "acceptanceCriterionIds", "businessRuleIds", "domainEntityIds", "capabilityIds", "nfrIds", "workflowNodeIds"]
+        }
+      ]
+    },
+    "serviceCandidate": {
+      "allOf": [
+        { "$ref": "#/$defs/baseElement" },
+        {
+          "type": "object",
+          "required": ["boundedDomainName", "responsibilityStatement", "ownedEntityIds", "supportedCapabilityIds", "inboundInterfaceIds", "outboundEventIds", "dependencyIds", "securitySensitivity", "dataClassification", "derivationSource", "derivationMethod", "confidence", "candidateType"]
+        }
+      ]
+    },
+    "architectureDecision": {
+      "allOf": [
+        { "$ref": "#/$defs/baseElement" },
+        {
+          "type": "object",
+          "required": ["decisionType", "optionsConsidered", "selectedOption", "rationale", "linkedNfrIds", "linkedServiceIds", "linkedCapabilityIds", "linkedWorkflowNodeIds", "derivationMethod", "analystApprovalRequired", "confidence"]
+        }
+      ]
+    },
+    "traceLink": {
+      "type": "object",
+      "required": ["id", "sourceRef", "targetRef", "relationshipType", "rationale", "confidence", "derivationStage", "derivationMethod", "analystApprovalStatus", "validationStatus", "supersedes", "supersededBy"]
+    }
+  }
+}

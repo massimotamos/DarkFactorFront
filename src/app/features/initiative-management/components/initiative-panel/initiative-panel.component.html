@@ -1,0 +1,66 @@
+<section class="panel">
+  <header class="panel__header">
+    <p>Initiative And Context</p>
+    <h2>{{ initiative.key }}</h2>
+  </header>
+
+  <label>
+    <span>Name</span>
+    <input [ngModel]="initiative.name" (ngModelChange)="updateInitiative('name', $event)" />
+  </label>
+
+  <label>
+    <span>Summary</span>
+    <textarea [ngModel]="initiative.summary" (ngModelChange)="updateInitiative('summary', $event)"></textarea>
+  </label>
+
+  <label>
+    <span>Vision</span>
+    <textarea [ngModel]="initiative.vision" (ngModelChange)="updateInitiative('vision', $event)"></textarea>
+  </label>
+
+  <label>
+    <span>Target Outcomes</span>
+    <textarea [ngModel]="initiative.targetOutcomes.join('\n')" (ngModelChange)="updateInitiative('targetOutcomes', $event)"></textarea>
+  </label>
+
+  <label>
+    <span>Industry</span>
+    <input [ngModel]="businessContext.industry" (ngModelChange)="updateBusinessContext('industry', $event)" />
+  </label>
+
+  <label>
+    <span>Business Domain</span>
+    <input [ngModel]="businessContext.businessDomain" (ngModelChange)="updateBusinessContext('businessDomain', $event)" />
+  </label>
+
+  <label>
+    <span>Problem Statement</span>
+    <textarea [ngModel]="businessContext.problemStatement" (ngModelChange)="updateBusinessContext('problemStatement', $event)"></textarea>
+  </label>
+
+  <label>
+    <span>Business Value</span>
+    <textarea [ngModel]="businessContext.businessValue" (ngModelChange)="updateBusinessContext('businessValue', $event)"></textarea>
+  </label>
+
+  <label>
+    <span>Stakeholders</span>
+    <textarea [ngModel]="businessContext.stakeholders.join('\n')" (ngModelChange)="updateBusinessContext('stakeholders', $event)"></textarea>
+  </label>
+
+  <label>
+    <span>Operating Model</span>
+    <textarea [ngModel]="businessContext.operatingModel" (ngModelChange)="updateBusinessContext('operatingModel', $event)"></textarea>
+  </label>
+
+  <label>
+    <span>Regulatory Context</span>
+    <textarea [ngModel]="businessContext.regulatoryContext.join('\n')" (ngModelChange)="updateBusinessContext('regulatoryContext', $event)"></textarea>
+  </label>
+
+  <label>
+    <span>Expected Outcomes</span>
+    <textarea [ngModel]="businessContext.expectedOutcomes.join('\n')" (ngModelChange)="updateBusinessContext('expectedOutcomes', $event)"></textarea>
+  </label>
+</section>

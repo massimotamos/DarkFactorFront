@@ -1,0 +1,49 @@
+.dsl-panel {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+  border-radius: 24px;
+  background: rgba(10, 14, 24, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  min-height: 0;
+}
+
+header p,
+header h2 {
+  margin: 0;
+}
+
+header p {
+  color: #ff8d6c;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.74rem;
+}
+
+.dsl-panel__meta,
+.dsl-panel__alerts {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.dsl-panel__meta span,
+.dsl-panel__alerts span {
+  border-radius: 999px;
+  padding: 0.35rem 0.65rem;
+  background: rgba(255, 255, 255, 0.06);
+  color: #d8dff1;
+  font-size: 0.75rem;
+}
+
+pre {
+  margin: 0;
+  min-height: 20rem;
+  max-height: 28rem;
+  overflow: auto;
+  border-radius: 18px;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.25);
+  color: #dfe7ff;
+  font-size: 0.78rem;
+}

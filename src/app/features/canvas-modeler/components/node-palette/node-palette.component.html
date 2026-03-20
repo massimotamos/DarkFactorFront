@@ -1,0 +1,18 @@
+<section class="palette">
+  <header>
+    <p>Graph Node Palette</p>
+    <h2>Workflow Elements</h2>
+  </header>
+
+  <div class="palette__list">
+    <button
+      type="button"
+      *ngFor="let template of palette"
+      draggable="true"
+      [style.--accent]="template.accent"
+      (dragstart)="onDragStart($event, template)">
+      <strong>{{ template.label }}</strong>
+      <span>{{ template.description }}</span>
+    </button>
+  </div>
+</section>

@@ -1,0 +1,23 @@
+<section class="dsl-panel">
+  <header>
+    <p>Canonical DSL Panel</p>
+    <h2>Structured Specification</h2>
+  </header>
+
+  <div class="dsl-panel__meta">
+    <span>{{ document.metadata.schemaId }}</span>
+    <span>{{ document.metadata.schemaVersion }}</span>
+    <span>doc v{{ document.versioning.documentVersion }}</span>
+    <span>{{ document.versioning.migrationState }}</span>
+  </div>
+
+  <div class="dsl-panel__alerts">
+    <span>Structural: {{ validationReport.byCategory.structural.length }}</span>
+    <span>Semantic: {{ validationReport.byCategory.semantic.length }}</span>
+    <span>Traceability: {{ validationReport.byCategory.traceability.length }}</span>
+    <span>Completeness: {{ validationReport.byCategory.completeness.length }}</span>
+    <span>Evolution: {{ validationReport.byCategory.evolution.length }}</span>
+  </div>
+
+  <pre>{{ dslText }}</pre>
+</section>

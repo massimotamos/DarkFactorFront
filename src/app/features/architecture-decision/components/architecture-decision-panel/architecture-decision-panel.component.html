@@ -1,0 +1,14 @@
+<section class="panel">
+  <header>
+    <p>Architecture Decisions</p>
+    <h2>Governed Runtime Choices</h2>
+  </header>
+
+  <article *ngFor="let decision of decisions" class="card">
+    <strong>{{ decision.name }}</strong>
+    <span>{{ decision.decisionType }}</span>
+    <span>Selected: {{ decision.selectedOption }}</span>
+    <span>Approval: {{ decision.approvalStatus || 'proposed' }} | Confidence: {{ decision.confidence }}</span>
+    <p>{{ decision.rationale }}</p>
+  </article>
+</section>

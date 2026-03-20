@@ -1,210 +1,108 @@
-<div class="app-shell">
-  <app-composer-toolbar
-    [modelName]="modelName()"
-    [nodeCount]="composer().canvasNodes.length"
-    (validateProjectRequested)="openProjectValidation()"
-    (generateCodeRequested)="openGenerateCode()"
-    (saveProjectRequested)="saveProject()"
-    (loadProjectRequested)="requestProjectLoad()"
-    (closeProjectRequested)="closeProject()"
-    (previewDslRequested)="openDslPreview()" />
+<div class="platform-shell">
+  <header class="platform-shell__header">
+    <div>
+      <p class="platform-shell__eyebrow">DarkFactor Platform Foundation</p>
+      <h1>{{ workspace.project().name }}</h1>
+      <p>{{ workspace.project().description }}</p>
+    </div>
 
-  <input
-    #projectFileInput
-    type="file"
-    accept=".dsl,.txt,.json,.darkfactor-project.json,.darkfactor.dsl"
-    hidden
-    (change)="onProjectFileSelected($event)" />
+    <div class="platform-shell__status">
+      <div>
+        <span>DSL version</span>
+        <strong>{{ workspace.document().metadata.schemaVersion }}</strong>
+      </div>
+      <div>
+        <span>Snapshot</span>
+        <strong>v{{ workspace.document().versioning.documentVersion }}</strong>
+      </div>
+      <div>
+        <span>Validation</span>
+        <strong>{{ issueCount() === 0 ? 'No open issues' : issueCount() + ' issue(s)' }}</strong>
+      </div>
+      <button type="button" (click)="workspace.reloadFromDsl()">Reload from DSL</button>
+    </div>
+  </header>
 
-  <main class="workspace" [style.grid-template-columns]="workspaceColumns()">
-    <app-composer-palette
-      class="workspace__palette"
-      [palette]="composer().palette" />
+  <main class="platform-shell__workspace">
+    <section class="platform-shell__column platform-shell__column--left">
+      <app-initiative-panel
+        [initiative]="workspace.initiative()"
+        [businessContext]="workspace.businessContext()"
+        (initiativeChanged)="workspace.updateInitiative($event)"
+        (businessContextChanged)="workspace.updateBusinessContext($event)" />
 
-    <div
-      class="workspace__resizer"
-      aria-hidden="true"
-      (mousedown)="startResize('palette', $event)"></div>
+      <app-backlog-panel
+        [epics]="workspace.epics()"
+        [stories]="workspace.userStories()"
+        [acceptanceCriteria]="workspace.acceptanceCriteria()"
+        [businessRules]="workspace.businessRules()"
+        [selectedEpicId]="workspace.selectedEpicId()"
+        [selectedStoryId]="workspace.selectedStoryId()"
+        (epicSelected)="workspace.selectEpic($event)"
+        (storySelected)="workspace.selectStory($event)"
+        (epicAdded)="workspace.addEpic()"
+        (storyAdded)="workspace.addStory($event)"
+        (epicUpdated)="workspace.updateEpic($event)"
+        (storyUpdated)="workspace.updateStory($event)" />
 
-    <app-composer-canvas
-      class="workspace__canvas"
-      [nodes]="composer().canvasNodes"
-      [connections]="composer().connections"
-      [invalidConnectionIds]="invalidConnectionIds()"
-      [pendingConnectionSourceId]="pendingConnectionSourceId()"
-      [validConnectionTargetIds]="validConnectionTargetIds()"
-      [selectedNodeId]="composer().selectedNodeId"
-      (nodeSelected)="onNodeSelected($event)"
-      (nodeDropped)="onNodeDropped($event)"
-      (nodeMoved)="onNodeMoved($event)"
-      (connectionStarted)="onConnectionStarted($event)"
-      (connectionCompleted)="onConnectionCompleted($event)"
-      (connectionCanceled)="onConnectionCanceled()" />
+      <app-domain-panel
+        [domainModel]="workspace.domainModel()"
+        [constraints]="workspace.document().requirementLayer.constraints"
+        [assumptions]="workspace.document().requirementLayer.assumptions"
+        [risks]="workspace.document().requirementLayer.risks" />
 
-    <div
-      class="workspace__resizer"
-      aria-hidden="true"
-      (mousedown)="startResize('properties', $event)"></div>
+      <app-capability-service-panel
+        [capabilityModel]="workspace.capabilityModel()"
+        [serviceDesign]="workspace.serviceDesign()"
+        [nonFunctionalRequirements]="workspace.document().requirementLayer.nonFunctionalRequirements"
+        [architectureInputs]="workspace.architectureInputs()"
+        [deployableSolutionInputs]="workspace.document().deploymentIntentLayer" />
 
-    <app-composer-properties
-      class="workspace__properties"
-      [selectedNode]="selectedNode()"
-      (basicPropertyChanged)="onBasicPropertyChanged($event)"
-      (semanticFieldChanged)="onSemanticFieldChanged($event)"
-      (contextBriefChanged)="onContextBriefChanged($event)"
-      (promptChanged)="onPromptChanged($event)"
-      (validateRequested)="onValidateRequested($event)"
-      (generateWorkflowRequested)="onGenerateWorkflowRequested($event)" />
-  </main>
-
-  <div
-    *ngIf="isDslPreviewOpen()"
-    class="dsl-modal-backdrop"
-    (click)="closeDslPreview()">
-    <section
-      class="dsl-modal"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Workflow semantic projection"
-      (click)="$event.stopPropagation()">
-      <header class="dsl-modal__header">
-        <div>
-          <p class="dsl-modal__eyebrow">Preview DSL</p>
-          <h2>Application Semantic Projection</h2>
-        </div>
-        <button type="button" class="dsl-modal__close" (click)="closeDslPreview()">Close</button>
-      </header>
-
-      <section class="dsl-modal__section">
-        <header>
-          <h3>Semantic DSL</h3>
-          <span>Whole application</span>
-        </header>
-        <pre>{{ semanticPreview() }}</pre>
-      </section>
-
-      <section class="dsl-modal__section">
-        <header>
-          <h3>Static Validation</h3>
-          <span>Workflow-wide constraints</span>
-        </header>
-        <pre>{{ validationPreview() }}</pre>
-      </section>
+      <app-architecture-decision-panel [decisions]="workspace.architectureDecisions()" />
     </section>
-  </div>
 
-  <div
-    *ngIf="isGenerateCodeOpen()"
-    class="dsl-modal-backdrop"
-    (click)="closeGenerateCode()">
-    <section
-      class="dsl-modal dsl-modal--wide"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Generated code preview"
-      (click)="$event.stopPropagation()">
-      <header class="dsl-modal__header">
-        <div>
-          <p class="dsl-modal__eyebrow">Generate Code</p>
-          <h2>Angular + Spring Boot + Maven Structure</h2>
-        </div>
-        <button type="button" class="dsl-modal__close" (click)="closeGenerateCode()">Close</button>
-      </header>
+    <section class="platform-shell__column platform-shell__column--center">
+      <div class="platform-shell__canvas-shell">
+        <app-node-palette [palette]="workspace.palette()" />
 
-      <div class="dsl-modal__workspace">
-        <aside class="dsl-modal__file-list">
-          <button
-            type="button"
-            *ngFor="let file of generatedFiles()"
-            class="dsl-modal__file-item"
-            [class.dsl-modal__file-item--active]="selectedGeneratedFilePath() === file.path"
-            (click)="selectGeneratedFile(file.path)">
-            <span>{{ file.category }}</span>
-            <strong>{{ file.path }}</strong>
-          </button>
-        </aside>
-
-        <section class="dsl-modal__section dsl-modal__section--full">
-          <ng-container *ngIf="selectedGeneratedFile() as selectedFile; else noGeneratedFile">
-            <header>
-              <h3>{{ selectedFile.path }}</h3>
-              <span>Preview only</span>
-            </header>
-            <pre>{{ selectedFile.content }}</pre>
-          </ng-container>
-          <ng-template #noGeneratedFile>
-            <header>
-              <h3>No generated files</h3>
-              <span>Preview only</span>
-            </header>
-            <pre>No generated output.</pre>
-          </ng-template>
-        </section>
+        <app-workflow-canvas
+          [workflowModel]="workspace.workflowModel()"
+          [selectedNodeId]="workspace.selectedNodeId()"
+          [validationReport]="workspace.validationReport()"
+          (nodeSelected)="workspace.selectNode($event)"
+          (nodeMoved)="workspace.moveNode($event)"
+          (nodeConnected)="workspace.connectNodes($event)"
+          (nodePropertyEdited)="workspace.updateNode($event)"
+          (nodeDeleted)="workspace.removeNode($event)"
+          (surfaceDropRequested)="workspace.addNodeFromTemplate($event.type, $event.position)" />
       </div>
     </section>
-  </div>
 
-  <div
-    *ngIf="isProjectValidationOpen()"
-    class="dsl-modal-backdrop"
-    (click)="closeProjectValidation()">
-    <section
-      class="dsl-modal"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Project validation results"
-      (click)="$event.stopPropagation()">
-      <header class="dsl-modal__header">
-        <div>
-          <p class="dsl-modal__eyebrow">Validate Project</p>
-          <h2>Model Coherence And Code Generation Readiness</h2>
-        </div>
-        <button type="button" class="dsl-modal__close" (click)="closeProjectValidation()">Close</button>
-      </header>
+    <section class="platform-shell__column platform-shell__column--right">
+      <app-property-inspector
+        [selectedNode]="workspace.selectedNode()"
+        [selectedNodeVisual]="workspace.selectedNodeVisual()"
+        [epics]="workspace.epics()"
+        [stories]="workspace.selectedEpicStories()"
+        [actors]="workspace.domainModel().actors"
+        [capabilities]="workspace.capabilityModel().capabilities"
+        [serviceCandidates]="workspace.serviceDesign().serviceCandidates"
+        [domainEntities]="workspace.domainModel().domainEntities"
+        [businessRules]="workspace.businessRules()"
+        (nodeUpdated)="workspace.updateNode($event)" />
 
-      <section class="dsl-modal__section">
-        <header>
-          <h3>Summary</h3>
-          <span>Overall assessment</span>
-        </header>
-        <pre>{{ projectValidationSummary() }}</pre>
-      </section>
+      <app-validation-summary-panel [validationReport]="workspace.validationReport()" />
 
-      <section class="dsl-modal__section">
-        <header>
-          <h3>Detailed Issues</h3>
-          <span>Syntax, semantics, and generation</span>
-        </header>
-        <pre>{{ projectValidationDetails() }}</pre>
-      </section>
+      <app-derivation-panel [derivationModel]="workspace.derivationModel()" />
+
+      <app-dsl-panel
+        [document]="workspace.document()"
+        [dslText]="workspace.dslText()"
+        [validationReport]="workspace.validationReport()" />
+
+      <app-traceability-panel
+        [relationships]="workspace.traces()"
+        [validationReport]="workspace.validationReport()" />
     </section>
-  </div>
-
-  <div
-    *ngIf="isImportDiagnosticsOpen()"
-    class="dsl-modal-backdrop"
-    (click)="closeImportDiagnostics()">
-    <section
-      class="dsl-modal"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Import diagnostics"
-      (click)="$event.stopPropagation()">
-      <header class="dsl-modal__header">
-        <div>
-          <p class="dsl-modal__eyebrow">Load Project</p>
-          <h2>DSL Import Diagnostics</h2>
-        </div>
-        <button type="button" class="dsl-modal__close" (click)="closeImportDiagnostics()">Close</button>
-      </header>
-
-      <section class="dsl-modal__section dsl-modal__section--full">
-        <header>
-          <h3>Parser Output</h3>
-          <span>Structured diagnostics</span>
-        </header>
-        <pre>{{ importDiagnosticsText() }}</pre>
-      </section>
-    </section>
-  </div>
+  </main>
 </div>

@@ -1,0 +1,30 @@
+<section class="panel">
+  <header>
+    <p>Domain Model</p>
+    <h2>Actors And Entities</h2>
+  </header>
+
+  <div class="chips">
+    <span>Actors: {{ domainModel.actors.length }}</span>
+    <span>Entities: {{ domainModel.domainEntities.length }}</span>
+    <span>Aggregate groups: {{ domainModel.aggregateGroups.length }}</span>
+  </div>
+
+  <article *ngFor="let actor of domainModel.actors" class="card">
+    <strong>{{ actor.name }}</strong>
+    <span>{{ actor.actorKind }}</span>
+    <p>{{ actor.responsibilities.join(', ') }}</p>
+  </article>
+
+  <article *ngFor="let entity of domainModel.domainEntities" class="card">
+    <strong>{{ entity.name }}</strong>
+    <span>{{ entity.entityKind }}</span>
+    <p>{{ entity.attributes.length }} attributes</p>
+  </article>
+
+  <div class="chips">
+    <span>Constraints: {{ constraints.length }}</span>
+    <span>Assumptions: {{ assumptions.length }}</span>
+    <span>Risks: {{ risks.length }}</span>
+  </div>
+</section>

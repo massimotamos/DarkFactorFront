@@ -1,0 +1,48 @@
+<section class="canvas-shell">
+  <header>
+    <div>
+      <p>Workflow Projection</p>
+      <h2>{{ workflowModel.name }}</h2>
+    </div>
+    <div class="validation">
+      <span>Semantic nodes: {{ workflowModel.semanticNodes.length }}</span>
+      <span>Semantic links: {{ workflowModel.semanticConnections.length }}</span>
+    </div>
+  </header>
+
+  <div
+    #surface
+    class="canvas"
+    [class.canvas--drop-active]="dropActive"
+    (dragover)="onSurfaceDragOver($event)"
+    (dragleave)="onSurfaceDragLeave($event)"
+    (drop)="onSurfaceDrop($event)"
+    (mousedown)="onCanvasPointerDown()">
+    <svg class="canvas__connections">
+      <g *ngFor="let connection of workflowModel.semanticConnections">
+        <path [attr.d]="connectionPath(connection.sourceNodeId, connection.targetNodeId)"></path>
+        <text [attr.x]="labelPosition(connection.id).x" [attr.y]="labelPosition(connection.id).y">
+          {{ connection.connectionType }}
+        </text>
+      </g>
+    </svg>
+
+    <article
+      *ngFor="let node of workflowModel.semanticNodes; trackBy: trackNode"
+      class="node"
+      [class.node--selected]="node.id === selectedNodeId"
+      [class.node--disconnected]="isDisconnected(node.id)"
+      [class.node--decision]="node.nodeType === 'decisionGateway'"
+      [style.left.px]="visual(node.id)?.position?.x"
+      [style.top.px]="visual(node.id)?.position?.y"
+      [style.width.px]="visual(node.id)?.size?.width"
+      [style.height.px]="visual(node.id)?.size?.height"
+      (mousedown)="onNodePointerDown($event, node)">
+      <button type="button" class="node__connect" (click)="startConnection($event, node.id)">+</button>
+      <button type="button" class="node__delete" (click)="deleteNode($event, node.id)">x</button>
+      <span class="node__type">{{ node.nodeType }}</span>
+      <strong>{{ node.name }}</strong>
+      <p>{{ node.description }}</p>
+    </article>
+  </div>
+</section>

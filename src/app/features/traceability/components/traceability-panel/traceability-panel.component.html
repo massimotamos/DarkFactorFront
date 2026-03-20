@@ -1,0 +1,19 @@
+<section class="trace-panel">
+  <header>
+    <p>Traceability Inspector</p>
+    <h2>Explicit Semantic Links</h2>
+  </header>
+
+  <div class="trace-panel__summary">
+    <span>Total links: {{ relationships.length }}</span>
+    <span>Trace issues: {{ validationReport.byCategory.traceability.length }}</span>
+  </div>
+
+  <article *ngFor="let relationship of relationships" class="trace-card">
+    <strong>{{ relationship.relationshipType }}</strong>
+    <span>{{ relationship.sourceRef }} -> {{ relationship.targetRef }}</span>
+    <span>{{ relationship.derivationStage }} / {{ relationship.derivationMethod }}</span>
+    <span>Approval: {{ relationship.analystApprovalStatus }} | Validation: {{ relationship.validationStatus }}</span>
+    <p>{{ relationship.rationale }}</p>
+  </article>
+</section>
